@@ -76,9 +76,14 @@ public class DrawingZone : MonoBehaviour
     /// </summary>
     /// <param name="shapeOrder"></param>
     /// <returns></returns>
-    public float GetDrawShapeLength(int shapeOrder)
+    public float GetDrawShapeLength(int shapeOrder, bool strokePreviewLine)
     {
-        return VectorUtils.SegmentsLength(drawStrokeShapes[shapeOrder].Contours[0].Segments,
+        Shape shape = null;
+        if (strokePreviewLine)
+            shape = previewStrokeShapes[shapeOrder];
+        else
+            shape = drawStrokeShapes[shapeOrder];
+        return VectorUtils.SegmentsLength(shape.Contours[0].Segments,
                drawStrokeShapes[shapeOrder].IsConvex, 0.01f);
     }
 
@@ -91,7 +96,15 @@ public class DrawingZone : MonoBehaviour
     public Vector2 GetDrawShapePos(int shapeIndex, float pos0to1)
     {
         Shape shape = drawStrokeShapes[shapeIndex];
-        float length = GetDrawShapeLength(shapeIndex);
+        float length = GetDrawShapeLength(shapeIndex, false);
+        float compLength = length * pos0to1;
+        return ShapeUtils.EvalShape(shape, compLength);
+    }
+
+    public Vector2 GetPreviewShapePos(int shapeIndex, float pos0to1)
+    {
+        Shape shape = previewStrokeShapes[shapeIndex];
+        float length = GetDrawShapeLength(shapeIndex, true);
         float compLength = length * pos0to1;
         return ShapeUtils.EvalShape(shape, compLength);
     }
@@ -194,6 +207,12 @@ public class DrawingZone : MonoBehaviour
     }
     #endregion
     #region Update drawing sprites
+    public void ContinueFillDrawSprite(int drawStageIndex, Vector2 direction, float dist)
+    {
+        drawStrokeShapes[drawStageIndex] = ShapeUtils.ContinueShape(drawStrokeShapes[drawStageIndex], direction, dist);
+    }
+
+
     [HideInInspector]
     public Texture2D drawFillTexture; //Reference to the texture that the player draws on when drawing fill
     /// <summary>
@@ -262,10 +281,9 @@ public class DrawingZone : MonoBehaviour
         UpdateStrokeDrawSprite(0, drawingStage);
         
         //Create cue sprites
-        Vector2 startLinePos = GetDrawShapePos(drawingStage, 0) * 0.01f;
-        startLinePos = new Vector2(startLinePos.x, -startLinePos.y);
-        Vector2 endLinePos = GetDrawShapePos(drawingStage, 1) * 0.01f;
-        endLinePos = new Vector2(endLinePos.x, -endLinePos.y);
+        Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0));
+        Vector2 endLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 1));
+        
         startLineCueObject = CreateSpriteObject(startLineSprite, startLinePos, "Start line marker");
         endLineCueObject = CreateSpriteObject(endLineSprite, endLinePos, "End line marker");
 

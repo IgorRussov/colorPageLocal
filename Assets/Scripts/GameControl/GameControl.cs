@@ -68,6 +68,9 @@ public class GameControl : MonoBehaviour
         drawingZone.HideEndLineSprite();
     }
 
+    Vector2 prevDrawShapePos;
+    bool continuedOnThisShape = false;
+
     /// <summary>
     /// Increases the length of already drawn stroke line by drawSpeed
     /// Updates sprite and moves the pencil to show line being drawn
@@ -77,9 +80,18 @@ public class GameControl : MonoBehaviour
         if (!canDraw)
             return;
         gameStageInfo.drawnAmmount += drawSpeed * Time.fixedDeltaTime;
+        Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart);
+        if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedOnThisShape)
+        {
+            Debug.Log("CONTINUE");
+            Vector2 direction = newDrawShapePos - prevDrawShapePos;
+            drawingZone.ContinueFillDrawSprite(gameStageInfo.drawStage, direction, continueLineLength);
+            gameStageInfo.strokeShapeLength += continueLineLength;
+            continuedOnThisShape = true;
+        }
+        prevDrawShapePos = newDrawShapePos;
         drawingZone.UpdateStrokeDrawSprite(gameStageInfo.drawnAmmount, gameStageInfo.drawStage);
-        Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
-            drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart)), false);
+        Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(newDrawShapePos), false);
         if (gameStageInfo.MustEndDraw)
         {
             canDraw = false;
@@ -97,7 +109,8 @@ public class GameControl : MonoBehaviour
         Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
             drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0)
             ), false);
-        gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage);
+        continuedOnThisShape = false;
+        gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage, false);
         canDraw = true;
     }
 

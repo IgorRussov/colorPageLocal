@@ -171,13 +171,10 @@ MonoBehaviour:
   forcedMoveSpeed: 30
   freeMoveSpeed: 1
   liftedOffset: {x: 0.3, y: 0.3}
-  quickFixOffset: {x: 0, y: 0}
   lifted: 0
   mustDraw: 0
   mustMoveForced: 0
   tipSpriteRenderer: {fileID: 1838675362}
-  needQuickFix: 1
-  worldMove: 0
   target: {x: 0, y: 0}
 --- !u!1 &64184893
 GameObject:
@@ -4181,12 +4178,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3766d47261cbcd14d8bb32379d67335e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawingZone: {fileID: 1736346571}
   fillMoveSpeed: 0.1
-  continueLineLength: 0.1
+  continueLineLength: 100
   drawSpeed: 1000
+  drawingZone: {fileID: 1736346571}
   drawingNow: 0
-  fillStageDelay: 2
 --- !u!114 &1356946718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5190,7 +5186,7 @@ MonoBehaviour:
   previewStrokeFillLength: 2
   previewStrokeEmptyLength: 20
   previewStrokeColor: {r: 0.6011926, g: 0.6603774, b: 0.65435565, a: 1}
-  drawStrokeWidth: 30
+  drawStrokeWidth: 20
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   fillStrokeWidth: 80
   stepDistance: 0.5

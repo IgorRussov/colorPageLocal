@@ -45,6 +45,23 @@ public class ShapeUtils
         return result;
     }
 
+    public static Vector2 TangentAt(BezierSegment s, float t)
+    {
+        Vector2 p1 = VectorUtils.Eval(s, t - 0.01f);
+        Vector2 p2 = VectorUtils.Eval(s, t);
+        return p2 - p1;
+
+        //-3(1-t)^2 * P0 + 3(1-t)^2 * P1 - 6t(1-t) * P1 - 3t^2 * P2 + 6t(1-t) * P2 + 3t^2 * P3 
+        Vector2 tan = 
+            -3 * (1 - t) * (1 - t) * s.P0 
+            + 3 * (1 - t) * (1 - t) * s.P1 
+            - 6 * t * (1 - t) * s.P1
+            - 3 * t * t * s.P2
+            + 6 * t * (1 - t) * s.P2
+            + 3 * t * t * s.P3;
+        return tan;
+    } 
+
     /// <summary>
     /// Gets svg space coordinates of a point on the shape's contour which is 
     /// evalPoint units away from the start of the contour.
@@ -205,6 +222,33 @@ public class ShapeUtils
         }
     }
 
+    public static Shape ContinueShape(Shape shape, Vector2 direction, float dist)
+    {
+        BezierContour shapeContour = shape.Contours.First();
+
+        BezierSegment[] segments = ShapeToBezierSegments(shape);
+        BezierSegment lastSegment;
+        if (shapeContour.Closed)
+            lastSegment = segments[segments.Length - 2];
+        else
+            lastSegment = segments[segments.Length - 1];
+
+        BezierSegment newSegment = VectorUtils.MakeLine(lastSegment.P3, lastSegment.P3 + direction.normalized * dist);
+
+        BezierSegment[] newSegments = new BezierSegment[segments.Length + 1];
+        Array.Copy(segments, newSegments, segments.Length);
+        newSegments[segments.Length] = newSegment;
+
+        BezierPathSegment[] newCountour = VectorUtils.BezierSegmentsToPath(newSegments);
+
+        Shape newShape = CloneShape(shape);
+        shapeContour.Closed = false;
+        shapeContour.Segments = newCountour;
+        newShape.Contours[0] = shapeContour;
+
+        return newShape;
+    }
+
     /// <summary>
     /// <remarcs>
     /// !===! DOES NOT WORK PROPERLY FOR NOW, LINES GO IN STRANGE DIRECTIONS !===!
@@ -220,53 +264,34 @@ public class ShapeUtils
     public static List<Shape> CreateDrawShapes(List<Shape> sourceShapes, float continueLineLength)
     {
         List<Shape> ret = new List<Shape>();
+        foreach (Shape s in sourceShapes)
+            ret.Add(CloneShape(s));
+        return ret;
         foreach(Shape s in sourceShapes)
         {
             BezierContour shapeContour = s.Contours.First();
-            BezierPathSegment lastPathSegment;
-            Vector2 lastPoint;
-            if (shapeContour.Closed)
-            {
-                BezierPathSegment firstPathSegment = shapeContour.Segments.First();
-                lastPoint = firstPathSegment.P0;
-                lastPathSegment = shapeContour.Segments.Last();
-            }
-            else
-            {
-                //Second to last because the last is just one point
-                lastPathSegment = shapeContour.Segments[shapeContour.Segments.Count() - 2];
-                lastPoint = shapeContour.Segments.Last().P0;
-            }
-                
-            BezierSegment lastSegment = new BezierSegment();
-            lastSegment.P0 = lastPathSegment.P0;
-            lastSegment.P1 = lastPathSegment.P1;
-            lastSegment.P2 = lastPathSegment.P2;
-            lastSegment.P3 = lastPoint;
 
-            Vector2 endTangent = VectorUtils.EvalTangent(lastSegment, 1);
+            BezierSegment[] segments = ShapeToBezierSegments(s);
+            BezierSegment lastSegment;
+            if (shapeContour.Closed)
+                lastSegment = segments[segments.Length - 2];
+            else
+                lastSegment = segments[segments.Length - 1];
+
+            //Vector2 endTangent = VectorUtils.EvalTangent(lastSegment, 1);
+            Vector2 endTangent = TangentAt(lastSegment, 1);
             Vector2 direction = endTangent.normalized * continueLineLength;
 
-            shapeContour.Closed = false;
-            BezierPathSegment newSegment = new BezierPathSegment();
-            newSegment.P0 = lastPoint;
-            newSegment.P1 = lastPoint + direction * continueLineLength / 3;
-            newSegment.P2 = lastPoint + direction * continueLineLength * 2 / 3;
-            BezierPathSegment newLastSegment = new BezierPathSegment();
-            newLastSegment.P0 = lastPoint + direction * continueLineLength;
-            //newLastSegment.P1 = newLastSegment.P0;
-            //newLastSegment.P2 = newLastSegment.P0;
-            
-            int count = shapeContour.Segments.Count();
-            //BezierPathSegment[] newCountour = new BezierPathSegment[count + 2];
-            //Array.Copy(shapeContour.Segments, newCountour, count);
-            //newCountour[count] = newSegment;
-            //newCountour[count + 1] = newLastSegment;
-            BezierPathSegment[] newCountour = new BezierPathSegment[count + 1];
-            Array.Copy(shapeContour.Segments, newCountour, count - 1);
-            newCountour[count - 1] = newSegment;
-            newCountour[count] = newLastSegment;
+            BezierSegment newSegment = VectorUtils.MakeLine(lastSegment.P3, lastSegment.P3 + direction);
+
+            BezierSegment[] newSegments = new BezierSegment[segments.Length + 1];
+            Array.Copy(segments, newSegments, segments.Length);
+            newSegments[segments.Length] = newSegment;
+
+            BezierPathSegment[] newCountour = VectorUtils.BezierSegmentsToPath(newSegments);
+
             Shape newShape = CloneShape(s);
+            shapeContour.Closed = false;
             shapeContour.Segments = newCountour;
             newShape.Contours[0] = shapeContour;
 
