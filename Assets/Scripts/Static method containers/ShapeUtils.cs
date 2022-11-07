@@ -1,0 +1,326 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using UnityEditor;
+using Unity.VectorGraphics;
+using System.Linq;
+using System;
+
+/// <summary>
+/// Has methods required for processing and creating new vector shapes
+/// </summary>
+public class ShapeUtils
+{
+    public static Vector2 drawingSize; //stores the size of the scene we are working with, required for texture generation
+
+    /// <summary>
+    /// Shape is expected to contain only one contour.
+    /// Extracts bezier segments from a vector shape
+    /// Bezier segments are different from Bezier path segments contained in the shape's contours,
+    /// because bezier segments have four control poins, while bezier path segments have three.
+    /// They use the following segment's point 0 as their point 3, so a conversion is required.
+    /// </summary>
+    /// <param name="shape">Is expected to conain only one contour</param>
+    /// <returns>An array of BezierSegments whichi create this shape</returns>
+    public static BezierSegment[] ShapeToBezierSegments(Shape shape)
+    {
+        BezierPathSegment[] seg = shape.Contours[0].Segments;
+        //If the shape is not closed, the last segment will contain just point 0, so it
+        //will only be used as the point 3 of the second to last segment.
+        //if the shape is closed, point 0 of the first segment will be used as point 3 of 
+        //the last segment. This is achivied in the cycle via mod division
+        int count = shape.Contours[0].Closed ? seg.Length : seg.Length - 1;
+        BezierSegment[] result = new BezierSegment[count];
+        for(int i = 0; i < count; i++)
+        {
+            BezierPathSegment s1 = seg[i];
+            BezierSegment s2 = new BezierSegment();
+            s2.P0 = s1.P0;
+            s2.P1 = s1.P1;
+            s2.P2 = s1.P2;
+            s2.P3 = seg[(i + 1) % seg.Length].P0; //Mod division to get next segment OR first segment if this is the last
+            result[i] = s2;
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Gets svg space coordinates of a point on the shape's contour which is 
+    /// evalPoint units away from the start of the contour.
+    /// </summary>
+    /// <param name="shape"></param>
+    /// <param name="evalPoint"></param>
+    /// <returns></returns>
+    public static Vector2 EvalShape(Shape shape, float evalPoint)
+    {
+        float lengthRemaining = evalPoint;
+        BezierSegment[] arr = ShapeToBezierSegments(shape);
+        int i = -1;
+        float length = 1;
+        bool flag = false;
+        try
+        {
+            do //We are looking for the segment which contains the required point
+            {
+                i++;
+                length = VectorUtils.SegmentLength(arr[i]);
+                if (lengthRemaining <= length)
+                    flag = true;
+                else
+                    lengthRemaining -= length;
+                if (i >= arr.Length)
+                    flag = true;
+            } while (!flag );
+        }catch (Exception e)
+        {
+               Debug.Log("Shape index wrong");
+        }
+
+        BezierSegment evalSegment = i < arr.Length ? arr[i] : arr.Last();
+        //The parameter must be from 0 to 1 for the VecturUtils lib funcion used here
+        float evalParameter = i < arr.Length ? 
+            lengthRemaining / length 
+            : 1; //if we could not get the required segment we are checking the last segment at its' last point
+        
+        Vector2 result = VectorUtils.Eval(evalSegment, evalParameter);
+        return result;
+    }
+    
+    /// <summary>
+    /// Returns a shape which is transformed by the Matrix2d
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="transform"></param>
+    /// <returns></returns>
+    public static Shape TransformedShape(Shape s, Matrix2D transform)
+    {
+        s.Contours[0].Segments = VectorUtils.TransformBezierPath(s.Contours[0].Segments, transform);
+        return s;
+    }
+
+    /// <summary>
+    /// Recursively gets all shapes from the scene node
+    /// parentTransform is required to preserve proper transforms in child nodes and is also
+    /// passed down recursively
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="parentTransform"></param>
+    /// <returns></returns>
+    public static List<Shape> getAllShapes(SceneNode node, Matrix2D parentTransform)
+    {
+        List<Shape> shapes = new List<Shape>();
+        if (node.Shapes != null)
+            node.Shapes.ForEach(s => shapes.Add(TransformedShape(s, parentTransform)));
+        if (node.Children != null)
+            node.Children.ForEach(c => shapes = shapes.Concat(getAllShapes(c, parentTransform * c.Transform)).ToList());
+        return shapes;
+    }
+    
+    /// <summary>
+    /// Creates a shape with the same values as original
+    /// This method is called from the method with the same name in the
+    /// DrawingSpriteFactory class
+    /// </summary>
+    /// <param name="s1"></param>
+    /// <returns></returns>
+    public static Shape CloneShape(Shape s1)
+    {
+        Shape s2 = new Shape();
+        s2.Contours = (BezierContour[])s1.Contours.Clone();
+        s2.Fill = s1.Fill;
+        s2.FillTransform = s1.FillTransform;
+        s2.IsConvex = s1.IsConvex;
+        s2.PathProps = s1.PathProps;
+        return s2;
+    }
+
+    /// <summary>
+    /// Returns a cloned shape with fill set to null
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static Shape GetNoFillShape(Shape source)
+    {
+        Shape ret = CloneShape(source);
+        ret.Fill = null;
+        return ret;
+    }
+
+    /// <summary>
+    /// Returns a cloned shape with stroke set to null
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static Shape GetNoStrokeShape(Shape source)
+    {
+        Shape ret = CloneShape(source);
+        PathProperties props = ret.PathProps;
+        props.Stroke = null;
+        ret.PathProps = props;
+        return ret;
+    }
+
+    /// <summary>
+    /// Sets a drawing size rect which is later required to generate texture
+    /// with size of the scene (to cover all the drawing)
+    /// Must be called before the drawing stage begins, during setup
+    /// </summary>
+    /// <param name="scene"></param>
+    public static void SetDrawingSize(Scene scene)
+    {
+        Rect rect = VectorUtils.SceneNodeBounds(scene.Root);
+        drawingSize = new Vector2(rect.width, rect.height);
+    }
+
+    /// <summary>
+    /// Checks all shapes in the scene,
+    ///  for each shape checks if it has fill and stroke
+    ///  If has fill, adds cloned shape with no stroke to fill shapes
+    ///  If has stroke, adds cloned shape with no fill to stroke shapes
+    ///  Thus it can separate one shape to two if it has both stroke and fill
+    ///  Is required for the proper game flow
+    /// </summary>
+    /// <param name="source">Scene from which shapes are taken</param>
+    /// <param name="strokeShapes">List containing created shapes with only stroke</param>
+    /// <param name="fillShapes">List containing created shapes with only fill</param>
+    public static void SeparateStrokeAndFill(Scene source, out List<Shape> strokeShapes, out List<Shape> fillShapes)
+    {
+        List<Shape> shapes = getAllShapes(source.Root, source.Root.Transform);
+        strokeShapes = new List<Shape>();
+        fillShapes = new List<Shape>();
+
+        foreach (Shape s in shapes)
+        {  
+            if (s.Fill != null)
+            {
+                Shape fillShape = GetNoStrokeShape(s);
+                fillShapes.Add(fillShape);
+            }
+            if (s.PathProps.Stroke != null)
+            {
+                Shape strokeShape = GetNoFillShape(s);
+                strokeShapes.Add(strokeShape);
+            }
+        }
+    }
+
+    /// <summary>
+    /// <remarcs>
+    /// !===! DOES NOT WORK PROPERLY FOR NOW, LINES GO IN STRANGE DIRECTIONS !===!
+    /// </remarcs>
+    /// <br></br>
+    /// Takes shapes and adds a straight line at the end of each shape's contour
+    /// This line is required for the mechanic when the players stops drawing to late and the line
+    /// is continued
+    /// </summary>
+    /// <param name="sourceShapes"></param>
+    /// <param name="continueLineLength">Length of the continuing line in svg pixels</param>
+    /// <returns></returns>
+    public static List<Shape> CreateDrawShapes(List<Shape> sourceShapes, float continueLineLength)
+    {
+        List<Shape> ret = new List<Shape>();
+        foreach(Shape s in sourceShapes)
+        {
+            BezierContour shapeContour = s.Contours.First();
+            BezierPathSegment lastPathSegment;
+            Vector2 lastPoint;
+            if (shapeContour.Closed)
+            {
+                BezierPathSegment firstPathSegment = shapeContour.Segments.First();
+                lastPoint = firstPathSegment.P0;
+                lastPathSegment = shapeContour.Segments.Last();
+            }
+            else
+            {
+                //Second to last because the last is just one point
+                lastPathSegment = shapeContour.Segments[shapeContour.Segments.Count() - 2];
+                lastPoint = shapeContour.Segments.Last().P0;
+            }
+                
+            BezierSegment lastSegment = new BezierSegment();
+            lastSegment.P0 = lastPathSegment.P0;
+            lastSegment.P1 = lastPathSegment.P1;
+            lastSegment.P2 = lastPathSegment.P2;
+            lastSegment.P3 = lastPoint;
+
+            Vector2 endTangent = VectorUtils.EvalTangent(lastSegment, 1);
+            Vector2 direction = endTangent.normalized * continueLineLength;
+
+            shapeContour.Closed = false;
+            BezierPathSegment newSegment = new BezierPathSegment();
+            newSegment.P0 = lastPoint;
+            newSegment.P1 = lastPoint + direction * continueLineLength / 3;
+            newSegment.P2 = lastPoint + direction * continueLineLength * 2 / 3;
+            BezierPathSegment newLastSegment = new BezierPathSegment();
+            newLastSegment.P0 = lastPoint + direction * continueLineLength;
+            //newLastSegment.P1 = newLastSegment.P0;
+            //newLastSegment.P2 = newLastSegment.P0;
+            
+            int count = shapeContour.Segments.Count();
+            //BezierPathSegment[] newCountour = new BezierPathSegment[count + 2];
+            //Array.Copy(shapeContour.Segments, newCountour, count);
+            //newCountour[count] = newSegment;
+            //newCountour[count + 1] = newLastSegment;
+            BezierPathSegment[] newCountour = new BezierPathSegment[count + 1];
+            Array.Copy(shapeContour.Segments, newCountour, count - 1);
+            newCountour[count - 1] = newSegment;
+            newCountour[count] = newLastSegment;
+            Shape newShape = CloneShape(s);
+            shapeContour.Segments = newCountour;
+            newShape.Contours[0] = shapeContour;
+
+            ret.Add(newShape);
+        }
+        return ret;
+    }
+
+    /// <summary>
+    /// Extracts a pattern fill from scene
+    /// Not sure if it works properly, not used for now  
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <returns></returns>
+    public static PatternFill GetPatternFillFromScene(Scene scene)
+    {
+        List<Shape> shapes = getAllShapes(scene.Root, scene.Root.Transform);
+        return shapes.Where(s => s.Fill as PatternFill != null).First().Fill as PatternFill;
+    }
+
+    /// <summary>
+    /// Combines two floats into an array.
+    /// </summary>
+    /// <param name="dashLength">Length of dashes (filled line)</param>
+    /// <param name="emptyLength">Length of empty space between dashes</param>
+    /// <returns></returns>
+    public static float[] CreateStrokeArray(float dashLength, float emptyLength)
+    {
+        return new float[] { dashLength, emptyLength };
+    }
+
+    /// <summary>
+    /// Creats a texture with the size of the svg scene that is being processed
+    /// </summary>
+    /// <param name="color">Color of all texture or of pattern lines</param>
+    /// <param name="padding"></param>
+    /// <param name="pattern">If false, generates a solid color texture. If true, adds diagonal lines</param>
+    /// <returns></returns>
+    public static Texture2D CreateSceneSizedTexture(Color32 color, Vector2 padding, bool pattern)
+    {
+        int textureWidth = Mathf.RoundToInt(drawingSize.x + padding.x);
+        int textureHeigth = Mathf.RoundToInt(drawingSize.y + padding.y);
+        Texture2D spriteTexture = new Texture2D(textureWidth, textureHeigth, TextureFormat.ARGB32, false);
+        Color32[] fillColorArray = new Color32[textureWidth * textureHeigth];
+        for (int i = 0; i < fillColorArray.Length; i++)
+        {
+            if (pattern)
+                fillColorArray[i] = (i % 50 < 10) ? color : (Color32)Color.HSVToRGB(65.0f/360, 0.08f, 0.95f); 
+            else
+                fillColorArray[i] = color;
+        }
+            
+        spriteTexture.SetPixels32(fillColorArray);
+        spriteTexture.Apply();
+        return spriteTexture;
+    }
+}
