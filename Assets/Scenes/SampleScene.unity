@@ -2253,6 +2253,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 623690369}
   m_CullTransparentMesh: 1
+--- !u!1 &641715733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641715735}
+  - component: {fileID: 641715734}
+  m_Layer: 0
+  m_Name: DrawFillBounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!64 &641715734
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641715733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!4 &641715735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641715733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2019433118}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &715605136
 GameObject:
   m_ObjectHideFlags: 0
@@ -5182,6 +5227,7 @@ MonoBehaviour:
   fillDrawSprite: {fileID: 739416769}
   fillDrawMask: {fileID: 807651499}
   shapesParentObject: {fileID: 2019433117}
+  drawFillBoundsMeshCollider: {fileID: 641715734}
   previewStrokeWidth: 10
   previewStrokeFillLength: 2
   previewStrokeEmptyLength: 20
@@ -5550,6 +5596,7 @@ Transform:
   - {fileID: 1736414569}
   - {fileID: 807651498}
   - {fileID: 16987212}
+  - {fileID: 641715735}
   m_Father: {fileID: 1736346570}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

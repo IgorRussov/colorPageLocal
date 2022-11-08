@@ -103,6 +103,29 @@ public class ShapeUtils
         Vector2 result = VectorUtils.Eval(evalSegment, evalParameter);
         return result;
     }
+
+    public static Vector2[] PointsFromShape(Shape shape, float samplesForSegment, float minDiff)
+    {
+        List<Vector2> ret = new List<Vector2>();
+        Vector2 prevPoint = Vector2.one * 1000000f;
+        BezierSegment[] arr = ShapeToBezierSegments(shape);
+
+        foreach(BezierSegment segment in arr)
+        {
+            for(float t = 0; t < 1; t += 1/samplesForSegment)
+            {
+                Vector2 point = VectorUtils.Eval(segment, t);
+                if ((prevPoint - point).magnitude > minDiff)
+                {
+                    prevPoint = point;
+                    ret.Add(point);
+                }
+            }
+        }
+
+        return ret.ToArray();
+
+    }
     
     /// <summary>
     /// Returns a shape which is transformed by the Matrix2d
