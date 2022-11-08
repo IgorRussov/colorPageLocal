@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
@@ -35,9 +36,13 @@ public class GameStateManager : MonoBehaviour
         touchInput.Touch.TouchPress.started += ctx =>
         {
             //Debug.Log("PRESSED");
-            currentState.InputPressed(this);
+            wantPressed = true;
         };
-        touchInput.Touch.TouchPress.canceled += ctx => currentState.InputReleased(this);
+        touchInput.Touch.TouchPress.canceled += ctx =>
+        {
+            wantCanceled = true;
+        };
+            
         touchInput.Touch.TouchDelta.performed += ctx =>
         {
             //Debug.Log("DELTA");
@@ -46,6 +51,10 @@ public class GameStateManager : MonoBehaviour
         };
         touchInput.Enable();
     }
+
+    private bool wantPressed;
+    private bool wantCanceled;
+
 
     private void OnEnable()
     {
@@ -60,6 +69,19 @@ public class GameStateManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (wantPressed)
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
+                currentState.InputPressed(this);
+            wantPressed = false;
+        }
+        if (wantCanceled)
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
+                currentState.InputReleased(this);
+            wantCanceled = false;
+        }
+
         if (currentState == null)
             SwitchState(waitingDrawLineState);
         currentState.UpdateState(this);
@@ -69,5 +91,10 @@ public class GameStateManager : MonoBehaviour
     {
         currentState = newState;
         currentState.EnterState(this);
+    }
+
+    public void UndoRequested(GameStageInfo gameStageInfo)
+    {
+        currentState.UndoRequested(this, gameStageInfo);
     }
 }
