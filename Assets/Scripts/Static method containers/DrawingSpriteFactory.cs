@@ -258,14 +258,25 @@ public class DrawingSpriteFactory
 
     private static Mesh CreateMeshFromPoints(Vector2[] p, float height)
     {
+        Vector2 avg = Vector2.zero;
         int l = p.Length;
         height *= -PositionConverter.SvgPixelsPerUnit;
         Vector3[] vertices = new Vector3[l * 2];
         for(int i = 0; i < l; i++)
         {
+            avg += p[i];
+
             vertices[i] = new Vector3(p[i].x, p[i].y, 0) / PositionConverter.SvgPixelsPerUnit;
             vertices[l + i] = new Vector3(p[i].x, p[i].y, height) / PositionConverter.SvgPixelsPerUnit;
         }
+
+        avg = avg / p.Length / PositionConverter.SvgPixelsPerUnit;
+        Vector2 pos = new Vector2(p[0].x, p[0].y) / PositionConverter.SvgPixelsPerUnit;
+
+        //Debug.Log("Next pos: " + pos);
+        pos += (avg - pos) * 0.1f;
+        //Debug.Log("Next pos + avg: " + pos); 
+        Pencil.PosForNextFillShape = pos;
 
         int[] triangles = new int[l * 6];
         for(int i = 0; i < l; i++)

@@ -22,6 +22,7 @@ public class GameStateManager : MonoBehaviour
     public static void EnableInput()
     {
         touchInput.Enable();
+
     }
 
     public static void DisableInput()

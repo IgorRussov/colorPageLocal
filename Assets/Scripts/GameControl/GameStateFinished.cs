@@ -10,6 +10,7 @@ public class GameStateFinished : GameBaseState
     public override void EnterState(GameStateManager game)
     {
         UiControl.Instance.ShowFinishedText();
+        Pencil.instance.SetPencilMode(PencilMode.Inactive);
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)

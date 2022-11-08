@@ -11,6 +11,7 @@ public class GameStateWaitingDrawLine : GameBaseState
     public override void EnterState(GameStateManager game)
     {
         game.gameControl.NextStrokeStage();
+        Pencil.instance.SetPencilMode(PencilMode.DrawStroke);
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
