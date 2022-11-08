@@ -46,14 +46,24 @@ public class GameControl : MonoBehaviour
         return drawingZone.fillColors[gameStageInfo.FillStageIndex].ToArray();
     }
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     /// <summary>
     /// Unity start function 
     /// </summary>
     private void Start()
     {
-        Instance = this;
-        gameStageInfo = drawingZone.SetupDrawing();
+        
+        //gameStageInfo = drawingZone.SetupDrawing();
         Pencil.instance.BindGameControlEvents(this);
+    }
+
+    public void StartLevel(LevelData levelData)
+    {
+        gameStageInfo = drawingZone.SetupDrawing(levelData);
     }
 
     /// <summary>

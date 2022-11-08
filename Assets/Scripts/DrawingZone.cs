@@ -19,6 +19,7 @@ public class DrawingZone : MonoBehaviour
     public SpriteMask fillDrawMask;
     public GameObject shapesParentObject;
     public MeshCollider drawFillBoundsMeshCollider;
+    public CameraControl cameraControl;
     [Header("Preview stroke settings")]
     public float previewStrokeWidth;
     public float previewStrokeFillLength;
@@ -37,7 +38,7 @@ public class DrawingZone : MonoBehaviour
     public float samplingStepSize;
     public float svgPixelsPerUnit;
     [Header("Files for image - must be in StreamingAssets/VectorFiles")]
-    public string svgFileName;
+    //public string svgFileName;
     public string patternSvgFileName;
     [Header("Cue sprites")]
     public Sprite startLineSprite;
@@ -112,14 +113,15 @@ public class DrawingZone : MonoBehaviour
     #endregion
 
     #region Setup phase
-    public GameStageInfo SetupDrawing()
+    public GameStageInfo SetupDrawing(LevelData levelData)
     {
-        return PrepareData();
+        return PrepareData(levelData);
     }
 
 
-    private GameStageInfo PrepareData()
+    private GameStageInfo PrepareData(LevelData levelData)
     {
+        Debug.Log("Prepare data for " + levelData.svgFileName);
         //Set static values - prepares data
         TesselationOptions = Options;
         PositionConverter.SvgPixelsPerUnit = svgPixelsPerUnit;
@@ -130,9 +132,9 @@ public class DrawingZone : MonoBehaviour
         patternNode = patternScene.Root;
         patternRect = VectorUtils.ApproximateSceneNodeBounds(patternScene.Root);
         //Get main drawing scene and set some values based on it
-        Scene scene = FileIO.GetVectorSceneFromFile(svgFileName);
+        Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        FindObjectOfType<CameraControl>().ViewRectWithCamera(sceneRect);
+        cameraControl.ViewRectWithCamera(sceneRect);
         shapesParentObject.transform.position = -PositionConverter.GetWorldCenterPos(sceneRect);
 
         List<Shape> strokeShapes = new List<Shape>();

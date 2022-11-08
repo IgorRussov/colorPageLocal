@@ -15,6 +15,11 @@ public class FileIO
         return Path.Combine(Application.streamingAssetsPath, "VectorFiles", fileName + ".svg");
     }
 
+    public static string GetLevelDataPath(string dataName, string saveFolder)
+    {
+        return Path.Combine(saveFolder, dataName + ".asset");
+    }
+
     /// <summary>
     /// Gets the vector scene from a provided file path.
     /// The file must be in Assets/StreamingAssets/VectorFiles folder

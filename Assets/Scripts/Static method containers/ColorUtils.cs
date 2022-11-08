@@ -32,8 +32,9 @@ public class ColorUtils : MonoBehaviour
         Color.RGBToHSV(centerColor, out H, out S, out V);
 
         List<Color> result = new List<Color>();
-        for (int i = 0; i < totalColors; i++)
-            result.Add(Color.HSVToRGB(Mathf.Lerp(H - maxDeviation, H + maxDeviation, (float)i / totalColors), S, V));
+        result.Add(centerColor);
+        for (int i = 0; i < totalColors - 0; i++)
+            result.Add(Color.HSVToRGB(Mathf.Lerp(H - maxDeviation, H + maxDeviation, (float)i / totalColors - 0), S, V));
         return result;
     }
 }

@@ -62,8 +62,8 @@ public class GameStateManager : MonoBehaviour
     void FixedUpdate()
     {
         if (currentState == null)
-            SwitchState(waitingDrawLineState);
-        currentState.UpdateState(this);
+           SwitchState(waitingDrawLineState);
+        currentState?.UpdateState(this);
     }
 
     public void SwitchState(GameBaseState newState)
