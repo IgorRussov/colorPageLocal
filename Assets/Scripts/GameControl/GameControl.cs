@@ -26,6 +26,8 @@ public class GameControl : MonoBehaviour
     public Action StrokeDrawStarted;
     public Action StrokeDrawStopped;
 
+    private GameStateManager gameStateManager;
+
     /// <summary>
     /// If the player has finished drawing the required ammount of stroke line
     /// </summary>
@@ -46,14 +48,21 @@ public class GameControl : MonoBehaviour
         return drawingZone.fillColors[gameStageInfo.FillStageIndex].ToArray();
     }
 
+    private void Awake()
+    {
+        Instance = this;
+        
+        gameStateManager = gameObject.GetComponent<GameStateManager>();
+    }
+
     /// <summary>
     /// Unity start function 
     /// </summary>
     private void Start()
     {
-        Instance = this;
-        gameStageInfo = drawingZone.SetupDrawing();
         Pencil.instance.BindGameControlEvents(this);
+        gameStageInfo = drawingZone.SetupDrawing();
+        
     }
 
     /// <summary>
@@ -105,6 +114,7 @@ public class GameControl : MonoBehaviour
     public void NextStrokeStage()
     {
         drawingZone.SetupSpritesForStrokeDrawingStage(gameStageInfo.drawStage);
+        gameStageInfo.drawnAmmount = 0;
         Pencil.instance.lifted = true;
         Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
             drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0)
@@ -120,7 +130,8 @@ public class GameControl : MonoBehaviour
     /// </summary>
     public void FinishFillStage()
     {
-        drawingZone.SetFinalFillSprite(gameStageInfo.FillStageIndex, Pencil.instance.Color);
+        drawingZone.SetFinalFillSprite(gameStageInfo.FillStageIndex, 
+            Pencil.instance.GetColorByStage(gameStageInfo.FillStageIndex));
         gameStageInfo.drawStage++;
     }
 
@@ -147,6 +158,29 @@ public class GameControl : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void Undo()
+    {
+        gameStateManager.UndoRequested(gameStageInfo);
+    }
+
+    public void PreviousStrokeDrawStage()
+    {
+        drawingZone.HideCurrentStrokeDrawStageSprites(gameStageInfo.drawStage);
+        gameStageInfo.drawStage--;
+
+        gameStateManager.SwitchState(gameStateManager.waitingDrawLineState);
+    }
+
+    public void PreviousFillDrawStage()
+    {
+        drawingZone.HideCurrentDrawFillSprites(gameStageInfo.FillStageIndex);
+        gameStageInfo.drawStage--;
+        drawingZone.SetFillPreviewSprite(gameStageInfo.FillStageIndex);
+        gameStateManager.SwitchState(gameStateManager.drawingFillState);
+
+        Pencil.instance.UpdateColorRepres(gameStageInfo.FillStageIndex);
     }
 
     

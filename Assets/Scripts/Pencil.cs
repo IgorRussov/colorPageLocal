@@ -20,16 +20,30 @@ public class Pencil : MonoBehaviour
     public bool mustMoveForced;
     public SpriteRenderer tipSpriteRenderer;
 
-    private Color color;
-    public Color Color
+    public void UpdateColorRepres(int fillStage)
     {
-        get { return color; }
-        set
-        {
-            color = value;
-            tipSpriteRenderer.color = color;
-        }
+        if (fillStage != -1)
+            tipSpriteRenderer.color = usedColors[fillStage];
+        else
+            tipSpriteRenderer.color = Color.black;
     }
+
+    public Color GetColorByStage(int stage)
+    {
+        return usedColors[stage];
+    }
+
+    public void SetColorByStage(Color color, int stage)
+    {
+        if (stage < usedColors.Count)
+            usedColors[stage] = color;
+        else
+            usedColors.Add(color);
+        UpdateColorRepres(stage);
+    }
+
+    private List<Color> usedColors = new List<Color>();
+  
 
     private Vector3 TrueTarget
     {

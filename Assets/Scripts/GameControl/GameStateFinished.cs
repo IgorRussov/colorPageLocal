@@ -10,6 +10,7 @@ public class GameStateFinished : GameBaseState
     public override void EnterState(GameStateManager game)
     {
         UiControl.Instance.ShowFinishedText();
+        Pencil.instance.ForcedMove(new Vector2(10, -10), false);
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
@@ -25,6 +26,13 @@ public class GameStateFinished : GameBaseState
     public override void InputReleased(GameStateManager game)
     {
         
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        UiControl.Instance.HideFinishedText();
+        game.gameControl.PreviousFillDrawStage();
+
     }
 
     public override void UpdateState(GameStateManager game)

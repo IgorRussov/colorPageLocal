@@ -78,6 +78,8 @@ public struct GameStageInfo
     {
         get
         {
+            if (FinishedDrawing)
+                return fillShapesCount - 1;
             return drawStage - strokeShapesCount;
         }
     }

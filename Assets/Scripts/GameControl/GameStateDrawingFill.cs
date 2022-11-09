@@ -34,6 +34,7 @@ public class GameStateDrawingFill : GameBaseState
         pos = Vector2.zero;
         pos = Camera.main.transform.position;
         Pencil.instance.ForcedMove(pos, true);
+        textureFillers = new List<TextureFiller>();
         drawTexture = game.gameControl.drawingZone.drawFillTexture;
     }
 
@@ -46,12 +47,12 @@ public class GameStateDrawingFill : GameBaseState
         {
             Vector2Int fillerPos = new Vector2Int(Mathf.RoundToInt(pos.x * 100), Mathf.RoundToInt(pos.y * 100));
             fillerPos = new Vector2Int(fillerPos.x + drawTexture.width / 2, fillerPos.y + drawTexture.height / 2);
-            Debug.Log("Adding filler at pos + " + fillerPos);
+            //Debug.Log("Adding filler at pos + " + fillerPos);
             lastPos = pos;
             
             TextureFiller filler = new TextureFiller(
                 drawTexture,
-                Pencil.instance.Color,
+                Pencil.instance.GetColorByStage(game.gameControl.gameStageInfo.FillStageIndex),
                 Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
                 fillSpeed,
                 fillerPos
@@ -75,7 +76,7 @@ public class GameStateDrawingFill : GameBaseState
         CalculateTextureFill();
     }
 
-    List<TextureFiller> textureFillers = new List<TextureFiller>();
+    List<TextureFiller> textureFillers;
 
     private void CalculateTextureFill()
     {
@@ -88,6 +89,11 @@ public class GameStateDrawingFill : GameBaseState
             }
         }
         drawTexture.Apply();
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        game.SwitchState(game.selectColorState);
     }
 }
 

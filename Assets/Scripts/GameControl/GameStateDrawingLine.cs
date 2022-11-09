@@ -15,6 +15,7 @@ public class GameStateDrawingLine : GameBaseState
         screenPressed = true; //Game enters this state on screen press so it is true
         game.gameControl.StartDraw();
         game.gameControl.drawingZone.ShowEndLineSprite();
+        Pencil.instance.UpdateColorRepres(-1);
     }
 
     /// <summary>
@@ -58,5 +59,10 @@ public class GameStateDrawingLine : GameBaseState
     public override void InputDelta(GameStateManager game, Vector2 delta)
     {
         
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        game.SwitchState(game.waitingDrawLineState);
     }
 }

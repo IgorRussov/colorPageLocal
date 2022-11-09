@@ -264,6 +264,12 @@ public class DrawingZone : MonoBehaviour
         drawFillTexture = ShapeUtils.CreateSceneSizedTexture(Color.clear, Vector2.one * 100, false);
         fillDrawSprite.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
     }
+
+    public void HideCurrentDrawFillSprites(int fillStageIndex)
+    {
+        drawingSprites[previewStrokeShapes.Count * 2 + fillStageIndex].enabled = false;
+        fillDrawMask.sprite = null;
+    }
     
     /// <summary>
     /// Enables the preview and drawing sprite and sets drawing sprite to be not filled by line 
@@ -288,6 +294,13 @@ public class DrawingZone : MonoBehaviour
         endLineCueObject = CreateSpriteObject(endLineSprite, endLinePos, "End line marker");
 
         endLineCueObject.SetActive(false);
+    }
+
+    public void HideCurrentStrokeDrawStageSprites(int drawingStage)
+    {
+        drawingSprites[drawingStage].enabled = false;
+        drawingSprites[previewStrokeShapes.Count + drawingStage].enabled = false;
+        HideEndLineSprite();
     }
 
     /// <summary>
