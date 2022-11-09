@@ -23,7 +23,7 @@ public class PositionConverter
     {
         Vector2 pos = new Vector2(bounds.width, -bounds.height) / 2;
         pos += new Vector2(bounds.x, -bounds.y);
-        pos /= 100;
+        pos /= SvgPixelsPerUnit;
 
         return pos;
     }

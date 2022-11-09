@@ -22,6 +22,8 @@ public class DrawingZone : MonoBehaviour
     public MeshCollider drawFillBoundsMeshCollider;
     public MeshCollider drawFillBoundsMeshCollider2;
     public CameraControl cameraControl;
+    [Header("Image settings")]
+    public float desiredSvgWidth;
     [Header("Preview stroke settings")]
     public float previewStrokeWidth;
     public float previewStrokeFillLength;
@@ -134,9 +136,13 @@ public class DrawingZone : MonoBehaviour
         //patternFill = ShapeUtils.GetPatternFillFromScene(patternScene);
         patternNode = patternScene.Root;
         patternRect = VectorUtils.ApproximateSceneNodeBounds(patternScene.Root);
+
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
+        ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+
+        sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
         shapesParentObject.transform.position = -PositionConverter.GetWorldCenterPos(sceneRect);
 

@@ -323,6 +323,14 @@ public class ShapeUtils
         return ret;
     }
 
+    public static void ScaleSceneToFit(Scene scene, float desiredWitdh)
+    {
+        Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
+        float currentWidth = sceneRect.width;
+        Matrix2D matrix = Matrix2D.Scale(Vector2.one * (desiredWitdh / currentWidth));
+        scene.Root.Transform = scene.Root.Transform * matrix;
+    }
+
     /// <summary>
     /// Extracts a pattern fill from scene
     /// Not sure if it works properly, not used for now  

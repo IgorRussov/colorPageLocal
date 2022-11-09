@@ -5582,6 +5582,7 @@ MonoBehaviour:
   drawFillBoundsMeshCollider: {fileID: 641715734}
   drawFillBoundsMeshCollider2: {fileID: 1579144419}
   cameraControl: {fileID: 519420033}
+  desiredSvgWidth: 1000
   previewStrokeWidth: 10
   previewStrokeFillLength: 2
   previewStrokeEmptyLength: 20
