@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    private Camera camera;
     public float drawingPadding;
+    public Camera camera;
     // Start is called before the first frame update
     void Start()
     {
-        camera = GetComponent<Camera>();
+ 
     }
 
     // Update is called once per frame

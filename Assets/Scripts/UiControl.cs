@@ -16,7 +16,7 @@ public class UiControl : MonoBehaviour
     private GameStateSelectColor selectColorState;
     public GameObject nextFillButton;
     public GameObject startOverButton;
-    public GameObject finishedDrawingText;
+    public GameObject nextLevelButton;
 
     private void Awake()
     {
@@ -79,7 +79,12 @@ public class UiControl : MonoBehaviour
 
     public void ShowFinishedText()
     {
-        finishedDrawingText.SetActive(true);
+        nextLevelButton.SetActive(true);
+    }
+
+    public void NextLevel()
+    {
+        GameObject.FindObjectOfType<LevelManager>().NextLevel();
     }
 
     public void HideFinishedText()

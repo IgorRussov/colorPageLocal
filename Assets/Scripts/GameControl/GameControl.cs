@@ -53,6 +53,7 @@ public class GameControl : MonoBehaviour
         Instance = this;
         
         gameStateManager = gameObject.GetComponent<GameStateManager>();
+
     }
 
     /// <summary>
@@ -63,6 +64,11 @@ public class GameControl : MonoBehaviour
         Pencil.instance.BindGameControlEvents(this);
         gameStageInfo = drawingZone.SetupDrawing();
         
+    }
+
+    public void StartLevel(LevelData levelData)
+    {
+        gameStageInfo = drawingZone.SetupDrawing(levelData);
     }
 
     /// <summary>
