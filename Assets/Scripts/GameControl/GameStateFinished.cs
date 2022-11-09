@@ -28,6 +28,13 @@ public class GameStateFinished : GameBaseState
         
     }
 
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        UiControl.Instance.HideFinishedText();
+        game.gameControl.PreviousFillDrawStage();
+
+    }
+
     public override void UpdateState(GameStateManager game)
     {
         

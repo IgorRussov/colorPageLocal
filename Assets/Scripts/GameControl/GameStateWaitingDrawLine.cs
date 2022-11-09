@@ -10,6 +10,7 @@ public class GameStateWaitingDrawLine : GameBaseState
 {
     public override void EnterState(GameStateManager game)
     {
+        Pencil.instance.UpdateColorRepres(-1);
         game.gameControl.NextStrokeStage();
         Pencil.instance.SetPencilMode(PencilMode.DrawStroke);
     }
@@ -27,6 +28,13 @@ public class GameStateWaitingDrawLine : GameBaseState
     public override void InputReleased(GameStateManager game)
     {
         
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        if (info.drawStage == 0)
+            return;
+        game.gameControl.PreviousStrokeDrawStage();
     }
 
     public override void UpdateState(GameStateManager game)
