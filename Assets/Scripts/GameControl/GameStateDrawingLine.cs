@@ -16,6 +16,8 @@ public class GameStateDrawingLine : GameBaseState
         game.gameControl.StartDraw();
         game.gameControl.drawingZone.ShowEndLineSprite();
         Pencil.instance.SetPencilMode(PencilMode.DrawStroke);
+        Pencil.instance.UpdateColorRepres(-1);
+
     }
 
     /// <summary>
@@ -65,5 +67,11 @@ public class GameStateDrawingLine : GameBaseState
     public override void InputDelta(GameStateManager game, Vector2 delta)
     {
         
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        game.gameControl.drawingZone.HideEndLineSprite();
+        game.SwitchState(game.waitingDrawLineState);
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -16,13 +16,14 @@ public class GameStateSelectColor : GameBaseState
     /// <param name="color"></param>
     public void ColorSelected(Color color)
     {
-        Pencil.instance.Color = color;
+        Pencil.instance.SetColorByStage(color, stateManager.gameControl.gameStageInfo.FillStageIndex);
         stateManager.SwitchState(stateManager.drawingFillState);
 
     }
 
     public override void EnterState(GameStateManager game)
     {
+       
         stateManager = game;
         game.gameControl.drawingZone.SetFillPreviewSprite(game.gameControl.gameStageInfo.FillStageIndex); 
         UiControl.Instance.EnableColorSelection(game.gameControl.GetFillStageColors(), this);
@@ -45,6 +46,22 @@ public class GameStateSelectColor : GameBaseState
         
     }
 
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        info.drawStage--;
+        if (info.InFillStage)
+        {
+            game.gameControl.PreviousFillDrawStage();
+            
+        }
+        else
+        {
+            GameObject.FindObjectOfType<UiControl>().HideColorButtons();
+            game.gameControl.gameStageInfo.drawStage--;
+            game.gameControl.drawingZone.HideCurrentDrawFillSprites(0);
+            game.SwitchState(game.waitingDrawLineState);
+        }
+    }
 
     public override void UpdateState(GameStateManager game)
     {

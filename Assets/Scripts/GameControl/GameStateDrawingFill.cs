@@ -33,7 +33,10 @@ public class GameStateDrawingFill : GameBaseState
         lastPos = Vector2.zero;
         pos = Vector2.zero;
         pos = Camera.main.transform.position;
+
         Pencil.instance.SetPencilMode(PencilMode.DrawFill);
+        textureFillers = new List<TextureFiller>();
+
         drawTexture = game.gameControl.drawingZone.drawFillTexture;
     }
 
@@ -41,14 +44,12 @@ public class GameStateDrawingFill : GameBaseState
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
     {
-
         Vector2 acceleration = delta - previousDelta;
         previousDelta = delta;
 
         //Pencil.instance.acceleration = acceleration * game.gameControl.fillMoveSpeed * Time.deltaTime;
 
         Pencil.instance.GetDelta(delta * game.gameControl.fillMoveSpeed * Time.deltaTime);
-        
     }
 
     public override void InputPressed(GameStateManager game)
@@ -75,7 +76,7 @@ public class GameStateDrawingFill : GameBaseState
 
             TextureFiller filler = new TextureFiller(
                 drawTexture,
-                Pencil.instance.Color,
+                Pencil.instance.GetColorByStage(game.gameControl.gameStageInfo.FillStageIndex),
                 Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
                 fillSpeed,
                 fillerPos
@@ -86,7 +87,7 @@ public class GameStateDrawingFill : GameBaseState
         CalculateTextureFill();
     }
 
-    List<TextureFiller> textureFillers = new List<TextureFiller>();
+    List<TextureFiller> textureFillers;
 
     private void CalculateTextureFill()
     {
@@ -99,6 +100,11 @@ public class GameStateDrawingFill : GameBaseState
             }
         }
         drawTexture.Apply();
+    }
+
+    public override void UndoRequested(GameStateManager game, GameStageInfo info)
+    {
+        game.SwitchState(game.selectColorState);
     }
 }
 

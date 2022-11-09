@@ -35,4 +35,7 @@ public abstract class GameBaseState
     /// <param name="game"></param>
     /// <param name="delta"></param>
     public abstract void InputDelta(GameStateManager game, Vector2 delta);
+
+    public abstract void UndoRequested(GameStateManager game, GameStageInfo info);
+   
 }

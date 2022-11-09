@@ -8,6 +8,8 @@ public class UiControl : MonoBehaviour
 {
     public static UiControl Instance;
 
+    public GameControl gameControl;
+
     public GameObject colorButtonsPanel;
     public Button[] colorButtons;
     private Color[] buttonColors;
@@ -19,6 +21,7 @@ public class UiControl : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        gameControl = GameObject.FindObjectOfType<GameControl>();
     }
 
     // Start is called before the first frame update
@@ -45,7 +48,7 @@ public class UiControl : MonoBehaviour
         colorButtonsPanel.SetActive(true);
         for (int i = 0; i < buttonColors.Length; i++)
             colorButtons[i].image.color = colors[i];
-
+        nextFillButton.SetActive(false);
     }
 
     public void ColorButtonPressed(int buttonIndex)
@@ -59,6 +62,7 @@ public class UiControl : MonoBehaviour
     public void StartFill(GameStateDrawingFill drawingFillState)
     {
         this.drawingFillState = drawingFillState;
+        colorButtonsPanel.SetActive(false);
         nextFillButton.SetActive(true);
     }
 
@@ -66,6 +70,11 @@ public class UiControl : MonoBehaviour
     {
         nextFillButton.SetActive(false);
         drawingFillState.FinishFill();
+    }
+
+    public void HideColorButtons()
+    {
+        colorButtonsPanel.SetActive(false);
     }
 
     public void ShowFinishedText()
@@ -78,6 +87,14 @@ public class UiControl : MonoBehaviour
         GameObject.FindObjectOfType<LevelManager>().NextLevel();
     }
 
-  
+    public void HideFinishedText()
+    {
+        finishedDrawingText.SetActive(false);
+    }
+
+    public void UndoButtonPressed()
+    {
+        gameControl.Undo();
+    }
 
 }
