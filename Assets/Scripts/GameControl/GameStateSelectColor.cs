@@ -56,6 +56,7 @@ public class GameStateSelectColor : GameBaseState
         }
         else
         {
+            game.gameControl.drawingZone.SetAutoDrawSpritesEnabled(false);
             GameObject.FindObjectOfType<UiControl>().HideColorButtons();
             game.gameControl.gameStageInfo.drawStage--;
             game.gameControl.drawingZone.HideCurrentDrawFillSprites(0);

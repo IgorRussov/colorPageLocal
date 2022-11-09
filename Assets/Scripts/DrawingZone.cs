@@ -20,6 +20,7 @@ public class DrawingZone : MonoBehaviour
     public SpriteMask fillDrawMask;
     public GameObject shapesParentObject;
     public MeshCollider drawFillBoundsMeshCollider;
+    public MeshCollider drawFillBoundsMeshCollider2;
     public CameraControl cameraControl;
     [Header("Preview stroke settings")]
     public float previewStrokeWidth;
@@ -242,9 +243,12 @@ public class DrawingZone : MonoBehaviour
     }
     #endregion
     #region Update drawing sprites
+   
+
     public void ContinueFillDrawSprite(int drawStageIndex, Vector2 direction, float dist)
     {
-        drawStrokeShapes[drawStageIndex] = ShapeUtils.ContinueShape(drawStrokeShapes[drawStageIndex], direction, dist);
+        
+        drawStrokeShapes[drawStageIndex] = ShapeUtils.ContinueShape(previewStrokeShapes[drawStageIndex], direction, dist);
     }
 
 
@@ -274,12 +278,26 @@ public class DrawingZone : MonoBehaviour
         SetDrawFillBoundsCollider(drawStageIndex);
     }
 
+    public static Mesh CopyMesh(Mesh mesh)
+    {
+        Mesh newmesh = new Mesh();
+        newmesh.vertices = mesh.vertices;
+        newmesh.triangles = mesh.triangles;
+        newmesh.uv = mesh.uv;
+        newmesh.normals = mesh.normals;
+        newmesh.colors = mesh.colors;
+        newmesh.tangents = mesh.tangents;
+        return newmesh;
+    }
+
     public void SetDrawFillBoundsCollider(int fillStageIndex)
     {
         Shape shape = fillShapes[fillStageIndex];
         Mesh mesh = DrawingSpriteFactory.CreateMeshForCollider(shape);
+        Mesh mesh2 = CopyMesh(mesh);
+        mesh2.SetIndices(mesh2.GetIndices(0).Concat(mesh2.GetIndices(0).Reverse()).ToArray(), MeshTopology.Triangles, 0);
         drawFillBoundsMeshCollider.sharedMesh = mesh;
-
+        drawFillBoundsMeshCollider2.sharedMesh = mesh2;
     }
 
     /// <summary>
@@ -326,9 +344,14 @@ public class DrawingZone : MonoBehaviour
             drawingSprites[drawingStage - 1].enabled = false; //Disable previous preview sprite
         //Preview sprite renderer
         drawingSprites[drawingStage].enabled = true;
+
         //Draw sprite renderer
+        drawStrokeShapes[drawingStage] = ShapeUtils.CloneShape(previewStrokeShapes[drawingStage]);
         drawingSprites[previewStrokeShapes.Count + drawingStage].enabled = true;
-        UpdateStrokeDrawSprite(0, drawingStage);
+        drawingSprites[previewStrokeShapes.Count + drawingStage].sprite =
+            DrawingSpriteFactory.CreateLineSprite(previewStrokeShapes[drawingStage],
+            ShapeUtils.CreateStrokeArray(0, 10000), drawStrokeWidth, drawStrokeColor);
+
         
         //Create cue sprites
         Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0));

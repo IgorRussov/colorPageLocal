@@ -1964,6 +1964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee92228af070cc24bb2e50c6777f8895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameControl: {fileID: 0}
   colorButtonsPanel: {fileID: 1496766888}
   colorButtons:
   - {fileID: 261916733}
@@ -3384,7 +3385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: planet
+  svgFileName: Planet
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
   strokeShapeData:

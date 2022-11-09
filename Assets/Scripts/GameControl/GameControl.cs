@@ -28,6 +28,8 @@ public class GameControl : MonoBehaviour
 
     private GameStateManager gameStateManager;
 
+    public bool continuedLine;
+
     /// <summary>
     /// If the player has finished drawing the required ammount of stroke line
     /// </summary>
@@ -35,7 +37,9 @@ public class GameControl : MonoBehaviour
     {
         get
         {
-            return gameStageInfo.drawnAmmount >= gameStageInfo.strokeShapeLength - continueLineLength;
+            float needLength = gameStageInfo.strokeShapeLength - (continuedLine ? continueLineLength : 0);
+            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth / 2 > needLength;
+               
         }
     }
 
@@ -62,8 +66,6 @@ public class GameControl : MonoBehaviour
     private void Start()
     {
         Pencil.instance.BindGameControlEvents(this);
-        gameStageInfo = drawingZone.SetupDrawing();
-        
     }
 
     public void StartLevel(LevelData levelData)
@@ -84,7 +86,6 @@ public class GameControl : MonoBehaviour
     }
 
     Vector2 prevDrawShapePos;
-    bool continuedOnThisShape = false;
 
     /// <summary>
     /// Increases the length of already drawn stroke line by drawSpeed
@@ -96,13 +97,13 @@ public class GameControl : MonoBehaviour
             return;
         gameStageInfo.drawnAmmount += drawSpeed * Time.fixedDeltaTime;
         Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart);
-        if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedOnThisShape)
+        if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedLine)
         {
             Debug.Log("CONTINUE");
             Vector2 direction = newDrawShapePos - prevDrawShapePos;
             drawingZone.ContinueFillDrawSprite(gameStageInfo.drawStage, direction, continueLineLength);
             gameStageInfo.strokeShapeLength += continueLineLength;
-            continuedOnThisShape = true;
+            continuedLine = true;
         }
         prevDrawShapePos = newDrawShapePos;
         drawingZone.UpdateStrokeDrawSprite(gameStageInfo.drawnAmmount, gameStageInfo.drawStage);
@@ -125,8 +126,9 @@ public class GameControl : MonoBehaviour
         Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
             drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0)
             ), false);
-        continuedOnThisShape = false;
+        continuedLine = false;
         gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage, false);
+        Debug.Log(gameStageInfo.strokeShapeLength);
         canDraw = true;
     }
 

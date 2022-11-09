@@ -89,7 +89,7 @@ public class UiControl : MonoBehaviour
 
     public void HideFinishedText()
     {
-        finishedDrawingText.SetActive(false);
+        nextLevelButton.SetActive(false);
     }
 
     public void UndoButtonPressed()

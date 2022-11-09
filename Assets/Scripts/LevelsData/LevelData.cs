@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +31,7 @@ public class LevelData : ScriptableObject
     public void InitColorsArray(int rows, int cols)
     {
         colors = new ColorRow[rows];
-        for(int i = 0; i < rows; i++)
+        for (int i = 0; i < rows; i++)
         {
             colors[i].row = new ColorData[cols];
         }
@@ -63,4 +63,3 @@ public class LevelData : ScriptableObject
     }
 
 }
-#endif

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: planet_level
+  m_Name: Planet_level
   m_EditorClassIdentifier: 
-  svgFileName: planet
+  svgFileName: Planet
   strokeShapesOrder: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
   fillShapesOrder: 00000000010000000200000003000000
   colors:
@@ -21,50 +21,50 @@ MonoBehaviour:
       g: 173
       b: 175
       a: 255
-    - r: 176
-      g: 173
-      b: 178
+    - r: 226
+      g: 198
+      b: 5
       a: 255
-    - r: 178
-      g: 173
-      b: 177
+    - r: 13
+      g: 175
+      b: 190
       a: 255
   - row:
     - r: 217
       g: 222
       b: 226
       a: 255
-    - r: 217
-      g: 226
-      b: 221
+    - r: 161
+      g: 23
+      b: 0
       a: 255
-    - r: 217
-      g: 225
-      b: 226
+    - r: 207
+      g: 202
+      b: 28
       a: 255
   - row:
     - r: 103
       g: 158
       b: 219
       a: 255
-    - r: 103
-      g: 219
-      b: 164
+    - r: 29
+      g: 188
+      b: 17
       a: 255
-    - r: 103
-      g: 197
-      b: 219
+    - r: 96
+      g: 30
+      b: 23
       a: 255
   - row:
     - r: 230
       g: 186
       b: 138
       a: 255
-    - r: 230
-      g: 138
-      b: 182
+    - r: 255
+      g: 214
+      b: 0
       a: 255
-    - r: 230
-      g: 155
-      b: 138
+    - r: 255
+      g: 255
+      b: 255
       a: 255

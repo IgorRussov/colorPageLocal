@@ -274,7 +274,7 @@ public class DrawingSpriteFactory
         Vector2 pos = new Vector2(p[0].x, p[0].y) / PositionConverter.SvgPixelsPerUnit;
 
         //Debug.Log("Next pos: " + pos);
-        pos += (avg - pos) * 0.1f;
+        pos += (avg - pos) * 0.05f;
         //Debug.Log("Next pos + avg: " + pos); 
         Pencil.PosForNextFillShape = pos;
 
