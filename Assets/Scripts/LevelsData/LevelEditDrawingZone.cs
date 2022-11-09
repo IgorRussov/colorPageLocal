@@ -26,6 +26,10 @@ public class LevelEditDrawingZone : MonoBehaviour
     private SpriteRenderer[] strokeSpriteRenderers;
     private SpriteRenderer[] fillSpriteRenderers;
 
+    private List<Shape> strokeShapes;
+    private List<Shape> fillShapes;
+    private LevelData levelData;
+
     private VectorUtils.TessellationOptions Options
     {
         get
@@ -46,21 +50,21 @@ public class LevelEditDrawingZone : MonoBehaviour
     public void OnDrawGizmos()
     {
         /*
-        for(int i = 0; i < handlesPositions.Count; i++)
-        {
-            Handles.Label(handlesPositions[i], handlesText[i]);
-        }
-        */
         for (int i = 0; i < handlesPositions.Count; i++)
         {
             GUIStyle style = new GUIStyle();
             style.normal.textColor = Color.green;
             Handles.Label(handlesPositions[i], handlesText[i], style);
         }
+        */
     }
 
     public void ShowAllDrawing(LevelData levelData, List<Shape> strokeShapes, List<Shape> fillShapes)
     {
+        this.fillShapes = fillShapes;
+        this.strokeShapes = strokeShapes;
+        this.levelData = levelData;
+
         DrawingZone.TesselationOptions = Options;
         PositionConverter.SvgPixelsPerUnit = svgPixelsPerUnit;
 
@@ -96,6 +100,34 @@ public class LevelEditDrawingZone : MonoBehaviour
                 strokeShapes[i], new float[] { 1000000, 0 }, drawStrokeWidth, drawStrokeColor);
         }
         GameObject.Destroy(originalFillSprite);
+    }
+
+    private int prevHighlightStroke = -1;
+    public void HighlightStrokeShape(int strokeShapeId)
+    {
+        if (strokeShapeId < 0 || strokeShapeId >= strokeShapes.Count)
+            return;
+        if (prevHighlightStroke != -1)
+            strokeSpriteRenderers[prevHighlightStroke].sprite = DrawingSpriteFactory.CreateLineSprite
+            (strokeShapes[prevHighlightStroke], new float[] { 100000, 0 }, drawStrokeWidth, drawStrokeColor);
+        prevHighlightStroke = strokeShapeId;
+        strokeSpriteRenderers[strokeShapeId].sprite = DrawingSpriteFactory.CreateLineSprite
+            (strokeShapes[strokeShapeId], new float[] { 100000, 0 }, drawStrokeWidth, Color.red);
+
+    }
+
+    private int prevHighlightFill = -1;
+    public void HighlightFillShape(int fillShapeId)
+    {
+        if (fillShapeId < 0 || fillShapeId >= fillShapes.Count)
+            return;
+        if (prevHighlightFill != -1)
+            fillSpriteRenderers[prevHighlightFill].sprite = DrawingSpriteFactory.CreateSolidColorFillSprite
+                (fillShapes[prevHighlightFill], levelData.GetColor(prevHighlightFill, 0));
+        prevHighlightFill = fillShapeId;
+        fillSpriteRenderers[prevHighlightFill].sprite = DrawingSpriteFactory.CreateSolidColorFillSprite
+                (fillShapes[prevHighlightFill], Color.red);
+
     }
 
 }

@@ -28,6 +28,7 @@ public class GameControl : MonoBehaviour
 
     private GameStateManager gameStateManager;
 
+    [HideInInspector]
     public bool continuedLine;
 
     /// <summary>
@@ -38,7 +39,7 @@ public class GameControl : MonoBehaviour
         get
         {
             float needLength = gameStageInfo.strokeShapeLength - (continuedLine ? continueLineLength : 0);
-            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth / 2 > needLength;
+            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth  > needLength;
                
         }
     }
