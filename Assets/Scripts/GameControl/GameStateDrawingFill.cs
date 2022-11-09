@@ -76,7 +76,7 @@ public class GameStateDrawingFill : GameBaseState
 
             TextureFiller filler = new TextureFiller(
                 drawTexture,
-                Pencil.instance.Color,
+                Pencil.instance.GetColorByStage(game.gameControl.gameStageInfo.FillStageIndex),
                 Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
                 fillSpeed,
                 fillerPos

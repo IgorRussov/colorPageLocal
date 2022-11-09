@@ -66,6 +66,7 @@ public class GameStateDrawingLine : GameBaseState
 
     public override void UndoRequested(GameStateManager game, GameStageInfo info)
     {
+        game.gameControl.drawingZone.HideEndLineSprite();
         game.SwitchState(game.waitingDrawLineState);
     }
 }

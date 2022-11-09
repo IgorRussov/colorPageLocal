@@ -173,7 +173,7 @@ MonoBehaviour:
   freeMoveSpeed: 1
   liftedOffset: {x: 0.3, y: 0.3}
   lifted: 0
-  liftSpeed: 10
+  liftSpeed: 0
   tipSpriteRenderer: {fileID: 1838675362}
   pencilRepresObject: {fileID: 81655338}
   acceleration: {x: 0, y: 0}
@@ -5468,7 +5468,7 @@ MonoBehaviour:
   maxTanAngleDeviation: 1.57
   samplingStepSize: 0.01
   svgPixelsPerUnit: 100
-  svgFileName: Planet
+  svgFileName: panda
   patternSvgFileName: pattern
   startLineSprite: {fileID: 21300000, guid: 1770750481546ab45aaa342124e8bb21, type: 3}
   endLineSprite: {fileID: 21300000, guid: a9dbf9e10a143974e8c266efe97fece8, type: 3}
