@@ -68,6 +68,7 @@ public struct FillShapeData
 
 public class LevelDataWorker : MonoBehaviour
 {
+    public LevelEditDrawingZone drawingZone;
     [Header("Initial level data will be generated from this. Must be in StreamingAssets/VectorFiles")]
     public string svgFileName;
     [Header("Values to edit level data")]
@@ -77,6 +78,25 @@ public class LevelDataWorker : MonoBehaviour
     public FillShapeData[] fillShapeData;
 
     private LevelData originalLevelData;
+
+    private int colorOptionsCount = 3;
+
+    public bool wantRead;
+    public bool wantSave;
+
+    private void FixedUpdate()
+    {
+        if (wantRead)
+        {
+            ReadLevelData();
+            wantRead = false;
+        }
+        if (wantSave)
+        {
+            SaveLevelData();
+            wantSave = false;
+        }
+    }
 
     public void ReadLevelData()
     {
@@ -94,12 +114,14 @@ public class LevelDataWorker : MonoBehaviour
         originalLevelData.fillShapesOrder = new int[fillShapes.Count];
         for (int i = 0; i < originalLevelData.fillShapesOrder.Length; i++)
             originalLevelData.fillShapesOrder[i] = i;
-        originalLevelData.fillShapesColors = new Color[fillShapes.Count][];
+        originalLevelData.InitColorsArray(fillShapes.Count, colorOptionsCount);
 
         for(int i = 0; i < originalLevelData.fillShapesOrder.Length; i++)
         {
             SolidFill fill = fillShapes[i].Fill as SolidFill;
-            originalLevelData.fillShapesColors[i] = ColorUtils.GetAdjacentColors(fill.Color, 3, 60).ToArray();
+            List<Color32> colors = ColorUtils.GetAdjacentColors(fill.Color, colorOptionsCount, 60);
+            for (int j = 0; j < colorOptionsCount; j++)
+                originalLevelData.SetColor(colors[j], i, j);
         }
 
         nameWhenSaved = svgFileName + "_level";
@@ -109,13 +131,13 @@ public class LevelDataWorker : MonoBehaviour
         fillShapeData = new FillShapeData[fillShapes.Count];
         for(int i = 0; i < fillShapes.Count; i++)
         {
-            fillShapeData[i] = new FillShapeData(i, i, originalLevelData.fillShapesColors[i][0],
+            fillShapeData[i] = new FillShapeData(i, i, originalLevelData.GetColor(i, 0),
                 new Color[2]);
-            fillShapeData[i].possibleColors[0] = originalLevelData.fillShapesColors[i][1];
-            fillShapeData[i].possibleColors[1] = originalLevelData.fillShapesColors[i][2];
+            fillShapeData[i].possibleColors[0] = originalLevelData.GetColor(i, 1);
+            fillShapeData[i].possibleColors[1] = originalLevelData.GetColor(i, 2);
         }
-            
-        
+
+        drawingZone.ShowAllDrawing(originalLevelData, strokeShapes, fillShapes);
     }
 
     public void SaveLevelData()
@@ -130,17 +152,14 @@ public class LevelDataWorker : MonoBehaviour
                 strokeShapeData[i].order;
 
         levelData.fillShapesOrder = new int[fillShapeData.Length];
-        levelData.fillShapesColors = new Color[fillShapeData.Length][];
+        levelData.InitColorsArray(fillShapeData.Length, colorOptionsCount);
         for(int i = 0; i < fillShapeData.Length; i++)
         {
             levelData.fillShapesOrder[i] = fillShapeData[i].order;
-            levelData.fillShapesColors[i] = new Color[fillShapeData[i].possibleColors.Length + 1];
-            levelData.fillShapesColors[i][0] = fillShapeData[i].mainColor;
-            Array.Copy(fillShapeData[i].possibleColors,
-                0,
-                levelData.fillShapesColors[i],
-                1,
-                fillShapeData[i].possibleColors.Length);
+            levelData.SetColor(fillShapeData[i].mainColor, i, 0);
+            for (int j = 1; j < colorOptionsCount; j++)
+                levelData.SetColor(fillShapeData[i].possibleColors[j - 1], i, j);
+
         }
 
         AssetDatabase.CreateAsset(levelData, FileIO.GetLevelDataPath(nameWhenSaved, saveFolder));

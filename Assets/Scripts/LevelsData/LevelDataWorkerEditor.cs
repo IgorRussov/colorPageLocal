@@ -13,13 +13,13 @@ public class LevelDataWorkerEditor : Editor
         DrawDefaultInspector();
 
         LevelDataWorker myScript = (LevelDataWorker)target;
-        if (GUILayout.Button("Read level data"))
+        if (GUILayout.Button("Read level data (LAUNCH GAME)"))
         {
-            myScript.ReadLevelData();
+            myScript.wantRead = true;
         }
-        if (GUILayout.Button("Save level data"))
+        if (GUILayout.Button("Save level data (LAUNCH GAME)"))
         {
-            myScript.SaveLevelData();
+            myScript.wantSave = true;
         }
     }
 }

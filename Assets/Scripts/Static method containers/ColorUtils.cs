@@ -25,16 +25,17 @@ public class ColorUtils : MonoBehaviour
     /// <param name="totalColors">How many colors are required</param>
     /// <param name="maxDeviation">Distance of first color hue from the center color (on a 360 scale)</param>
     /// <returns></returns>
-    public static List<Color> GetAdjacentColors(Color centerColor, int totalColors, float maxDeviation)
+    public static List<Color32> GetAdjacentColors(Color centerColor, int totalColors, float maxDeviation)
     {
         maxDeviation = maxDeviation / 360;
         float H, S, V;
         Color.RGBToHSV(centerColor, out H, out S, out V);
 
-        List<Color> result = new List<Color>();
+        List<Color32> result = new List<Color32>();
         result.Add(centerColor);
         for (int i = 0; i < totalColors - 0; i++)
             result.Add(Color.HSVToRGB(Mathf.Lerp(H - maxDeviation, H + maxDeviation, (float)i / totalColors - 0), S, V));
+  
         return result;
     }
 }

@@ -28,7 +28,12 @@ public class GameStateDrawingLine : GameBaseState
         if (game.gameControl.TryEndDraw())
         { //Ended this line
             if (game.gameControl.gameStageInfo.InFillStage)
+            {
+                game.gameControl.drawingZone.SetAutoDrawSpritesEnabled(true);
                 game.SwitchState(game.selectColorState);
+
+            }
+                
             else
                 game.SwitchState(game.waitingDrawLineState);
         }
