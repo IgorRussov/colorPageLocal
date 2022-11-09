@@ -2,23 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PencilMode
+{
+    Inactive,
+    DrawStroke,
+    DrawFill
+}
+
 /// <summary>
 /// Class which controlls the pencil - graphic representation of drawing
 /// </summary>
 public class Pencil : MonoBehaviour
 {
+    public static Vector2 PosForNextFillShape;
+
     public static Pencil instance;
+
+    [HideInInspector]
+    private PencilMode pencilMode;
 
     public float forcedMoveSpeed;
     public float freeMoveSpeed;
     public Vector2 liftedOffset;
     [HideInInspector]
     public bool lifted;
-    [HideInInspector]
-    public bool mustDraw;
-    [HideInInspector]
-    public bool mustMoveForced;
+    private float liftedAmmount;
+    public float liftSpeed;
     public SpriteRenderer tipSpriteRenderer;
+    public GameObject pencilRepresObject;
+
+    private Rigidbody rigidbody;
+    private Collider collider;
+
+    [HideInInspector]
+    public Vector2 acceleration;
 
     public void UpdateColorRepres(int fillStage)
     {
@@ -32,6 +49,7 @@ public class Pencil : MonoBehaviour
     {
         return usedColors[stage];
     }
+
 
     public void SetColorByStage(Color color, int stage)
     {
@@ -75,23 +93,57 @@ public class Pencil : MonoBehaviour
     void Start()
     {
         instance = this;
+        rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponentInChildren<Collider>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        UpdateForcedMove();
+        if (pencilMode == PencilMode.DrawStroke)
+            UpdateForcedMove();
+        else if (pencilMode == PencilMode.DrawFill)
+            UpdateDrawFill();
+        UpdateRepresPosition();
+    }
+
+    void UpdateDrawFill()
+    {
+        //if (acceleration != Vector2.zero)
+        //{
+            //rigidbody.AddForce(acceleration);
+            //acceleration = Vector2.zero;
+            rigidbody.velocity = delta;
+            delta = Vector2.zero;
+        //}
+
+
+    }
+
+    void UpdateRepresPosition()
+    {
+        if (lifted && liftedAmmount != 1)
+        {
+            liftedAmmount = Mathf.Min(1, liftedAmmount + liftSpeed * Time.deltaTime);
+            pencilRepresObject.transform.localPosition = liftedOffset * liftedAmmount;
+        }
+        else if (!lifted && liftedAmmount != 0)
+        {
+            liftedAmmount = Mathf.Max(0, liftedAmmount - liftSpeed * Time.deltaTime);
+            pencilRepresObject.transform.localPosition = liftedOffset * liftedAmmount;
+        }
+
     }
 
     void UpdateForcedMove()
     {
-        Vector3 pos = transform.localPosition;
-        Vector2 toTarget = TrueTarget - pos;
+        Vector2 pos = transform.localPosition;
+        Vector2 toTarget = target - pos;
         float dist = toTarget.magnitude;
         if (dist > float.Epsilon)
         {
             float moveDist = Mathf.Min(dist, forcedMoveSpeed * Time.deltaTime);
-            transform.Translate(toTarget.normalized * moveDist);
+            rigidbody.MovePosition((Vector2)transform.position + (toTarget.normalized * moveDist));
         }
     }
 
@@ -99,9 +151,40 @@ public class Pencil : MonoBehaviour
     {
         lifted = false;
     }
-
+    
     public void LiftPencil()
     {
-        lifted = false;
+        //Debug.Log("LIFT");
+        lifted = true;
+    }
+
+    private Vector2 delta;
+    public void GetDelta(Vector2 delta)
+    {
+        //Debug.Log("GET delta" + delta);
+        this.delta = delta;
+    }
+
+    public void MoveToPosForNextFillShape()
+    {
+        rigidbody.MovePosition(PosForNextFillShape + (Vector2)transform.parent.position);
+    }
+
+    public void SetPencilMode(PencilMode newMode)
+    {
+        pencilMode = newMode;
+        switch(newMode)
+        {
+            case (PencilMode.Inactive):
+                collider.enabled = false;
+                break;
+            case (PencilMode.DrawFill):
+                
+                collider.enabled = true;
+                break;
+            case (PencilMode.DrawStroke):
+                collider.enabled = false;
+                break;
+        }
     }
 }

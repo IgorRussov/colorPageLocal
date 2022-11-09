@@ -33,32 +33,23 @@ public class GameStateDrawingFill : GameBaseState
         lastPos = Vector2.zero;
         pos = Vector2.zero;
         pos = Camera.main.transform.position;
-        Pencil.instance.ForcedMove(pos, true);
+
+        Pencil.instance.SetPencilMode(PencilMode.DrawFill);
         textureFillers = new List<TextureFiller>();
+
         drawTexture = game.gameControl.drawingZone.drawFillTexture;
     }
 
+    private Vector2 previousDelta = Vector2.zero;
+
     public override void InputDelta(GameStateManager game, Vector2 delta)
-    { 
-        delta = delta * Time.deltaTime * game.gameControl.fillMoveSpeed;
-        pos += delta;
-        Pencil.instance.ForcedMove(pos, true);
-        if ((lastPos - pos).magnitude > minPointDiff)
-        {
-            Vector2Int fillerPos = new Vector2Int(Mathf.RoundToInt(pos.x * 100), Mathf.RoundToInt(pos.y * 100));
-            fillerPos = new Vector2Int(fillerPos.x + drawTexture.width / 2, fillerPos.y + drawTexture.height / 2);
-            //Debug.Log("Adding filler at pos + " + fillerPos);
-            lastPos = pos;
-            
-            TextureFiller filler = new TextureFiller(
-                drawTexture,
-                Pencil.instance.GetColorByStage(game.gameControl.gameStageInfo.FillStageIndex),
-                Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
-                fillSpeed,
-                fillerPos
-                );
-            textureFillers.Add(filler); 
-        }
+    {
+        Vector2 acceleration = delta - previousDelta;
+        previousDelta = delta;
+
+        //Pencil.instance.acceleration = acceleration * game.gameControl.fillMoveSpeed * Time.deltaTime;
+
+        Pencil.instance.GetDelta(delta * game.gameControl.fillMoveSpeed * Time.deltaTime);
     }
 
     public override void InputPressed(GameStateManager game)
@@ -69,10 +60,30 @@ public class GameStateDrawingFill : GameBaseState
     public override void InputReleased(GameStateManager game)
     {
         Pencil.instance.lifted = true;
+        previousDelta = Vector2.zero;
     }
 
     public override void UpdateState(GameStateManager game)
     {
+        Vector2 pos = Pencil.instance.gameObject.transform.position;
+
+        if ((lastPos - pos).magnitude > minPointDiff)
+        {
+            Vector2Int fillerPos = new Vector2Int(Mathf.RoundToInt(pos.x * 100), Mathf.RoundToInt(pos.y * 100));
+            fillerPos = new Vector2Int(fillerPos.x + drawTexture.width / 2, fillerPos.y + drawTexture.height / 2);
+            //Debug.Log("Adding filler at pos + " + fillerPos);
+            lastPos = pos;
+
+            TextureFiller filler = new TextureFiller(
+                drawTexture,
+                Pencil.instance.Color,
+                Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
+                fillSpeed,
+                fillerPos
+                );
+            textureFillers.Add(filler);
+        }
+
         CalculateTextureFill();
     }
 

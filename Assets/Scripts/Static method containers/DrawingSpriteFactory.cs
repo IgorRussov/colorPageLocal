@@ -119,6 +119,12 @@ public class DrawingSpriteFactory
 
     #endregion
     #region Create generic sprite
+    private static List<VectorUtils.Geometry> GetGeomFromScene(Scene scene)
+    {
+        return VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
+    }
+    
+    
     /// <summary>
     /// Creates a sprite from a vector scene
     /// </summary>
@@ -135,7 +141,7 @@ public class DrawingSpriteFactory
         ushort gradientResolution = 64,
         bool flipYaxis = true)
     {
-        List<VectorUtils.Geometry> geom = VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
+        List<VectorUtils.Geometry> geom = GetGeomFromScene(scene);
         if (needAtlas)
         {
             VectorUtils.GenerateAtlasAndFillUVs(geom, 128);
@@ -249,6 +255,84 @@ public class DrawingSpriteFactory
             new Rect(0f, 0f, texture.width, texture.height), 
             Vector2.one * 0.5f);
     }
+
+    private static Mesh CreateMeshFromPoints(Vector2[] p, float height)
+    {
+        Vector2 avg = Vector2.zero;
+        int l = p.Length;
+        height *= -PositionConverter.SvgPixelsPerUnit;
+        Vector3[] vertices = new Vector3[l * 2];
+        for(int i = 0; i < l; i++)
+        {
+            avg += p[i];
+
+            vertices[i] = new Vector3(p[i].x, p[i].y, 0) / PositionConverter.SvgPixelsPerUnit;
+            vertices[l + i] = new Vector3(p[i].x, p[i].y, height) / PositionConverter.SvgPixelsPerUnit;
+        }
+
+        avg = avg / p.Length / PositionConverter.SvgPixelsPerUnit;
+        Vector2 pos = new Vector2(p[0].x, p[0].y) / PositionConverter.SvgPixelsPerUnit;
+
+        //Debug.Log("Next pos: " + pos);
+        pos += (avg - pos) * 0.1f;
+        //Debug.Log("Next pos + avg: " + pos); 
+        Pencil.PosForNextFillShape = pos;
+
+        int[] triangles = new int[l * 6];
+        for(int i = 0; i < l; i++)
+        {
+            //triangle 1
+            triangles[6 * i] = i;   //point i
+            triangles[6 * i + 1] = (i + 1) % l; //next point on contour after i 
+            triangles[6 * i + 2] = (i + l); //point above i
+            //triangle 2
+            triangles[6 * i + 3] = (i + 1) % l; //next point on contour after i 
+            triangles[6 * i + 4] = (i + 1) % l + l; //point above next point on contour after i 
+            triangles[6 * i + 5] = (i + l); //point above i
+        }
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+
+        return mesh;
+    }
+
+    private static Mesh CreateMeshFromShape(Shape shape)
+    {
+        Vector2[] points = ShapeUtils.PointsFromShape(shape, 10, 1);
+        for (int i = 0; i < points.Length; i++)
+            points[i] = new Vector2(points[i].x, -points[i].y);
+        return CreateMeshFromPoints(points, 1);
+    }
+
+    private static Mesh CreateMeshFromBounds(Rect bounds)
+    {
+        Vector2[] rectBounds = new Vector2[4];
+        rectBounds[0] = new Vector2(bounds.x, -bounds.y);
+        rectBounds[1] = new Vector2(bounds.x, -bounds.y - bounds.height);
+        rectBounds[2] = new Vector2(bounds.x + bounds.width, -bounds.y - bounds.height);
+        rectBounds[3] = new Vector2(bounds.x + bounds.width, -bounds.y);
+
+        return CreateMeshFromPoints(rectBounds, 1);
+    }
+
+    public static Mesh CreateMeshForCollider(Shape shape)
+    {
+
+        Shape newShape = null;
+        Scene newScene = CreateSceneWithClonedShape(shape, out newShape);
+     
+        if (shape.Contours.Length > 1)
+        {
+            return CreateMeshFromBounds(VectorUtils.SceneNodeBounds(newScene.Root));
+        }
+        else
+        {
+            return CreateMeshFromShape(newShape);
+        }
+    }
+
     #endregion
 
 }

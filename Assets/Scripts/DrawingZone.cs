@@ -18,6 +18,7 @@ public class DrawingZone : MonoBehaviour
     public SpriteRenderer fillDrawSprite;
     public SpriteMask fillDrawMask;
     public GameObject shapesParentObject;
+    public MeshCollider drawFillBoundsMeshCollider;
     [Header("Preview stroke settings")]
     public float previewStrokeWidth;
     public float previewStrokeFillLength;
@@ -236,6 +237,15 @@ public class DrawingZone : MonoBehaviour
         fillDrawSprite.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
 
         SetMaskSprite(drawStageIndex);
+        SetDrawFillBoundsCollider(drawStageIndex);
+    }
+
+    public void SetDrawFillBoundsCollider(int fillStageIndex)
+    {
+        Shape shape = fillShapes[fillStageIndex];
+        Mesh mesh = DrawingSpriteFactory.CreateMeshForCollider(shape);
+        drawFillBoundsMeshCollider.sharedMesh = mesh;
+
     }
 
     /// <summary>

@@ -15,7 +15,9 @@ public class GameStateDrawingLine : GameBaseState
         screenPressed = true; //Game enters this state on screen press so it is true
         game.gameControl.StartDraw();
         game.gameControl.drawingZone.ShowEndLineSprite();
+        Pencil.instance.SetPencilMode(PencilMode.DrawStroke);
         Pencil.instance.UpdateColorRepres(-1);
+
     }
 
     /// <summary>
@@ -24,6 +26,7 @@ public class GameStateDrawingLine : GameBaseState
     /// <param name="game"></param>
     private void PauseDrawing(GameStateManager game)
     {
+
         if (game.gameControl.TryEndDraw())
         { //Ended this line
             if (game.gameControl.gameStageInfo.InFillStage)
