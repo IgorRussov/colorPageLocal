@@ -3385,76 +3385,65 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: Planet
+  svgFileName: panda
+  sourceLevelData: {fileID: 0}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
   strokeShapeData:
   - strokeShapeId: 0
-    order: 0
     autoDraw: 0
   - strokeShapeId: 1
-    order: 1
     autoDraw: 0
   - strokeShapeId: 2
-    order: 2
     autoDraw: 0
   - strokeShapeId: 3
-    order: 3
     autoDraw: 0
   - strokeShapeId: 4
-    order: 4
     autoDraw: 0
   - strokeShapeId: 5
-    order: 5
     autoDraw: 0
   - strokeShapeId: 6
-    order: 6
     autoDraw: 0
   - strokeShapeId: 7
-    order: 7
     autoDraw: 0
   - strokeShapeId: 8
-    order: 8
     autoDraw: 0
   - strokeShapeId: 9
-    order: 9
     autoDraw: 0
   - strokeShapeId: 10
-    order: 10
     autoDraw: 0
   - strokeShapeId: 11
-    order: 11
     autoDraw: 0
   - strokeShapeId: 12
-    order: 12
     autoDraw: 0
   fillShapeData:
   - fillShapeId: 0
-    order: 0
     mainColor: {r: 0.69803923, g: 0.6784314, b: 0.6862745, a: 1}
     possibleColors:
     - {r: 0.6901961, g: 0.6784314, b: 0.69803923, a: 1}
     - {r: 0.69803923, g: 0.6784314, b: 0.69411767, a: 1}
   - fillShapeId: 1
-    order: 1
     mainColor: {r: 0.8509804, g: 0.87058824, b: 0.8862745, a: 1}
     possibleColors:
     - {r: 0.8509804, g: 0.8862745, b: 0.8666667, a: 1}
     - {r: 0.8509804, g: 0.88235295, b: 0.8862745, a: 1}
   - fillShapeId: 2
-    order: 2
     mainColor: {r: 0.40392157, g: 0.61960787, b: 0.85882354, a: 1}
     possibleColors:
     - {r: 0.40392157, g: 0.85882354, b: 0.6431373, a: 1}
     - {r: 0.40392157, g: 0.77254903, b: 0.85882354, a: 1}
   - fillShapeId: 3
-    order: 3
     mainColor: {r: 0.9019608, g: 0.7294118, b: 0.5411765, a: 1}
     possibleColors:
     - {r: 0.9019608, g: 0.5411765, b: 0.7137255, a: 1}
     - {r: 0.9019608, g: 0.60784316, b: 0.5411765, a: 1}
   wantRead: 0
   wantSave: 0
+  wantReadData: 0
+  highlightStrokeShapeId: 0
+  wantHighlightStroke: 0
+  highlightFillShapeId: 0
+  wantHighlightFill: 0
 --- !u!4 &976693194
 Transform:
   m_ObjectHideFlags: 0

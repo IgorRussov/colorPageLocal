@@ -36,13 +36,11 @@ public struct StrokeShapeData
 {
     [ReadOnly]
     public int strokeShapeId;
-    public int order;
     public bool autoDraw;
 
-    public StrokeShapeData(int strokeShapeId, int order, bool autoDraw)
+    public StrokeShapeData(int strokeShapeId, bool autoDraw)
     {
         this.strokeShapeId = strokeShapeId;
-        this.order = order;
         this.autoDraw = autoDraw;
     }
 }
@@ -52,15 +50,13 @@ public struct FillShapeData
 {
     [ReadOnly]
     public int fillShapeId;
-    public int order;
     [ReadOnly]
     public Color mainColor;
     public Color[] possibleColors;
 
-    public FillShapeData(int fillShapeId, int order, Color mainColor, Color[] possibleColors)
+    public FillShapeData(int fillShapeId, Color mainColor, Color[] possibleColors)
     {
         this.fillShapeId = fillShapeId;
-        this.order = order;
         this.mainColor = mainColor;
         this.possibleColors = possibleColors;
     }
@@ -69,9 +65,11 @@ public struct FillShapeData
 public class LevelDataWorker : MonoBehaviour
 {
     public LevelEditDrawingZone drawingZone;
-    [Header("Initial level data will be generated from this. Must be in StreamingAssets/VectorFiles")]
+    [Header("Create level data from svg file")]
     public string svgFileName;
-    [Header("Values to edit level data")]
+    [Header("Edit existing level data")]
+    public LevelData sourceLevelData;
+    [Header("Edited data info")]
     public string nameWhenSaved;
     public string saveFolder;
     public StrokeShapeData[] strokeShapeData;
@@ -80,15 +78,27 @@ public class LevelDataWorker : MonoBehaviour
     private LevelData originalLevelData;
 
     private int colorOptionsCount = 3;
-
+ 
     public bool wantRead;
+   
     public bool wantSave;
+  
+    public bool wantReadData;
+
+    [Header("Enter id of stroke shape to highlight")]
+    public int highlightStrokeShapeId;
+  
+    public bool wantHighlightStroke;
+    [Header("Enter id of fill shape to highlight")]
+    public int highlightFillShapeId;
+
+    public bool wantHighlightFill;
 
     private void FixedUpdate()
     {
         if (wantRead)
         {
-            ReadLevelData();
+            ReadLevelDataFromSvg();
             wantRead = false;
         }
         if (wantSave)
@@ -96,9 +106,59 @@ public class LevelDataWorker : MonoBehaviour
             SaveLevelData();
             wantSave = false;
         }
+        if (wantHighlightStroke)
+        {
+            HighlightStrokeShape();
+            wantHighlightStroke = false;
+        }
+        if (wantHighlightFill)
+        {
+            HighlightFillShape();
+            wantHighlightFill = false;
+        }
+        if (wantReadData)
+        {
+            ReadExistingLevelData();
+            wantReadData = false;
+        }
     }
 
-    public void ReadLevelData()
+    public void ReadExistingLevelData()
+    {
+        Scene vectorScene = FileIO.GetVectorSceneFromFile(sourceLevelData.svgFileName);
+        List<Shape> strokeShapes = new List<Shape>();
+        List<Shape> fillShapes = new List<Shape>();
+
+        ShapeUtils.SeparateStrokeAndFill(vectorScene, out strokeShapes, out fillShapes);
+
+        originalLevelData = GameObject.Instantiate(sourceLevelData);
+
+        nameWhenSaved = sourceLevelData.svgFileName + "_level";
+
+        strokeShapeData = new StrokeShapeData[strokeShapes.Count];
+        int autoDrawIndex = strokeShapes.Count - 1;
+        for (int i = 0; i < strokeShapes.Count; i++)
+        {
+            int baseIndex = originalLevelData.strokeShapesOrder[i];
+            int index = baseIndex != -1 ? baseIndex : autoDrawIndex--;
+            strokeShapeData[index] = new StrokeShapeData(i, baseIndex == -1);
+        }
+            
+
+        fillShapeData = new FillShapeData[fillShapes.Count];
+        for (int i = 0; i < fillShapes.Count; i++)
+        {
+            int index = originalLevelData.fillShapesOrder[i];
+            fillShapeData[index] = new FillShapeData(i, originalLevelData.GetColor(i, 0),
+                new Color[2]);
+            fillShapeData[index].possibleColors[0] = originalLevelData.GetColor(i, 1);
+            fillShapeData[index].possibleColors[1] = originalLevelData.GetColor(i, 2);
+        }
+
+        drawingZone.ShowAllDrawing(originalLevelData, strokeShapes, fillShapes);
+    }
+
+    public void ReadLevelDataFromSvg()
     {
         Scene vectorScene = FileIO.GetVectorSceneFromFile(svgFileName);
         List<Shape> strokeShapes = new List<Shape>();
@@ -127,11 +187,11 @@ public class LevelDataWorker : MonoBehaviour
         nameWhenSaved = svgFileName + "_level";
         strokeShapeData = new StrokeShapeData[strokeShapes.Count];
         for (int i = 0; i < strokeShapes.Count; i++)
-            strokeShapeData[i] = new StrokeShapeData(i, i, false);
+            strokeShapeData[i] = new StrokeShapeData(i, false);
         fillShapeData = new FillShapeData[fillShapes.Count];
         for(int i = 0; i < fillShapes.Count; i++)
         {
-            fillShapeData[i] = new FillShapeData(i, i, originalLevelData.GetColor(i, 0),
+            fillShapeData[i] = new FillShapeData(i, originalLevelData.GetColor(i, 0),
                 new Color[2]);
             fillShapeData[i].possibleColors[0] = originalLevelData.GetColor(i, 1);
             fillShapeData[i].possibleColors[1] = originalLevelData.GetColor(i, 2);
@@ -146,26 +206,38 @@ public class LevelDataWorker : MonoBehaviour
         levelData.svgFileName = svgFileName;
 
         levelData.strokeShapesOrder = new int[strokeShapeData.Length];
+
         for (int i = 0; i < strokeShapeData.Length; i++)
-            levelData.strokeShapesOrder[i] = strokeShapeData[i].autoDraw ? 
-                -1 :
-                strokeShapeData[i].order;
+            levelData.strokeShapesOrder[strokeShapeData[i].strokeShapeId] = 
+                strokeShapeData[i].autoDraw ? 
+                -1 : i;
 
         levelData.fillShapesOrder = new int[fillShapeData.Length];
         levelData.InitColorsArray(fillShapeData.Length, colorOptionsCount);
         for(int i = 0; i < fillShapeData.Length; i++)
         {
-            levelData.fillShapesOrder[i] = fillShapeData[i].order;
-            levelData.SetColor(fillShapeData[i].mainColor, i, 0);
+            int fillShapeId = fillShapeData[i].fillShapeId;
+            levelData.fillShapesOrder[fillShapeId] = i;
+            levelData.SetColor(fillShapeData[i].mainColor, fillShapeId, 0);
             for (int j = 1; j < colorOptionsCount; j++)
-                levelData.SetColor(fillShapeData[i].possibleColors[j - 1], i, j);
+                levelData.SetColor(fillShapeData[i].possibleColors[j - 1], fillShapeId, j);
 
         }
 
         AssetDatabase.CreateAsset(levelData, FileIO.GetLevelDataPath(nameWhenSaved, saveFolder));
 
     }
-    
+
+    public void HighlightStrokeShape()
+    {
+        drawingZone.HighlightStrokeShape(highlightStrokeShapeId);
+    }
+
+    public void HighlightFillShape()
+    {
+        drawingZone.HighlightFillShape(highlightFillShapeId);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -176,6 +248,20 @@ public class LevelDataWorker : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void OnEnable()
+    {
+        Selection.selectionChanged += ChangedSelection;
+    }
+    void OnDisable()
+    {
+        Selection.selectionChanged -= ChangedSelection;
+    }
+
+    private void ChangedSelection()
+    {
+        Debug.Log(Selection.activeObject);
     }
 }
 #endif
