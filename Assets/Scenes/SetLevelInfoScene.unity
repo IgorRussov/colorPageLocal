@@ -3385,7 +3385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: panda
+  svgFileName: Planet
   sourceLevelData: {fileID: 0}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
