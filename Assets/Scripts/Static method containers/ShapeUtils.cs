@@ -101,7 +101,8 @@ public class ShapeUtils
             : 1; //if we could not get the required segment we are checking the last segment at its' last point
         
         Vector2 result = VectorUtils.Eval(evalSegment, evalParameter);
-        return result;
+
+        return result * PositionConverter.DrawingScale;
     }
 
     public static Vector2[] PointsFromShape(Shape shape, float samplesForSegment, float minDiff)
@@ -226,7 +227,8 @@ public class ShapeUtils
     /// <param name="fillShapes">List containing created shapes with only fill</param>
     public static void SeparateStrokeAndFill(Scene source, out List<Shape> strokeShapes, out List<Shape> fillShapes)
     {
-        List<Shape> shapes = getAllShapes(source.Root, source.Root.Transform);
+        //List<Shape> shapes = getAllShapes(source.Root, source.Root.Transform);
+        List<Shape> shapes = getAllShapes(source.Root, Matrix2D.identity);
         strokeShapes = new List<Shape>();
         fillShapes = new List<Shape>();
 
@@ -327,7 +329,9 @@ public class ShapeUtils
     {
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         float currentWidth = sceneRect.width;
-        Matrix2D matrix = Matrix2D.Scale(Vector2.one * (desiredWitdh / currentWidth));
+        float scale = desiredWitdh / currentWidth;
+        PositionConverter.DrawingScale = scale;
+        Matrix2D matrix = Matrix2D.Scale(Vector2.one * scale);
         scene.Root.Transform = scene.Root.Transform * matrix;
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Has methods and values required to convert positions in svg space to world space
@@ -11,6 +12,7 @@ public class PositionConverter
     /// Ammount of svg pixels in one unity unit
     /// </summary>
     public static float SvgPixelsPerUnit;
+    public static float DrawingScale = 1;
     
     /// <summary>
     /// Returns the unity world position of the center of a svg coordinates rect
@@ -31,5 +33,13 @@ public class PositionConverter
     public static Vector2 VectorPosToWorldPos(Vector2 vectorPos)
     {
         return new Vector2(vectorPos.x, -vectorPos.y) / SvgPixelsPerUnit;
+    }
+
+    public static Vector2[] ConvertPoints(Vector2[] points)
+    {
+        Vector2[] result = new Vector2[points.Length];
+        for (int i = 0; i < result.Length; i++)
+            result[i] = points[i] * DrawingScale;
+        return result;
     }
 }

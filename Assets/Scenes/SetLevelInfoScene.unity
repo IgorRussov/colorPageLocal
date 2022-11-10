@@ -3385,7 +3385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: Planet
+  svgFileName: "\u041E\u0421\u041C\u0418\u041D\u041E\u0413"
   sourceLevelData: {fileID: 0}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
@@ -3572,7 +3572,7 @@ MonoBehaviour:
   strokeShapesParentObject: {fileID: 113540460}
   fillShapesParentObject: {fileID: 1504754525}
   shapesParentObject: {fileID: 1662524696}
-  drawStrokeWidth: 30
+  drawStrokeWidth: 3
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   stepDistance: 0.5
   maxCordDeviation: 1000000

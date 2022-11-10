@@ -732,7 +732,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.05
+  m_Radius: 0.0001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &161939958
 GameObject:
@@ -2210,7 +2210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641715733}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2019433118}
@@ -4665,7 +4665,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1579144418}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2019433118}
@@ -4807,12 +4807,12 @@ MonoBehaviour:
   drawFillBoundsMeshCollider: {fileID: 641715734}
   drawFillBoundsMeshCollider2: {fileID: 1579144419}
   cameraControl: {fileID: 519420033}
-  desiredSvgWidth: 1000
-  previewStrokeWidth: 10
-  previewStrokeFillLength: 2
-  previewStrokeEmptyLength: 20
-  previewStrokeColor: {r: 0.6011926, g: 0.6603774, b: 0.65435565, a: 1}
-  drawStrokeWidth: 30
+  desiredSvgWidth: 800
+  previewStrokeWidth: 7
+  previewStrokeFillLength: 1
+  previewStrokeEmptyLength: 13
+  previewStrokeColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
+  drawStrokeWidth: 25
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   fillStrokeWidth: 80
   stepDistance: 1
