@@ -140,7 +140,7 @@ public class DrawingZone : MonoBehaviour
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+        //ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
