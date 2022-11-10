@@ -36,9 +36,20 @@ public class LevelDataWorkerEditor : Editor
     */
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
-
         LevelDataWorker myScript = (LevelDataWorker)target;
+
+        if (GUILayout.Button("Read level data from svg file"))
+        {
+            myScript.wantRead = true;
+        }
+        if (GUILayout.Button("Edit existing level data"))
+        {
+            myScript.wantReadData = true;
+        }
+
+
+        DrawDefaultInspector();
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Highlight stroke shape"))
         {
             myScript.wantHighlightStroke = true;
@@ -47,16 +58,15 @@ public class LevelDataWorkerEditor : Editor
         {
             myScript.wantHighlightFill = true;
         }
+        GUILayout.EndHorizontal();
 
-        if (GUILayout.Button("Read level data (LAUNCH GAME)"))
-        {
-            myScript.wantRead = true;
-        }
-        if (GUILayout.Button("Save level data (LAUNCH GAME)"))
+        if (GUILayout.Button("Save level data"))
         {
             myScript.wantSave = true;
         }
-        
+
+
+
     }
     
 }

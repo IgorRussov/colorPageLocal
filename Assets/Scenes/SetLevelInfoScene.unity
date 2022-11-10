@@ -3385,7 +3385,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: Planet
+  svgFileName: panda
+  sourceLevelData: {fileID: 0}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
   strokeShapeData:
@@ -3438,6 +3439,11 @@ MonoBehaviour:
     - {r: 0.9019608, g: 0.60784316, b: 0.5411765, a: 1}
   wantRead: 0
   wantSave: 0
+  wantReadData: 0
+  highlightStrokeShapeId: 0
+  wantHighlightStroke: 0
+  highlightFillShapeId: 0
+  wantHighlightFill: 0
 --- !u!4 &976693194
 Transform:
   m_ObjectHideFlags: 0

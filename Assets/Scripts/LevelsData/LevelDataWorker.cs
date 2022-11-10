@@ -64,9 +64,12 @@ public struct FillShapeData
 
 public class LevelDataWorker : MonoBehaviour
 {
-
     public LevelEditDrawingZone drawingZone;
+    [Header("Create level data from svg file")]
     public string svgFileName;
+    [Header("Edit existing level data")]
+    public LevelData sourceLevelData;
+    [Header("Edited data info")]
     public string nameWhenSaved;
     public string saveFolder;
     public StrokeShapeData[] strokeShapeData;
@@ -75,25 +78,27 @@ public class LevelDataWorker : MonoBehaviour
     private LevelData originalLevelData;
 
     private int colorOptionsCount = 3;
-    [HideInInspector]
+ 
     public bool wantRead;
-    [HideInInspector]
+   
     public bool wantSave;
+  
+    public bool wantReadData;
 
     [Header("Enter id of stroke shape to highlight")]
     public int highlightStrokeShapeId;
-    [HideInInspector]
+  
     public bool wantHighlightStroke;
     [Header("Enter id of fill shape to highlight")]
     public int highlightFillShapeId;
-    [HideInInspector]
+
     public bool wantHighlightFill;
 
     private void FixedUpdate()
     {
         if (wantRead)
         {
-            ReadLevelData();
+            ReadLevelDataFromSvg();
             wantRead = false;
         }
         if (wantSave)
@@ -111,9 +116,49 @@ public class LevelDataWorker : MonoBehaviour
             HighlightFillShape();
             wantHighlightFill = false;
         }
+        if (wantReadData)
+        {
+            ReadExistingLevelData();
+            wantReadData = false;
+        }
     }
 
-    public void ReadLevelData()
+    public void ReadExistingLevelData()
+    {
+        Scene vectorScene = FileIO.GetVectorSceneFromFile(sourceLevelData.svgFileName);
+        List<Shape> strokeShapes = new List<Shape>();
+        List<Shape> fillShapes = new List<Shape>();
+
+        ShapeUtils.SeparateStrokeAndFill(vectorScene, out strokeShapes, out fillShapes);
+
+        originalLevelData = GameObject.Instantiate(sourceLevelData);
+
+        nameWhenSaved = sourceLevelData.svgFileName + "_level";
+
+        strokeShapeData = new StrokeShapeData[strokeShapes.Count];
+        int autoDrawIndex = strokeShapes.Count - 1;
+        for (int i = 0; i < strokeShapes.Count; i++)
+        {
+            int baseIndex = originalLevelData.strokeShapesOrder[i];
+            int index = baseIndex != -1 ? baseIndex : autoDrawIndex--;
+            strokeShapeData[index] = new StrokeShapeData(i, baseIndex == -1);
+        }
+            
+
+        fillShapeData = new FillShapeData[fillShapes.Count];
+        for (int i = 0; i < fillShapes.Count; i++)
+        {
+            int index = originalLevelData.fillShapesOrder[i];
+            fillShapeData[index] = new FillShapeData(i, originalLevelData.GetColor(i, 0),
+                new Color[2]);
+            fillShapeData[index].possibleColors[0] = originalLevelData.GetColor(i, 1);
+            fillShapeData[index].possibleColors[1] = originalLevelData.GetColor(i, 2);
+        }
+
+        drawingZone.ShowAllDrawing(originalLevelData, strokeShapes, fillShapes);
+    }
+
+    public void ReadLevelDataFromSvg()
     {
         Scene vectorScene = FileIO.GetVectorSceneFromFile(svgFileName);
         List<Shape> strokeShapes = new List<Shape>();

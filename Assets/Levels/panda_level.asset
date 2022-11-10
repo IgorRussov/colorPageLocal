@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: panda_level
   m_EditorClassIdentifier: 
   svgFileName: panda
-  strokeShapesOrder: 0000000006000000010000000700000008000000090000000300000002000000ffffffffffffffff
+  strokeShapesOrder: 0000000004000000030000000500000006000000070000000100000002000000ffffffffffffffff
   fillShapesOrder: 000000000100000002000000
   colors:
   - row:
@@ -25,9 +25,9 @@ MonoBehaviour:
       g: 69
       b: 47
       a: 255
-    - r: 185
-      g: 192
-      b: 44
+    - r: 22
+      g: 123
+      b: 3
       a: 255
   - row:
     - r: 80
@@ -47,11 +47,11 @@ MonoBehaviour:
       g: 0
       b: 0
       a: 255
-    - r: 0
+    - r: 108
       g: 0
       b: 0
       a: 255
-    - r: 0
-      g: 0
-      b: 0
+    - r: 255
+      g: 255
+      b: 255
       a: 255
