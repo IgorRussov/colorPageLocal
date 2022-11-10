@@ -323,6 +323,14 @@ public class ShapeUtils
         return ret;
     }
 
+    public static void ScaleSceneToFit(Scene scene, float desiredWitdh)
+    {
+        Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
+        float currentWidth = sceneRect.width;
+        Matrix2D matrix = Matrix2D.Scale(Vector2.one * (desiredWitdh / currentWidth));
+        scene.Root.Transform = scene.Root.Transform * matrix;
+    }
+
     /// <summary>
     /// Extracts a pattern fill from scene
     /// Not sure if it works properly, not used for now  
@@ -362,7 +370,7 @@ public class ShapeUtils
         for (int i = 0; i < fillColorArray.Length; i++)
         {
             if (pattern)
-                fillColorArray[i] = (i % 50 < 10) ? color : (Color32)Color.HSVToRGB(65.0f/360, 0.08f, 0.95f); 
+                fillColorArray[i] = (i % 50 < 10) ? color : (Color32)Color.HSVToRGB(192.0f/360, 0.01f, 0.98f); 
             else
                 fillColorArray[i] = color;
         }
