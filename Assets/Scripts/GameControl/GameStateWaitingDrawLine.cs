@@ -11,6 +11,7 @@ public class GameStateWaitingDrawLine : GameBaseState
     public override void EnterState(GameStateManager game)
     {
         Pencil.instance.UpdateColorRepres(-1);
+        Pencil.instance.lifted = true;
         game.gameControl.NextStrokeStage();
         Pencil.instance.SetPencilMode(PencilMode.DrawStroke);
     }

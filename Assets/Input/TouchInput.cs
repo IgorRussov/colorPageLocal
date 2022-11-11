@@ -53,6 +53,15 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""TouchPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""c06cb543-dce9-4eb4-81c3-623afd876df3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -80,39 +89,6 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f034a92e-d0c5-4c99-a2fe-5f0cf335a8bf"",
-                    ""path"": ""<Mouse>/press"",
-                    ""interactions"": ""Press(pressPoint=1.401298E-45,behavior=2)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchPress"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e8850217-6142-47bd-88ba-796c9d1fd917"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": ""Press(pressPoint=0.5,behavior=2)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchPress"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7098abd2-50ef-466c-a1e2-a5e75db607ac"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchPress"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""22055b50-1215-47a9-ac56-d437630ef7b9"",
                     ""path"": ""<Touchscreen>/primaryTouch/delta"",
                     ""interactions"": """",
@@ -124,23 +100,12 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8a8f818b-91e6-4cb7-8f4f-020a2a2739f4"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""id"": ""e533638c-29b5-43c2-ba5f-e3d18afe9fd6"",
+                    ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""TouchDelta"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6110fd14-fe7b-4dc7-978d-ac72a2cca0a6"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchDelta"",
+                    ""action"": ""TouchPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -154,6 +119,7 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
         m_Touch_PrimaryTouch = m_Touch.FindAction("PrimaryTouch", throwIfNotFound: true);
         m_Touch_TouchPress = m_Touch.FindAction("TouchPress", throwIfNotFound: true);
         m_Touch_TouchDelta = m_Touch.FindAction("TouchDelta", throwIfNotFound: true);
+        m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -216,6 +182,7 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Touch_PrimaryTouch;
     private readonly InputAction m_Touch_TouchPress;
     private readonly InputAction m_Touch_TouchDelta;
+    private readonly InputAction m_Touch_TouchPosition;
     public struct TouchActions
     {
         private @TouchInput m_Wrapper;
@@ -223,6 +190,7 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
         public InputAction @PrimaryTouch => m_Wrapper.m_Touch_PrimaryTouch;
         public InputAction @TouchPress => m_Wrapper.m_Touch_TouchPress;
         public InputAction @TouchDelta => m_Wrapper.m_Touch_TouchDelta;
+        public InputAction @TouchPosition => m_Wrapper.m_Touch_TouchPosition;
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -241,6 +209,9 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
                 @TouchDelta.started -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchDelta;
                 @TouchDelta.performed -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchDelta;
                 @TouchDelta.canceled -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchDelta;
+                @TouchPosition.started -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
+                @TouchPosition.performed -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
+                @TouchPosition.canceled -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
             }
             m_Wrapper.m_TouchActionsCallbackInterface = instance;
             if (instance != null)
@@ -254,6 +225,9 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
                 @TouchDelta.started += instance.OnTouchDelta;
                 @TouchDelta.performed += instance.OnTouchDelta;
                 @TouchDelta.canceled += instance.OnTouchDelta;
+                @TouchPosition.started += instance.OnTouchPosition;
+                @TouchPosition.performed += instance.OnTouchPosition;
+                @TouchPosition.canceled += instance.OnTouchPosition;
             }
         }
     }
@@ -263,5 +237,6 @@ public partial class @TouchInput : IInputActionCollection2, IDisposable
         void OnPrimaryTouch(InputAction.CallbackContext context);
         void OnTouchPress(InputAction.CallbackContext context);
         void OnTouchDelta(InputAction.CallbackContext context);
+        void OnTouchPosition(InputAction.CallbackContext context);
     }
 }

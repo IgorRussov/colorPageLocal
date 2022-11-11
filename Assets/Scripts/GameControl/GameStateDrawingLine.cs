@@ -47,7 +47,7 @@ public class GameStateDrawingLine : GameBaseState
 
     public override void UpdateState(GameStateManager game)
     {
-        if (screenPressed)
+        if (screenPressed && Pencil.instance.PressedCompletely)
             game.gameControl.AddStrokeLineDraw();
     }
 

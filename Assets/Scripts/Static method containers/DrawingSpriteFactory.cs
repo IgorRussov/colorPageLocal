@@ -258,6 +258,7 @@ public class DrawingSpriteFactory
 
     private static Mesh CreateMeshFromPoints(Vector2[] p, float height)
     {
+        p = PositionConverter.ConvertPoints(p);
         Vector2 avg = Vector2.zero;
         int l = p.Length;
         height *= -PositionConverter.SvgPixelsPerUnit;
@@ -309,10 +310,10 @@ public class DrawingSpriteFactory
     private static Mesh CreateMeshFromBounds(Rect bounds)
     {
         Vector2[] rectBounds = new Vector2[4];
-        rectBounds[0] = new Vector2(bounds.x, -bounds.y);
-        rectBounds[1] = new Vector2(bounds.x, -bounds.y - bounds.height);
-        rectBounds[2] = new Vector2(bounds.x + bounds.width, -bounds.y - bounds.height);
-        rectBounds[3] = new Vector2(bounds.x + bounds.width, -bounds.y);
+        rectBounds[0] = new Vector2(bounds.x, -bounds.y) / PositionConverter.DrawingScale;
+        rectBounds[1] = new Vector2(bounds.x, -bounds.y - bounds.height) / PositionConverter.DrawingScale;
+        rectBounds[2] = new Vector2(bounds.x + bounds.width, -bounds.y - bounds.height) / PositionConverter.DrawingScale;
+        rectBounds[3] = new Vector2(bounds.x + bounds.width, -bounds.y) / PositionConverter.DrawingScale;
 
         return CreateMeshFromPoints(rectBounds, 1);
     }

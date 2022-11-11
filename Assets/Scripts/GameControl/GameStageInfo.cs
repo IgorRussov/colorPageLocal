@@ -30,6 +30,8 @@ public struct GameStageInfo
     /// </summary>
     public float strokeShapeLength;
 
+    public float drawSpeed;
+
     /// <summary>
     /// If the current stage of the game is drawing stroke shapes
     /// </summary>
@@ -93,5 +95,15 @@ public struct GameStageInfo
         {
             return drawnAmmount / strokeShapeLength;
         }
+    }
+
+    public void SetDrawSpeed(float minDrawTime, float maxDrawTime, float midDrawTime, float midLength, float length)
+    {
+
+        float midSpeed = midLength / midDrawTime;
+        float resultTime = length / midSpeed;
+        float realTime = (maxDrawTime) / (1 + Mathf.Pow(2.71f, -1f * (resultTime - minDrawTime)));
+        drawSpeed = length / realTime;
+        //Debug.Log("Length: " + length + ", Real time: " + realTime);
     }
 }
