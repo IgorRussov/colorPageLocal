@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: octopus_level
   m_EditorClassIdentifier: 
   svgFileName: octopus
-  strokeShapesOrder: 000000000100000002000000030000000400000005000000
+  strokeShapesOrder: 030000000400000005000000010000000000000002000000
   fillShapesOrder: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
   colors:
   - row:
@@ -21,26 +21,26 @@ MonoBehaviour:
       g: 181
       b: 216
       a: 255
-    - r: 181
-      g: 205
-      b: 216
+    - r: 73
+      g: 238
+      b: 71
       a: 255
-    - r: 181
-      g: 182
-      b: 216
+    - r: 221
+      g: 137
+      b: 0
       a: 255
   - row:
     - r: 192
       g: 181
       b: 216
       a: 255
-    - r: 181
-      g: 205
-      b: 216
+    - r: 34
+      g: 152
+      b: 178
       a: 255
-    - r: 181
-      g: 182
-      b: 216
+    - r: 183
+      g: 119
+      b: 108
       a: 255
   - row:
     - r: 30

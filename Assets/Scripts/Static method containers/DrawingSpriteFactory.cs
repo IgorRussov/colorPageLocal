@@ -272,7 +272,7 @@ public class DrawingSpriteFactory
         }
 
         avg = avg / p.Length / PositionConverter.SvgPixelsPerUnit;
-        Vector2 pos = new Vector2(p[0].x, p[0].y) / PositionConverter.SvgPixelsPerUnit;
+        Vector2 pos = new Vector2(p[1].x, p[1].y) / PositionConverter.SvgPixelsPerUnit;
 
         //Debug.Log("Next pos: " + pos);
         pos += (avg - pos) * 0.05f;

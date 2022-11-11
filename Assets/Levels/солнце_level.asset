@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\u0441\u043E\u043B\u043D\u0446\u0435_level"
   m_EditorClassIdentifier: 
   svgFileName: "\u0441\u043E\u043B\u043D\u0446\u0435"
-  strokeShapesOrder: 0000000001000000020000000300000004000000
+  strokeShapesOrder: ffffffffffffffffffffffff0000000001000000
   fillShapesOrder: 00000000010000000200000003000000
   colors:
   - row:
@@ -47,24 +47,24 @@ MonoBehaviour:
       g: 30
       b: 28
       a: 255
-    - r: 30
-      g: 28
-      b: 28
+    - r: 255
+      g: 0
+      b: 0
       a: 255
-    - r: 30
-      g: 29
-      b: 28
+    - r: 22
+      g: 0
+      b: 255
       a: 255
   - row:
     - r: 30
       g: 30
       b: 28
       a: 255
-    - r: 30
-      g: 28
-      b: 28
+    - r: 255
+      g: 0
+      b: 0
       a: 255
-    - r: 30
-      g: 29
-      b: 28
+    - r: 10
+      g: 58
+      b: 200
       a: 255

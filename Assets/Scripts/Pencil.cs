@@ -26,6 +26,10 @@ public class Pencil : MonoBehaviour
     [Header("Graphical repres properties")]
     public float liftSpeed;
     public Vector2 liftedOffset;
+    [Header("Animation properties")]
+    public float rotationAmplitude;
+    public float strokeRotationSpeed;
+    public float fillRotationSpeed;
 
     [HideInInspector]
     public bool lifted;
@@ -116,9 +120,19 @@ public class Pencil : MonoBehaviour
         UpdateRepresPosition();
     }
 
+
+    private void Update()
+    {
+        
+    }
+
+
+
     private Vector2 pointerPosition;
     private Vector2 pointerOffset;
     private bool wantMove;
+
+
 
     public void RecieveInitialPosition(Vector2 pointerPosition)
     {
@@ -157,23 +171,15 @@ public class Pencil : MonoBehaviour
 
         Vector2 localPos = (Vector2)transform.localPosition;
 
-        //Vector2 v = (localSpacePosition - localPos).normalized * drawFillMaxSpeed * Time.fixedDeltaTime;
-        //rigidbody.velocity = v;
         newPos = Vector2.SmoothDamp(localPos, localSpacePosition, ref currentVelocity, drawFillSmoothTime, drawFillMaxSpeed);
         rigidbody.velocity = currentVelocity;
-        //Vector2 newPosWorld = transform.TransformPoint(newPos);
-        //rigidbody.position = newPosWorld;
-        //rigidbody.MovePosition(newPos);
-        //rigidbody.position = newPos;
-        //Vector3 newPosition = rigidbody.position + transform.TransformDirection(newPos);
-        //rigidbody.MovePosition(newPosition);
+
+        float phase = Mathf.Lerp(-1, 1, currentVelocity.x / drawFillMaxSpeed);
+        rigidbody.rotation = Quaternion.Euler(0, 0, rotationAmplitude * phase);
     }
 
     void UpdateRepresPosition()
     {
-        //Debug.Log("Lifted ? " + lifted +  
-        //    ", Lifted ammount: " + liftedAmmount + ", position = "
-        //    + pencilRepresObject.transform.localPosition);
         if (lifted && liftedAmmount != 1)
         {
             liftedAmmount = Mathf.Min(1, liftedAmmount + liftSpeed * Time.deltaTime);
@@ -187,6 +193,8 @@ public class Pencil : MonoBehaviour
 
     }
 
+    private float r = 0;
+
     void UpdateForcedMove()
     {
         Vector2 pos = transform.localPosition;
@@ -194,8 +202,15 @@ public class Pencil : MonoBehaviour
         float dist = toTarget.magnitude;
         if (dist > float.Epsilon)
         {
-            float moveDist = Mathf.Min(dist, forcedMoveSpeed * Time.deltaTime);
+            float speed = forcedMoveSpeed;
+            if (!lifted)
+                speed *= 10;
+            float moveDist = Mathf.Min(dist, speed * Time.deltaTime);
             rigidbody.MovePosition((Vector2)transform.position + (toTarget.normalized * moveDist));
+            float dR = moveDist * strokeRotationSpeed;
+            if (!lifted)
+                r += dR;
+            rigidbody.rotation = Quaternion.Euler(0, 0, rotationAmplitude * Mathf.Sin(r));
         }
     }
 
