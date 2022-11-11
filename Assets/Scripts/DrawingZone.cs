@@ -253,7 +253,6 @@ public class DrawingZone : MonoBehaviour
 
     public void ContinueFillDrawSprite(int drawStageIndex, Vector2 direction, float dist)
     {
-        
         drawStrokeShapes[drawStageIndex] = ShapeUtils.ContinueShape(previewStrokeShapes[drawStageIndex], direction, dist);
     }
 
@@ -388,6 +387,15 @@ public class DrawingZone : MonoBehaviour
            drawStrokeShapes[drawStageIndex],
            ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
            drawStrokeWidth, drawStrokeColor);
+        drawingSprites[previewStrokeShapes.Count + drawStageIndex].sprite = newSprite;
+    }
+
+    public void SetPerfectStrokeDrawSprite(int drawStageIndex)
+    {
+        Sprite newSprite = DrawingSpriteFactory.CreateLineSprite(
+          previewStrokeShapes[drawStageIndex],
+          ShapeUtils.CreateStrokeArray(1000000f, 0),
+          drawStrokeWidth, drawStrokeColor);
         drawingSprites[previewStrokeShapes.Count + drawStageIndex].sprite = newSprite;
     }
 

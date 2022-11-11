@@ -29,6 +29,7 @@ public class GameStateSelectColor : GameBaseState
         UiControl.Instance.EnableColorSelection(game.gameControl.GetFillStageColors(), this);
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
         Pencil.instance.MoveToPosForNextFillShape();
+        Pencil.instance.lifted = false;
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)

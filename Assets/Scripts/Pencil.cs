@@ -15,24 +15,32 @@ public enum PencilMode
 public class Pencil : MonoBehaviour
 {
     public static Vector2 PosForNextFillShape;
-
     public static Pencil instance;
-
-    [HideInInspector]
-    private PencilMode pencilMode;
-
-    public float forcedMoveSpeed;
-    public float freeMoveSpeed;
-    public Vector2 liftedOffset;
-    [HideInInspector]
-    public bool lifted;
-    private float liftedAmmount;
-    public float liftSpeed;
+    [Header("Hierarchy objects")]
     public SpriteRenderer tipSpriteRenderer;
     public GameObject pencilRepresObject;
+    [Header("Movement properties")]
+    public float forcedMoveSpeed;
+    public float freeMoveSpeed;
+    [Header("Graphical repres properties")]
+    public float liftSpeed;
+    public Vector2 liftedOffset;
 
+    [HideInInspector]
+    public bool lifted;
+
+    private float liftedAmmount;
+    private PencilMode pencilMode;
     private Rigidbody rigidbody;
     private Collider collider;
+
+    public bool PressedCompletely
+    {
+        get
+        {
+            return !lifted && liftedAmmount == 0;
+        }
+    }
 
     [HideInInspector]
     public Vector2 acceleration;
@@ -107,21 +115,32 @@ public class Pencil : MonoBehaviour
         UpdateRepresPosition();
     }
 
+    private Vector2 pointerPosition;
+    private Vector2 pointerOffset;
+
+    public void RecieveInitialPosition(Vector2 pointerPosition)
+    {
+        this.pointerPosition = pointerPosition;
+        pointerOffset = pointerPosition - (Vector2)transform.localPosition;
+
+    }    
+
+    public void GetDelta(Vector2 delta)
+    {
+        pointerPosition += delta;
+    }
+
     void UpdateDrawFill()
     {
-        //if (acceleration != Vector2.zero)
-        //{
-            //rigidbody.AddForce(acceleration);
-            //acceleration = Vector2.zero;
-            rigidbody.velocity = delta;
-            delta = Vector2.zero;
-        //}
-
-
+        //rigidbody.velocity = delta;
+        //delta = Vector2.zero;
     }
 
     void UpdateRepresPosition()
     {
+        //Debug.Log("Lifted ? " + lifted +  
+        //    ", Lifted ammount: " + liftedAmmount + ", position = "
+        //    + pencilRepresObject.transform.localPosition);
         if (lifted && liftedAmmount != 1)
         {
             liftedAmmount = Mathf.Min(1, liftedAmmount + liftSpeed * Time.deltaTime);
@@ -154,16 +173,10 @@ public class Pencil : MonoBehaviour
     
     public void LiftPencil()
     {
-        //Debug.Log("LIFT");
         lifted = true;
     }
 
-    private Vector2 delta;
-    public void GetDelta(Vector2 delta)
-    {
-        //Debug.Log("GET delta" + delta);
-        this.delta = delta;
-    }
+   
 
     public void MoveToPosForNextFillShape()
     {

@@ -3385,7 +3385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: "\u041E\u0421\u041C\u0418\u041D\u041E\u0413"
+  svgFileName: "\u0430\u0440\u0431\u0443\u0437"
   sourceLevelData: {fileID: 0}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels

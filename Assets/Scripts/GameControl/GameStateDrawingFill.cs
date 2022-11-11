@@ -27,6 +27,7 @@ public class GameStateDrawingFill : GameBaseState
 
     public override void EnterState(GameStateManager game)
     {
+
         this.gameStateManager = game;
         //game.gameControl.drawingZone.SetMaskSprite(game.gameControl.gameStageInfo.FillStageIndex);
         UiControl.Instance.StartFill(this);
@@ -40,27 +41,21 @@ public class GameStateDrawingFill : GameBaseState
         drawTexture = game.gameControl.drawingZone.drawFillTexture;
     }
 
-    private Vector2 previousDelta = Vector2.zero;
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
     {
-        Vector2 acceleration = delta - previousDelta;
-        previousDelta = delta;
-
-        //Pencil.instance.acceleration = acceleration * game.gameControl.fillMoveSpeed * Time.deltaTime;
-
-        Pencil.instance.GetDelta(delta * game.gameControl.fillMoveSpeed * Time.deltaTime);
+        Pencil.instance.GetDelta(delta);
     }
 
     public override void InputPressed(GameStateManager game)
     {
-        Pencil.instance.lifted = false;
+
+        //Pencil.instance.lifted = false;
     }
 
     public override void InputReleased(GameStateManager game)
     {
-        Pencil.instance.lifted = true;
-        previousDelta = Vector2.zero;
+        //Pencil.instance.lifted = true;
     }
 
     public override void UpdateState(GameStateManager game)

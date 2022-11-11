@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
+  m_Name: "\u0430\u0440\u0431\u0443\u0437_level"
+  m_EditorClassIdentifier: 
+  svgFileName: "\u0430\u0440\u0431\u0443\u0437"
+  strokeShapesOrder: 0000000001000000
+  fillShapesOrder: 00000000010000000200000003000000040000000500000006000000
+  colors:
+  - row:
+    - r: 134
+      g: 185
+      b: 102
+      a: 255
+    - r: 185
+      g: 153
+      b: 102
+      a: 255
+    - r: 162
+      g: 185
+      b: 102
+      a: 255
+  - row:
+    - r: 214
+      g: 71
+      b: 89
+      a: 255
+    - r: 196
+      g: 71
+      b: 214
+      a: 255
+    - r: 214
+      g: 71
+      b: 137
+      a: 255
+  - row:
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+  - row:
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+  - row:
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+  - row:
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+  - row:
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255
+    - r: 0
+      g: 0
+      b: 0
+      a: 255

@@ -173,7 +173,7 @@ MonoBehaviour:
   freeMoveSpeed: 1
   liftedOffset: {x: 0.3, y: 0.3}
   lifted: 0
-  liftSpeed: 0
+  liftSpeed: 10
   tipSpriteRenderer: {fileID: 1838675362}
   pencilRepresObject: {fileID: 81655338}
   acceleration: {x: 0, y: 0}
@@ -1723,6 +1723,7 @@ MonoBehaviour:
   levelData:
   - {fileID: 11400000, guid: 55869b900e36d8441b63b686711cf1f2, type: 2}
   - {fileID: 11400000, guid: 4085c791f224c1549aa48fe82cd5cdd2, type: 2}
+  - {fileID: 11400000, guid: a876989539cf500448953b943a2dfd87, type: 2}
 --- !u!4 &599220231
 Transform:
   m_ObjectHideFlags: 0
@@ -4022,9 +4023,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3766d47261cbcd14d8bb32379d67335e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fillMoveSpeed: 7
+  minStrokeTime: 1
+  maxStrokeTime: 2
+  midStrokeTime: 1.5
+  midStrokeLength: 600
+  perfectStrokeMargin: 0.1
   continueLineLength: 100
-  drawSpeed: 500
+  fillMoveSpeed: 7
   drawingZone: {fileID: 1736346571}
   drawingNow: 0
   continuedLine: 0
@@ -4808,11 +4813,11 @@ MonoBehaviour:
   drawFillBoundsMeshCollider2: {fileID: 1579144419}
   cameraControl: {fileID: 519420033}
   desiredSvgWidth: 800
-  previewStrokeWidth: 7
+  previewStrokeWidth: 5
   previewStrokeFillLength: 1
-  previewStrokeEmptyLength: 13
+  previewStrokeEmptyLength: 8
   previewStrokeColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-  drawStrokeWidth: 25
+  drawStrokeWidth: 22
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   fillStrokeWidth: 80
   stepDistance: 1

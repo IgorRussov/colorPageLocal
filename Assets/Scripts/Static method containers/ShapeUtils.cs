@@ -374,7 +374,7 @@ public class ShapeUtils
         for (int i = 0; i < fillColorArray.Length; i++)
         {
             if (pattern)
-                fillColorArray[i] = (i % 50 < 10) ? color : (Color32)Color.HSVToRGB(192.0f/360, 0.01f, 0.98f); 
+                fillColorArray[i] = (i % 35 < 10) ? color : (Color32)Color.HSVToRGB(192.0f/360, 0.01f, 0.98f); 
             else
                 fillColorArray[i] = color;
         }
