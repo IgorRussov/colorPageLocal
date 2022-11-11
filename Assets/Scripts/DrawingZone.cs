@@ -131,11 +131,11 @@ public class DrawingZone : MonoBehaviour
         TesselationOptions = Options;
         PositionConverter.SvgPixelsPerUnit = svgPixelsPerUnit;
         //Get pattern info
-        Scene patternScene = FileIO.GetVectorSceneFromFile(patternSvgFileName);
+        //Scene patternScene = FileIO.GetVectorSceneFromFile(patternSvgFileName);
 
         //patternFill = ShapeUtils.GetPatternFillFromScene(patternScene);
-        patternNode = patternScene.Root;
-        patternRect = VectorUtils.ApproximateSceneNodeBounds(patternScene.Root);
+        //patternNode = patternScene.Root;
+        //patternRect = VectorUtils.ApproximateSceneNodeBounds(patternScene.Root);
 
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
