@@ -49,7 +49,7 @@ public class GameStateDrawingFill : GameBaseState
 
     public override void InputPressed(GameStateManager game)
     {
-
+        Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition);
         //Pencil.instance.lifted = false;
     }
 

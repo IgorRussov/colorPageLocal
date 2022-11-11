@@ -21,7 +21,8 @@ public class Pencil : MonoBehaviour
     public GameObject pencilRepresObject;
     [Header("Movement properties")]
     public float forcedMoveSpeed;
-    public float freeMoveSpeed;
+    public float drawFillMaxSpeed;
+    public float drawFillSmoothTime;
     [Header("Graphical repres properties")]
     public float liftSpeed;
     public Vector2 liftedOffset;
@@ -110,30 +111,62 @@ public class Pencil : MonoBehaviour
     {
         if (pencilMode == PencilMode.DrawStroke)
             UpdateForcedMove();
-        else if (pencilMode == PencilMode.DrawFill)
+        else if (pencilMode == PencilMode.DrawFill && wantMove)
             UpdateDrawFill();
         UpdateRepresPosition();
     }
 
     private Vector2 pointerPosition;
     private Vector2 pointerOffset;
+    private bool wantMove;
 
     public void RecieveInitialPosition(Vector2 pointerPosition)
     {
+        wantMove = true;
         this.pointerPosition = pointerPosition;
-        pointerOffset = pointerPosition - (Vector2)transform.localPosition;
-
+        pointerOffset = PositionConverter.LocalSpaceToScreenSpace(transform.localPosition) - this.pointerPosition;
     }    
 
     public void GetDelta(Vector2 delta)
     {
+        wantMove = true;
         pointerPosition += delta;
     }
 
+    private Vector2 currentVelocity;
+
+    private void OnDrawGizmos()
+    {
+        /*
+        Gizmos.DrawCube(newPos + (Vector2)transform.position, Vector3.one * 0.5f);
+        Gizmos.DrawCube(transform.position, Vector3.one * 0.3f);
+
+        Vector2 screenSpacePosition = pointerPosition + pointerOffset;
+        Vector2 localSpacePosition = PositionConverter.ScreenSpaceToLocalSpace(screenSpacePosition);
+        Gizmos.DrawCube(localSpacePosition, Vector3.one);
+        */
+    }
+
+    private Vector2 newPos;
+
     void UpdateDrawFill()
     {
-        //rigidbody.velocity = delta;
-        //delta = Vector2.zero;
+        //Debug.Log(pointerPosition);
+        Vector2 screenSpacePosition = pointerPosition + pointerOffset;
+        Vector2 localSpacePosition = PositionConverter.ScreenSpaceToLocalSpace(screenSpacePosition);
+
+        Vector2 localPos = (Vector2)transform.localPosition;
+
+        //Vector2 v = (localSpacePosition - localPos).normalized * drawFillMaxSpeed * Time.fixedDeltaTime;
+        //rigidbody.velocity = v;
+        newPos = Vector2.SmoothDamp(localPos, localSpacePosition, ref currentVelocity, drawFillSmoothTime, drawFillMaxSpeed);
+        rigidbody.velocity = currentVelocity;
+        //Vector2 newPosWorld = transform.TransformPoint(newPos);
+        //rigidbody.position = newPosWorld;
+        //rigidbody.MovePosition(newPos);
+        //rigidbody.position = newPos;
+        //Vector3 newPosition = rigidbody.position + transform.TransformDirection(newPos);
+        //rigidbody.MovePosition(newPosition);
     }
 
     void UpdateRepresPosition()
@@ -190,9 +223,10 @@ public class Pencil : MonoBehaviour
         {
             case (PencilMode.Inactive):
                 collider.enabled = false;
+                rigidbody.velocity = Vector2.zero;
                 break;
             case (PencilMode.DrawFill):
-                
+                wantMove = false;
                 collider.enabled = true;
                 break;
             case (PencilMode.DrawStroke):

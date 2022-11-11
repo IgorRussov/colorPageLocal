@@ -20,6 +20,8 @@ public class GameStateManager : MonoBehaviour
 
     static TouchInput touchInput;
 
+    public static Vector2 touchPosition;
+
     public static void EnableInput()
     {
         touchInput.Enable();
@@ -50,6 +52,10 @@ public class GameStateManager : MonoBehaviour
             currentState.InputDelta(this, ctx.ReadValue<Vector2>());
             
         };
+        touchInput.Touch.TouchPosition.performed += ctx =>
+        {
+            touchPosition = ctx.ReadValue<Vector2>();
+        };
         touchInput.Enable();
     }
 
@@ -70,6 +76,7 @@ public class GameStateManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //Debug.Log("Current position = " + touchPosition);
         if (wantPressed)
         {
             if (!EventSystem.current.IsPointerOverGameObject())

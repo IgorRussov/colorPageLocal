@@ -145,6 +145,7 @@ public class DrawingZone : MonoBehaviour
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
         shapesParentObject.transform.position = -PositionConverter.GetWorldCenterPos(sceneRect);
+        PositionConverter.shapesObjectPos = shapesParentObject.transform.position;
 
         List<Shape> strokeShapes;
 
