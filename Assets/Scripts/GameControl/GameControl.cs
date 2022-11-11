@@ -7,9 +7,15 @@ using System;
 
 public class GameControl : MonoBehaviour
 {
-    public float fillMoveSpeed;
+    [Header("Stroke speed info")]
+    public float minStrokeTime;
+    public float maxStrokeTime;
+    public float midStrokeTime;
+    public float midStrokeLength;
+    [Header("")]
+    [Range(0, 1)]
+    public float perfectStrokeMargin;
     public float continueLineLength;
-    public float drawSpeed;
 
     public static GameControl Instance;
     public DrawingZone drawingZone;
@@ -31,6 +37,14 @@ public class GameControl : MonoBehaviour
     [HideInInspector]
     public bool continuedLine;
 
+    public float GetRequiredLength
+    {
+        get
+        {
+            return gameStageInfo.strokeShapeLength - (continuedLine ? continueLineLength : 0);
+        }
+    }
+
     /// <summary>
     /// If the player has finished drawing the required ammount of stroke line
     /// </summary>
@@ -38,9 +52,24 @@ public class GameControl : MonoBehaviour
     {
         get
         {
-            float needLength = gameStageInfo.strokeShapeLength - (continuedLine ? continueLineLength : 0);
-            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth  > needLength;
+            float needLength = GetRequiredLength;
+            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth  > needLength * (1 - perfectStrokeMargin);
                
+        }
+    }
+
+    public bool WithinPerfectStroke
+    {
+        get
+        {
+            float needLength = GetRequiredLength;
+            float drawn = gameStageInfo.drawnAmmount;
+
+            if (drawn > needLength * (1 + perfectStrokeMargin))
+                return false;
+            if (drawn < needLength * (1 - perfectStrokeMargin))
+                return false;
+            return true;
         }
     }
 
@@ -74,11 +103,15 @@ public class GameControl : MonoBehaviour
         gameStageInfo = drawingZone.SetupDrawing(levelData);
     }
 
+
     /// <summary>
     /// Ends the drawing process of a stroke line
     /// </summary>
     private void EndStrokeLineDraw()
     {
+        if (WithinPerfectStroke)
+            drawingZone.SetPerfectStrokeDrawSprite(gameStageInfo.drawStage);
+
         gameStageInfo.drawnAmmount = 0;
         gameStageInfo.drawStage++;
         gameStageInfo.strokeShapeLength = 0;
@@ -96,7 +129,7 @@ public class GameControl : MonoBehaviour
     {
         if (!canDraw)
             return;
-        gameStageInfo.drawnAmmount += drawSpeed * Time.fixedDeltaTime;
+        gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
         Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart);
         if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedLine)
         {
@@ -129,7 +162,8 @@ public class GameControl : MonoBehaviour
             ), false);
         continuedLine = false;
         gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage, false);
-        Debug.Log(gameStageInfo.strokeShapeLength);
+        gameStageInfo.SetDrawSpeed(minStrokeTime, maxStrokeTime, midStrokeTime, midStrokeLength, gameStageInfo.strokeShapeLength);
+        //Debug.Log(gameStageInfo.strokeShapeLength);
         canDraw = true;
     }
 
