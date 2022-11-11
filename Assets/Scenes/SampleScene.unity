@@ -172,7 +172,7 @@ MonoBehaviour:
   tipSpriteRenderer: {fileID: 1838675362}
   pencilRepresObject: {fileID: 81655338}
   forcedMoveSpeed: 30
-  drawFillMaxSpeed: 5
+  drawFillMaxSpeed: 10
   drawFillSmoothTime: 0.2
   liftSpeed: 10
   liftedOffset: {x: 0.5, y: -0.5}
@@ -4624,7 +4624,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 207
   m_Sprite: {fileID: 21300000, guid: 9d3a1134028636a4fbe7e449a8475002, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4822,9 +4822,9 @@ MonoBehaviour:
   previewStrokeFillLength: 1
   previewStrokeEmptyLength: 8
   previewStrokeColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-  drawStrokeWidth: 22
+  drawStrokeWidth: 30
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
-  fillStrokeWidth: 80
+  fillStrokeWidth: 40
   stepDistance: 1
   maxCordDeviation: 1000000
   maxTanAngleDeviation: 1.57
@@ -4935,7 +4935,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 200
   m_Sprite: {fileID: 21300000, guid: a73a806799229e24f84e07fc17ffd2d6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.54509807}
   m_FlipX: 0
@@ -5224,7 +5224,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 21
+  m_SortingOrder: 206
   m_Sprite: {fileID: 21300000, guid: ade72dd466ee29949a184284dfd2056e, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0

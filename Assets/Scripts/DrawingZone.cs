@@ -422,6 +422,7 @@ public class DrawingZone : MonoBehaviour
         GameObject newObject = new GameObject(name);
         SpriteRenderer spriteRenderer = newObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
+        spriteRenderer.sortingOrder = 100;
         newObject.transform.SetParent(transform.GetChild(0).transform, true);
         newObject.transform.localPosition = position;
 
