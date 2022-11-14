@@ -12,9 +12,9 @@ public class GameStateDrawingFill : GameBaseState
     private float minPointDiff = 0.05f;
     private float fillSpeed = 50;
     private Vector2 pos;
+    private Vector2 drawTextureSize;
 
     private GameStateManager gameStateManager;
-    private Texture2D drawTexture;
 
     public void FinishFill()
     {
@@ -38,7 +38,7 @@ public class GameStateDrawingFill : GameBaseState
         Pencil.instance.SetPencilMode(PencilMode.DrawFill);
         textureFillers = new List<TextureFiller>();
 
-        drawTexture = game.gameControl.drawingZone.drawFillTexture;
+        drawTextureSize = game.gameControl.drawingZone.FillTextureSize;
     }
 
 
@@ -64,22 +64,17 @@ public class GameStateDrawingFill : GameBaseState
 
         if ((lastPos - pos).magnitude > minPointDiff)
         {
-            Vector2Int fillerPos = new Vector2Int(Mathf.RoundToInt(pos.x * 100), Mathf.RoundToInt(pos.y * 100));
-            fillerPos = new Vector2Int(fillerPos.x + drawTexture.width / 2, fillerPos.y + drawTexture.height / 2);
+            Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit;
+            fillerPos += drawTextureSize * 0.5f;
             //Debug.Log("Adding filler at pos + " + fillerPos);
             lastPos = pos;
 
-            TextureFiller filler = new TextureFiller(
-                drawTexture,
-                Pencil.instance.GetColorByStage(game.gameControl.gameStageInfo.FillStageIndex),
-                Mathf.RoundToInt(game.gameControl.drawingZone.fillStrokeWidth / 2),
-                fillSpeed,
-                fillerPos
-                );
-            textureFillers.Add(filler);
+            game.gameControl.drawingZone.AddColorPainter(fillerPos, 
+                game.gameControl.gameStageInfo.FillStageIndex);
         }
 
-        CalculateTextureFill();
+        game.gameControl.drawingZone.UpdateDrawFill();
+        //CalculateTextureFill();
     }
 
     List<TextureFiller> textureFillers;
@@ -94,13 +89,21 @@ public class GameStateDrawingFill : GameBaseState
                 i--;
             }
         }
-        drawTexture.Apply();
+        //drawTexture.Apply();
     }
 
     public override void UndoRequested(GameStateManager game, GameStageInfo info)
     {
         game.SwitchState(game.selectColorState);
     }
+}
+
+public struct ColorPainter
+{
+    public static readonly int StructSize = 3 * 4;
+
+    public float startTime;
+    public Vector2 texturePos;
 }
 
 public class TextureFiller

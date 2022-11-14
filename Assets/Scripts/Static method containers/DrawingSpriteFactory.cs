@@ -228,7 +228,26 @@ public class DrawingSpriteFactory
     {
         return CreateSprite(shape, patternFill, null);
     }
-    
+
+    public static RenderTexture TextureFromSprite(Shape sourceShape, Sprite sprite, Material material)
+    {
+        Shape newShape = null;
+        Scene newScene = CreateSceneWithClonedShape(sourceShape, out newShape);
+
+        Rect boundsRect = VectorUtils.SceneNodeBounds(newScene.Root);
+        int height = Mathf.RoundToInt(boundsRect.height);
+        int width = Mathf.RoundToInt(boundsRect.width);
+        int offsetX = Mathf.RoundToInt(boundsRect.x);
+        int offsetY = Mathf.RoundToInt(boundsRect.y);
+        Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(sprite, height, width, material);
+
+        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+
+        Graphics.Blit(texture2d, renderTexture, Vector2.one, new Vector2Int(offsetX, offsetY));
+
+        return renderTexture;
+    }
+
     /// <summary>
     /// Creates a sprite with solid fill of provided color and no stroke
     /// </summary>

@@ -1,0 +1,56 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+struct ColorPainter
+{
+    float startTime;
+    float2 texturePos;
+};
+
+RWStructuredBuffer<bool> _SetPixels;
+RWStructuredBuffer<ColorPainter> _ColorPainters;
+float _PainterCount;
+
+float _StartRadius, _MaxRadius, _RadiusPerSecond;
+float _Width, _Height;
+float _Time;
+float4 _Color;
+
+float PixelIndex(float2 pos)
+{
+    return pos.x * _Width + pos.y;
+}
+
+bool PointInPainterRadius(float2 pos, float painterIndex)
+{
+    ColorPainter cp = _ColorPainters[painterIndex];
+    float r = min(_MaxRadius, _StartRadius + _RadiusPerSecond * (_Time - cp.startTime));
+    return distance(cp.texturePos, pos) < r;
+}
+
+[numthreads(32,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float pixelIndex = PixelIndex(id.xy);
+    float set = 0;
+    if (!_SetPixels[pixelIndex])
+    {
+        for (float i = 0; i < _PainterCount; i = i + 1)
+        {
+            if (PointInPainterRadius(id.xy, i))
+            {
+                i = _PainterCount;
+                set = 1;
+                _SetPixels[pixelIndex] = 1;
+            }
+        }
+    }
+
+    //Result[id.xy] = set ? _Color : float4(0, 0, 0, 0);
+    Result[id.xy] = _SetPixels[pixelIndex] ? _Color : float4(0, 0, 0, 0);
+    //Result[id.xy] = float4(pixelIndex/270000, 0, 0, 1);
+}

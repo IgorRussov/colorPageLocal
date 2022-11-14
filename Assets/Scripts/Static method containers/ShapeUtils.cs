@@ -404,4 +404,14 @@ public class ShapeUtils
         spriteTexture.Apply();
         return spriteTexture;
     }
+
+    public static RenderTexture CreateSceneSizedRenderTexture(Vector2 padding)
+    {
+        int textureWidth = Mathf.RoundToInt(drawingSize.x + padding.x);
+        int textureHeigth = Mathf.RoundToInt(drawingSize.y + padding.y);
+        RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGB32);
+        texture.enableRandomWrite = true;
+        texture.Create();
+        return texture;
+    }
 }
