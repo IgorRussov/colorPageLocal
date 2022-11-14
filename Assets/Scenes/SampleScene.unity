@@ -1726,9 +1726,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
-  - {fileID: 11400000, guid: 55869b900e36d8441b63b686711cf1f2, type: 2}
-  - {fileID: 11400000, guid: 9d44e6cdf2352e744b842a2493d25153, type: 2}
+  - {fileID: 11400000, guid: a876989539cf500448953b943a2dfd87, type: 2}
   - {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
+  - {fileID: 11400000, guid: 9d44e6cdf2352e744b842a2493d25153, type: 2}
+  - {fileID: 11400000, guid: 55869b900e36d8441b63b686711cf1f2, type: 2}
   - {fileID: 11400000, guid: 4085c791f224c1549aa48fe82cd5cdd2, type: 2}
 --- !u!4 &599220231
 Transform:
@@ -5224,7 +5225,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 206
+  m_SortingOrder: 222
   m_Sprite: {fileID: 21300000, guid: ade72dd466ee29949a184284dfd2056e, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0

@@ -161,7 +161,7 @@ public class DrawingZone : MonoBehaviour
             Shape fillShape = fillShapes[i];
             List<Color> colors = levelData.GetColorsRow(i);
             int shapeSortedOrder = levelData.fillShapesOrder[i];
-            sortedFillShapes[i] = fillShape;
+            sortedFillShapes[shapeSortedOrder] = fillShape;
             fillColors[shapeSortedOrder] = colors;
         }
 

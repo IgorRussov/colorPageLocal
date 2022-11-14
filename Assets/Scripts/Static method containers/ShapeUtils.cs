@@ -214,6 +214,11 @@ public class ShapeUtils
         drawingSize = new Vector2(rect.width, rect.height);
     }
 
+    public static Color GetShapeColor(Shape shape)
+    {
+        return ((SolidFill)shape.Fill).Color;
+    }
+
     /// <summary>
     /// Checks all shapes in the scene,
     ///  for each shape checks if it has fill and stroke
@@ -231,13 +236,20 @@ public class ShapeUtils
         List<Shape> shapes = getAllShapes(source.Root, Matrix2D.identity);
         strokeShapes = new List<Shape>();
         fillShapes = new List<Shape>();
+        Dictionary<Color, List<Shape>> shapesOfColor = new Dictionary<Color, List<Shape>>();
+
 
         foreach (Shape s in shapes)
         {  
             if (s.Fill != null)
             {
                 Shape fillShape = GetNoStrokeShape(s);
-                fillShapes.Add(fillShape);
+                Color color = GetShapeColor(fillShape);
+
+                if (!shapesOfColor.ContainsKey(color))
+                    shapesOfColor.Add(color, new List<Shape>());
+                shapesOfColor[color].Add(fillShape);
+               
             }
             if (s.PathProps.Stroke != null)
             {
@@ -245,7 +257,16 @@ public class ShapeUtils
                 strokeShapes.Add(strokeShape);
             }
         }
+
+        foreach(List<Shape> shapesWithColor in shapesOfColor.Values)
+        {
+            Shape baseShape = shapesWithColor[0];
+            baseShape.Contours = shapesWithColor.Select(s => s.Contours[0]).ToArray();
+            fillShapes.Add(baseShape);
+        }
     }
+
+
 
     public static Shape ContinueShape(Shape shape, Vector2 direction, float dist)
     {
