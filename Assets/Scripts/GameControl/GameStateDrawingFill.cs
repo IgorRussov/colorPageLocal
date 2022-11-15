@@ -33,7 +33,7 @@ public class GameStateDrawingFill : GameBaseState
 
         Pencil.instance.SetPencilMode(PencilMode.DrawFill);
         textureFillers = new List<TextureFiller>();
-
+        game.gameControl.drawingZone.filledPercent = 0;
         drawTextureSize = game.gameControl.drawingZone.FillTextureSize;
     }
 
@@ -70,6 +70,12 @@ public class GameStateDrawingFill : GameBaseState
         }
 
         game.gameControl.drawingZone.UpdateDrawFill();
+        if (game.gameControl.drawingZone.filledPercent > game.gameControl.requiredFillToContinue)
+        {
+            //Debug.Log(game.gameControl.drawingZone.filledPercent);
+            UiControl.Instance.ShowNextFillButton();
+        }
+            
         //CalculateTextureFill();
     }
 

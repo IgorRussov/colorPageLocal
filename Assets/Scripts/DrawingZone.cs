@@ -71,6 +71,9 @@ public class DrawingZone : MonoBehaviour
     public static Matrix2D originalSceneMatrix;
     public static VectorUtils.TessellationOptions TesselationOptions;
 
+    [HideInInspector]
+    public float filledPercent;
+
     private VectorUtils.TessellationOptions Options
     {
         get
@@ -621,9 +624,10 @@ public class DrawingZone : MonoBehaviour
 
             fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
             colorPercentResultBuffer.GetData(result);
-            Debug.Log(result[0] + " " + result[1]);
+
+            filledPercent = result[0] * 1.0f / result[1];
+            //Debug.Log(filledPercent);
         }
-        
     }
 
     public void SetupNewDrawFillTexture()
