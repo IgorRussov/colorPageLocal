@@ -10,8 +10,6 @@ public class GameStateDrawingFill : GameBaseState
 {
     private Vector2 lastPos;
     private float minPointDiff = 0.05f;
-    private float fillSpeed = 50;
-    private Vector2 pos;
     private Vector2 drawTextureSize;
 
     private GameStateManager gameStateManager;
@@ -32,8 +30,6 @@ public class GameStateDrawingFill : GameBaseState
         //game.gameControl.drawingZone.SetMaskSprite(game.gameControl.gameStageInfo.FillStageIndex);
         UiControl.Instance.StartFill(this);
         lastPos = Vector2.zero;
-        pos = Vector2.zero;
-        pos = Camera.main.transform.position;
 
         Pencil.instance.SetPencilMode(PencilMode.DrawFill);
         textureFillers = new List<TextureFiller>();

@@ -38,6 +38,7 @@ public class DrawingZone : MonoBehaviour
     public float fillStrokeMaxRadius;
     public float fillStrokeRadiusPerTime;
     public ComputeShader fillComputeShader;
+    public ComputeShader fillPercentComputeShader;
     [Header("Tesselation options")]
     [Range(0f, 10f)]
     public float stepDistance;
@@ -122,26 +123,12 @@ public class DrawingZone : MonoBehaviour
         return ShapeUtils.EvalShape(shape, compLength);
     }
 
-    private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
-    {
-        ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
-        return buffer;
-    }
-
-    private ComputeBuffer CreateColorPainterComputeBuffer(int paintersNumber)
-    {
-        if (paintersNumber < 1)
-            paintersNumber = 1;
-        ComputeBuffer buffer = new ComputeBuffer(paintersNumber, ColorPainter.StructSize);
-        return buffer;
-    }
+    
 
     #endregion
 
     #region Setup phase
 
-    private ComputeBuffer textureSetBuffer;
-    private ComputeBuffer colorPainterComputeBuffer;
 
 
     public void Awake()
@@ -174,7 +161,7 @@ public class DrawingZone : MonoBehaviour
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+        //ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
@@ -311,8 +298,6 @@ public class DrawingZone : MonoBehaviour
         //    fillShapes[drawStageIndex],
         //    patternNode, patternRect);
         //Clear fill draw texture
-        drawFillTexture = ShapeUtils.CreateSceneSizedTexture(Color.grey, Vector2.one * 100, true);
-        drawFillMask.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
 
         SetupNewDrawFillTexture();
         SetMaskSprite(drawStageIndex);
@@ -341,6 +326,8 @@ public class DrawingZone : MonoBehaviour
         drawFillBoundsMeshCollider2.sharedMesh = mesh2;
     }
 
+    bool setMaskTexture = false;
+
     /// <summary>
     /// Sets the mask sprite for drawing fill
     /// </summary>
@@ -349,11 +336,18 @@ public class DrawingZone : MonoBehaviour
     {
         //Set mask sprite
         Sprite maskSprite =
-            DrawingSpriteFactory.CreateSolidColorFillSprite(fillShapes[drawStageIndex], Color.white);
-        //drawFillMask.sprite = maskSprite;
-       
-        drawFillQuadMaterial.SetTexture("_Alpha", 
-            DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
+            DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
+        drawFillMask.sprite = maskSprite;
+        Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(maskSprite, 
+            Mathf.RoundToInt(ShapeUtils.drawingSize.x),
+            Mathf.RoundToInt(ShapeUtils.drawingSize.y), spriteMaterial);
+
+        drawFillQuadMaterial.SetTexture("_Alpha", texture2d);
+        fillPercentComputeShader.SetTexture(kernelInit, maskTexId, texture2d);
+        fillPercentComputeShader.SetTexture(kernelMain, maskTexId, texture2d);
+        setMaskTexture = true;
+        //drawFillQuadMaterial.SetTexture("_Alpha", 
+        //    DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
     }
 
     /// <summary>
@@ -499,9 +493,41 @@ public class DrawingZone : MonoBehaviour
     private int setPixelsBufferId;
     private int colorPaintersBufferId;
 
+    private int drawTexId;
+    private int maskTexId;
+    private int resultSumId;
+
+    private int kernelMain;
+    private int kernelInit;
+
+
+    private ComputeBuffer textureSetBuffer;
+    private ComputeBuffer colorPainterComputeBuffer;
+    private ComputeBuffer colorPercentResultBuffer;
+
     private List<ColorPainter> colorPainters;
 
-    private void SetShaderIds()
+    private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
+    {
+        ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
+        return buffer;
+    }
+
+    private ComputeBuffer CreateColorPainterComputeBuffer(int paintersNumber)
+    {
+        if (paintersNumber < 1)
+            paintersNumber = 1;
+        ComputeBuffer buffer = new ComputeBuffer(paintersNumber, ColorPainter.StructSize);
+        return buffer;
+    }
+
+    private ComputeBuffer CreateColorSetResultBuffer()
+    {
+        ComputeBuffer buffer = new ComputeBuffer(2, sizeof(int));
+        return buffer;
+    }
+
+        private void SetShaderIds()
     {
         widthId = Shader.PropertyToID("_Width");
         heightId = Shader.PropertyToID("_Height");
@@ -516,6 +542,14 @@ public class DrawingZone : MonoBehaviour
         resultTextureId = Shader.PropertyToID("Result");
         setPixelsBufferId = Shader.PropertyToID("_SetPixels");
         colorPaintersBufferId = Shader.PropertyToID("_ColorPainters");
+
+        drawTexId = Shader.PropertyToID("DrawTex");
+        maskTexId = Shader.PropertyToID("MaskTex");
+
+        resultSumId = Shader.PropertyToID("_ResultSum");
+
+        kernelMain = fillPercentComputeShader.FindKernel("CSMain");
+        kernelInit = fillPercentComputeShader.FindKernel("CSInit");
     }
 
     public void SetShaderConstants()
@@ -525,12 +559,19 @@ public class DrawingZone : MonoBehaviour
         fillComputeShader.SetFloat(radiusPerSecondId, fillStrokeRadiusPerTime);
     }
 
+    private void UpdateFilledPercent()
+    {
+
+    }
+
     public void UpdateDrawFill()
     {
         SetShaderConstants();
         fillComputeShader.SetFloat(timeId, Time.time);
         RemoveExpiredPainters();
         DispatchShader();
+
+
     }
 
 
@@ -539,13 +580,15 @@ public class DrawingZone : MonoBehaviour
         textureSetBuffer = CreateTextureSetComputeBuffer(32, 32);
         colorPainterComputeBuffer = CreateColorPainterComputeBuffer(1);
         colorPainters = new List<ColorPainter>();
+        colorPercentResultBuffer = CreateColorSetResultBuffer();
     }
 
     public void ResetComputeBuffers(int width, int height)
     {
         textureSetBuffer = CreateTextureSetComputeBuffer(width, height);
-        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(1);
+        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(10000);
         colorPainters = new List<ColorPainter>();
+        colorPercentResultBuffer = CreateColorSetResultBuffer();
     }
 
     public Vector2 FillTextureSize
@@ -556,12 +599,31 @@ public class DrawingZone : MonoBehaviour
         }
     }
 
+    private int counter = 0;
+
     private void DispatchShader()
     {
-        int width = drawFillQuadMaterial.mainTexture.width / 32 + 1;
-        int height = drawFillQuadMaterial.mainTexture.height / 32 + 1;
+        int width = drawFillQuadMaterial.mainTexture.width / 8 + 1;
+        int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
 
         fillComputeShader.Dispatch(0, width, height, 1);
+        
+        if (counter++ >= 10)
+        {
+            counter = 0;
+            RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+            Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
+            fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
+
+            int[] result = new int[2];
+
+            fillPercentComputeShader.Dispatch(kernelInit, 1, 1, 1);
+
+            fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
+            colorPercentResultBuffer.GetData(result);
+            Debug.Log(result[0] + " " + result[1]);
+        }
+        
     }
 
     public void SetupNewDrawFillTexture()
@@ -573,10 +635,22 @@ public class DrawingZone : MonoBehaviour
         fillComputeShader.SetFloat(heightId, renderTexture.height);
         fillComputeShader.SetFloats(colorId, new float[] { 0, 0, 0, 0 });
 
+        fillPercentComputeShader.SetFloat(widthId, renderTexture.width);
+        fillPercentComputeShader.SetFloat(heightId, renderTexture.height);
+
         ResetComputeBuffers(renderTexture.width, renderTexture.height);
         fillComputeShader.SetBuffer(0, setPixelsBufferId, textureSetBuffer);
         fillComputeShader.SetFloat(painterCountId, 1);
         fillComputeShader.SetBuffer(0, colorPaintersBufferId, colorPainterComputeBuffer);
+
+        fillPercentComputeShader.SetBuffer(kernelInit, resultSumId, colorPercentResultBuffer);
+        fillPercentComputeShader.SetBuffer(kernelMain, resultSumId, colorPercentResultBuffer);
+
+
+        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        fillPercentComputeShader.SetTexture(kernelInit, drawTexId, rt);
+        fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
+        
 
         drawFillQuad.transform.localScale = new Vector3(renderTexture.width / PositionConverter.SvgPixelsPerUnit,
             renderTexture.height / PositionConverter.SvgPixelsPerUnit, 1);
@@ -596,9 +670,16 @@ public class DrawingZone : MonoBehaviour
 
     private void CreateAndSetPainterBuffer()
     {
-        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(colorPainters.Count);
+       // Debug.Log("Create buffer: " + colorPainters.Count);
+        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(10000);
         colorPainterComputeBuffer.SetData(colorPainters);
         fillComputeShader.SetBuffer(0, colorPaintersBufferId, colorPainterComputeBuffer);
+    }
+
+    private void UpdatePainterBuffer()
+    {
+        colorPainterComputeBuffer.SetData(colorPainters);
+        fillComputeShader.SetFloat(painterCountId, colorPainters.Count);
     }
 
     public float TimeToMaxRadius
@@ -620,19 +701,19 @@ public class DrawingZone : MonoBehaviour
                 i--;
             }
         }
-        CreateAndSetPainterBuffer();
+        UpdatePainterBuffer();
     }
 
     public void AddColorPainter(Vector2 pos, int fillStageId)
     {
-       // Debug.Log("Add color painter " + pos);
         fillComputeShader.SetFloats(colorId, ColorToFloat4(Pencil.instance.GetColorByStage(fillStageId)));
+
         ColorPainter painter = new ColorPainter();
         painter.texturePos = pos;
         painter.startTime = Time.time;
         colorPainters.Add(painter);
 
-        CreateAndSetPainterBuffer();
+        UpdatePainterBuffer();
 
     }
 

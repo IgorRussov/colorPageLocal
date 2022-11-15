@@ -85,15 +85,13 @@ public class FileIO
                 continue;
             startingPathElements.Add(pathElement);
             string baseD = pathElement.Attribute("d").Value;
-            string baseClass = pathElement.Attribute("class").Value;
             string[] paths = baseD.Split('M');
             paths = paths.Where(s => s.Length > 0).ToArray();
 
             for(int i = 0; i < paths.Length; i++)
             {
-                XElement newPathElement = new XElement("path");
+                XElement newPathElement = new XElement(pathElement);
                 newPathElement.SetAttributeValue("d", "M" + paths[i]);
-                newPathElement.SetAttributeValue("class", baseClass);
                 pathElement.Parent.Add(newPathElement);
             }
         }

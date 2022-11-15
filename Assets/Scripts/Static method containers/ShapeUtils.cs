@@ -13,6 +13,7 @@ using System;
 public class ShapeUtils
 {
     public static Vector2 drawingSize; //stores the size of the scene we are working with, required for texture generation
+    public static Rect sceneRect;
 
     /// <summary>
     /// Shape is expected to contain only one contour.
@@ -212,6 +213,7 @@ public class ShapeUtils
     {
         Rect rect = VectorUtils.SceneNodeBounds(scene.Root);
         drawingSize = new Vector2(rect.width, rect.height);
+        sceneRect = rect;
     }
 
     public static Color GetShapeColor(Shape shape)
@@ -412,6 +414,7 @@ public class ShapeUtils
         RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGB32);
         texture.enableRandomWrite = true;
         texture.Create();
+        texture.Release();
         return texture;
     }
 }

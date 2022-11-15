@@ -766,7 +766,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161558815}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.41}
+  m_LocalPosition: {x: 0, y: 0, z: -0.4}
   m_LocalScale: {x: 10, y: 10, z: 1.6203}
   m_Children: []
   m_Father: {fileID: 1736346570}
@@ -1255,6 +1255,50 @@ MonoBehaviour:
   m_EffectColor: {r: 0.2, g: 0.21960784, b: 0.23137255, a: 1}
   m_EffectDistance: {x: 6.5, y: 6.5}
   m_UseGraphicAlpha: 1
+--- !u!1 &275473031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 275473033}
+  - component: {fileID: 275473032}
+  m_Layer: 0
+  m_Name: TextureConverter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &275473032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275473031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f5e283c62399b4c8b5a65a44a5be07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureConvertShader: {fileID: 7200000, guid: 53d04eaad5d4a114e979a0a34f6dee0b, type: 3}
+--- !u!4 &275473033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275473031}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.19368, y: -1.5616826, z: -31.63214}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &281155823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1823,10 +1867,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelData:
   - {fileID: 11400000, guid: a876989539cf500448953b943a2dfd87, type: 2}
+  - {fileID: 11400000, guid: 4085c791f224c1549aa48fe82cd5cdd2, type: 2}
   - {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
   - {fileID: 11400000, guid: 9d44e6cdf2352e744b842a2493d25153, type: 2}
   - {fileID: 11400000, guid: 55869b900e36d8441b63b686711cf1f2, type: 2}
-  - {fileID: 11400000, guid: 4085c791f224c1549aa48fe82cd5cdd2, type: 2}
 --- !u!4 &599220231
 Transform:
   m_ObjectHideFlags: 0
@@ -4842,8 +4886,9 @@ MonoBehaviour:
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   fillStrokeStartRadius: 50
   fillStrokeMaxRadius: 100
-  fillStrokeRadiusPerTime: 50
+  fillStrokeRadiusPerTime: 150
   fillComputeShader: {fileID: 7200000, guid: e876e417277405040a226e9a3d6c97a9, type: 3}
+  fillPercentComputeShader: {fileID: 7200000, guid: 53d04eaad5d4a114e979a0a34f6dee0b, type: 3}
   stepDistance: 1
   maxCordDeviation: 1000000
   maxTanAngleDeviation: 1.57

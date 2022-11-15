@@ -13,13 +13,25 @@ Shader "Unlit/FillMaskShader"
             Blend SrcAlpha OneMinusSrcAlpha
             ColorMask RGB
 
-            Pass {
-                SetTexture[_MainTex] {
-                    Combine texture
-                }
-                SetTexture[_Alpha] {
-                    Combine previous, texture * previous
-                }
-            }
-    }
+            CGPROGRAM
+            #pragma surface surf Lambert
+
+            fixed4 _Color;
+            sampler2D _MainTex;
+            sampler2D _Alpha;
+
+            struct Input {
+              float2 uv_MainTex;
+            };
+
+            void surf(Input IN, inout SurfaceOutput o) {
+              
+              o.Albedo = tex2D(_MainTex, IN.uv_MainTex);
+              o.Alpha = tex2D(_MainTex, IN.uv_MainTex).r > 0.2;
+        }
+        ENDCG
+
+        
+        }
+        Fallback "Transparent/VertexUnlit"
 }

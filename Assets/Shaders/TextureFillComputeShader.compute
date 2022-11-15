@@ -32,11 +32,10 @@ bool PointInPainterRadius(float2 pos, float painterIndex)
     return distance(cp.texturePos, pos) < r;
 }
 
-[numthreads(32,32,1)]
+[numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     float pixelIndex = PixelIndex(id.xy);
-    float set = 0;
     if (!_SetPixels[pixelIndex])
     {
         for (float i = 0; i < _PainterCount; i = i + 1)
@@ -44,7 +43,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             if (PointInPainterRadius(id.xy, i))
             {
                 i = _PainterCount;
-                set = 1;
                 _SetPixels[pixelIndex] = 1;
             }
         }
@@ -52,5 +50,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
     //Result[id.xy] = set ? _Color : float4(0, 0, 0, 0);
     Result[id.xy] = _SetPixels[pixelIndex] ? _Color : float4(0, 0, 0, 0);
+    //Result[id.xy] = _Color;
     //Result[id.xy] = float4(pixelIndex/270000, 0, 0, 1);
 }
