@@ -63,6 +63,11 @@ public class UiControl : MonoBehaviour
     {
         this.drawingFillState = drawingFillState;
         colorButtonsPanel.SetActive(false);
+
+    }
+
+    public void ShowNextFillButton()
+    {
         nextFillButton.SetActive(true);
     }
 

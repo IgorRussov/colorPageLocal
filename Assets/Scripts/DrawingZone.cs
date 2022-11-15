@@ -16,14 +16,15 @@ public class DrawingZone : MonoBehaviour
     public Transform strokeShapesParentObject;
     public Transform fillShapesParentObject;
     public Transform autoStrokeShapesParentObject;
-    public SpriteRenderer fillDrawSprite;
-    public SpriteMask fillDrawMask;
+    public GameObject drawFillQuad;
     public GameObject shapesParentObject;
     public MeshCollider drawFillBoundsMeshCollider;
     public MeshCollider drawFillBoundsMeshCollider2;
     public CameraControl cameraControl;
+    public SpriteMask drawFillMask;
     [Header("Image settings")]
     public float desiredSvgWidth;
+    public Material spriteMaterial;
     [Header("Preview stroke settings")]
     public float previewStrokeWidth;
     public float previewStrokeFillLength;
@@ -33,7 +34,11 @@ public class DrawingZone : MonoBehaviour
     public float drawStrokeWidth;
     public Color drawStrokeColor;
     [Header("Fill stroke settings")]
-    public float fillStrokeWidth;
+    public float fillStrokeStartRadius;
+    public float fillStrokeMaxRadius;
+    public float fillStrokeRadiusPerTime;
+    public ComputeShader fillComputeShader;
+    public ComputeShader fillPercentComputeShader;
     [Header("Tesselation options")]
     [Range(0f, 10f)]
     public float stepDistance;
@@ -61,8 +66,13 @@ public class DrawingZone : MonoBehaviour
     private GameObject startLineCueObject;
     private GameObject endLineCueObject;
 
+    private Material drawFillQuadMaterial;
+
     public static Matrix2D originalSceneMatrix;
     public static VectorUtils.TessellationOptions TesselationOptions;
+
+    [HideInInspector]
+    public float filledPercent;
 
     private VectorUtils.TessellationOptions Options
     {
@@ -115,9 +125,23 @@ public class DrawingZone : MonoBehaviour
         float compLength = length * pos0to1;
         return ShapeUtils.EvalShape(shape, compLength);
     }
+
+    
+
     #endregion
 
     #region Setup phase
+
+
+
+    public void Awake()
+    {
+        ResetComputeBuffers();
+        drawFillQuadMaterial = drawFillQuad.GetComponent<MeshRenderer>().material;
+        SetShaderIds();
+        SetShaderConstants();
+    }
+
     public GameStageInfo SetupDrawing(LevelData levelData)
     {
         return PrepareData(levelData);
@@ -140,7 +164,7 @@ public class DrawingZone : MonoBehaviour
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+        //ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
@@ -161,7 +185,7 @@ public class DrawingZone : MonoBehaviour
             Shape fillShape = fillShapes[i];
             List<Color> colors = levelData.GetColorsRow(i);
             int shapeSortedOrder = levelData.fillShapesOrder[i];
-            sortedFillShapes[i] = fillShape;
+            sortedFillShapes[shapeSortedOrder] = fillShape;
             fillColors[shapeSortedOrder] = colors;
         }
 
@@ -169,7 +193,7 @@ public class DrawingZone : MonoBehaviour
         Shape[] sortedStrokeShapes = new Shape[strokeShapes.Count];
         autoStrokeShapes = new List<Shape>();
 
-        for(int i = 0; i < levelData.strokeShapesOrder.Length; i++)
+        for (int i = 0; i < levelData.strokeShapesOrder.Length; i++)
         {
             Shape strokeShape = strokeShapes[i];
             int shapeSortedOrder = levelData.strokeShapesOrder[i];
@@ -234,7 +258,7 @@ public class DrawingZone : MonoBehaviour
         }
         //Create auto stroke sprite renderers and sprites
         GameObject originalAutoStrokeSprite = autoStrokeShapesParentObject.GetChild(0).gameObject;
-        for(int i = 0; i < autoStrokeShapes.Count; i++)
+        for (int i = 0; i < autoStrokeShapes.Count; i++)
         {
             GameObject newSprite = GameObject.Instantiate(originalAutoStrokeSprite, autoStrokeShapesParentObject);
             drawingSprites[strokeSpritesCount + fillShapes.Count + i] = newSprite.GetComponent<SpriteRenderer>();
@@ -250,7 +274,7 @@ public class DrawingZone : MonoBehaviour
     }
     #endregion
     #region Update drawing sprites
-   
+
 
     public void ContinueFillDrawSprite(int drawStageIndex, Vector2 direction, float dist)
     {
@@ -277,9 +301,8 @@ public class DrawingZone : MonoBehaviour
         //    fillShapes[drawStageIndex],
         //    patternNode, patternRect);
         //Clear fill draw texture
-        drawFillTexture = ShapeUtils.CreateSceneSizedTexture(Color.grey, Vector2.one * 100, true);
-        fillDrawSprite.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
 
+        SetupNewDrawFillTexture();
         SetMaskSprite(drawStageIndex);
         SetDrawFillBoundsCollider(drawStageIndex);
     }
@@ -306,6 +329,8 @@ public class DrawingZone : MonoBehaviour
         drawFillBoundsMeshCollider2.sharedMesh = mesh2;
     }
 
+    bool setMaskTexture = false;
+
     /// <summary>
     /// Sets the mask sprite for drawing fill
     /// </summary>
@@ -314,8 +339,18 @@ public class DrawingZone : MonoBehaviour
     {
         //Set mask sprite
         Sprite maskSprite =
-            DrawingSpriteFactory.CreateSolidColorFillSprite(fillShapes[drawStageIndex], Color.white);
-        fillDrawMask.sprite = maskSprite;
+            DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
+        drawFillMask.sprite = maskSprite;
+        Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(maskSprite, 
+            Mathf.RoundToInt(ShapeUtils.drawingSize.x),
+            Mathf.RoundToInt(ShapeUtils.drawingSize.y), spriteMaterial);
+
+        drawFillQuadMaterial.SetTexture("_Alpha", texture2d);
+        fillPercentComputeShader.SetTexture(kernelInit, maskTexId, texture2d);
+        fillPercentComputeShader.SetTexture(kernelMain, maskTexId, texture2d);
+        setMaskTexture = true;
+        //drawFillQuadMaterial.SetTexture("_Alpha", 
+        //    DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
     }
 
     /// <summary>
@@ -330,15 +365,15 @@ public class DrawingZone : MonoBehaviour
             DrawingSpriteFactory.CreateSolidColorFillSprite(fillShapes[fillStageIndex], color);
         //Clear fill draw texture
         drawFillTexture = ShapeUtils.CreateSceneSizedTexture(Color.clear, Vector2.one * 100, false);
-        fillDrawSprite.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
+        drawFillMask.sprite = DrawingSpriteFactory.CreateTextureSprite(drawFillTexture);
     }
 
     public void HideCurrentDrawFillSprites(int fillStageIndex)
     {
         drawingSprites[previewStrokeShapes.Count * 2 + fillStageIndex].enabled = false;
-        fillDrawMask.sprite = null;
+        drawFillMask.sprite = null;
     }
-    
+
     /// <summary>
     /// Enables the preview and drawing sprite and sets drawing sprite to be not filled by line 
     /// Positions sprites that show the beginning and end of the line that is drawn now
@@ -358,11 +393,11 @@ public class DrawingZone : MonoBehaviour
             DrawingSpriteFactory.CreateLineSprite(previewStrokeShapes[drawingStage],
             ShapeUtils.CreateStrokeArray(0, 10000), drawStrokeWidth, drawStrokeColor);
 
-        
+
         //Create cue sprites
         Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0));
         Vector2 endLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 1));
-        
+
         startLineCueObject = CreateSpriteObject(startLineSprite, startLinePos, "Start line marker");
         endLineCueObject = CreateSpriteObject(endLineSprite, endLinePos, "End line marker");
 
@@ -402,7 +437,7 @@ public class DrawingZone : MonoBehaviour
 
     public void SetAutoDrawSpritesEnabled(bool enabled)
     {
-        for(int i = 0; i < autoStrokeShapes.Count; i++)
+        for (int i = 0; i < autoStrokeShapes.Count; i++)
         {
             drawingSprites[previewStrokeShapes.Count * 2 + fillShapes.Count + i].enabled = enabled;
         }
@@ -446,6 +481,246 @@ public class DrawingZone : MonoBehaviour
         GameObject.Destroy(startLineCueObject);
         GameObject.Destroy(endLineCueObject);
     }
+    #endregion
+    #region Draw fill shader work
+    private int widthId;
+    private int heightId;
+    private int timeId;
+    private int startRadiusId;
+    private int maxRadiusId;
+    private int radiusPerSecondId;
+    private int painterCountId;
+    private int colorId;
+
+    private int resultTextureId;
+    private int setPixelsBufferId;
+    private int colorPaintersBufferId;
+
+    private int drawTexId;
+    private int maskTexId;
+    private int resultSumId;
+
+    private int kernelMain;
+    private int kernelInit;
+
+
+    private ComputeBuffer textureSetBuffer;
+    private ComputeBuffer colorPainterComputeBuffer;
+    private ComputeBuffer colorPercentResultBuffer;
+
+    private List<ColorPainter> colorPainters;
+
+    private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
+    {
+        ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
+        return buffer;
+    }
+
+    private ComputeBuffer CreateColorPainterComputeBuffer(int paintersNumber)
+    {
+        if (paintersNumber < 1)
+            paintersNumber = 1;
+        ComputeBuffer buffer = new ComputeBuffer(paintersNumber, ColorPainter.StructSize);
+        return buffer;
+    }
+
+    private ComputeBuffer CreateColorSetResultBuffer()
+    {
+        ComputeBuffer buffer = new ComputeBuffer(2, sizeof(int));
+        return buffer;
+    }
+
+        private void SetShaderIds()
+    {
+        widthId = Shader.PropertyToID("_Width");
+        heightId = Shader.PropertyToID("_Height");
+        heightId = Shader.PropertyToID("_Height");
+        timeId = Shader.PropertyToID("_Time");
+        startRadiusId = Shader.PropertyToID("_StartRadius");
+        maxRadiusId = Shader.PropertyToID("_MaxRadius");
+        radiusPerSecondId = Shader.PropertyToID("_RadiusPerSecond");
+        painterCountId = Shader.PropertyToID("_PainterCount");
+        colorId = Shader.PropertyToID("_Color");
+
+        resultTextureId = Shader.PropertyToID("Result");
+        setPixelsBufferId = Shader.PropertyToID("_SetPixels");
+        colorPaintersBufferId = Shader.PropertyToID("_ColorPainters");
+
+        drawTexId = Shader.PropertyToID("DrawTex");
+        maskTexId = Shader.PropertyToID("MaskTex");
+
+        resultSumId = Shader.PropertyToID("_ResultSum");
+
+        kernelMain = fillPercentComputeShader.FindKernel("CSMain");
+        kernelInit = fillPercentComputeShader.FindKernel("CSInit");
+    }
+
+    public void SetShaderConstants()
+    {
+        fillComputeShader.SetFloat(startRadiusId, fillStrokeStartRadius);
+        fillComputeShader.SetFloat(maxRadiusId, fillStrokeMaxRadius);
+        fillComputeShader.SetFloat(radiusPerSecondId, fillStrokeRadiusPerTime);
+    }
+
+    private void UpdateFilledPercent()
+    {
+
+    }
+
+    public void UpdateDrawFill()
+    {
+        SetShaderConstants();
+        fillComputeShader.SetFloat(timeId, Time.time);
+        RemoveExpiredPainters();
+        DispatchShader();
+
+
+    }
+
+
+    public void ResetComputeBuffers()
+    {
+        textureSetBuffer = CreateTextureSetComputeBuffer(32, 32);
+        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(1);
+        colorPainters = new List<ColorPainter>();
+        colorPercentResultBuffer = CreateColorSetResultBuffer();
+    }
+
+    public void ResetComputeBuffers(int width, int height)
+    {
+        textureSetBuffer = CreateTextureSetComputeBuffer(width, height);
+        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(10000);
+        colorPainters = new List<ColorPainter>();
+        colorPercentResultBuffer = CreateColorSetResultBuffer();
+    }
+
+    public Vector2 FillTextureSize
+    {
+        get
+        {
+            return new Vector2(drawFillQuadMaterial.mainTexture.width, drawFillQuadMaterial.mainTexture.height);
+        }
+    }
+
+    private int counter = 0;
+
+    private void DispatchShader()
+    {
+        int width = drawFillQuadMaterial.mainTexture.width / 8 + 1;
+        int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
+
+        fillComputeShader.Dispatch(0, width, height, 1);
+        
+        if (counter++ >= 10)
+        {
+            counter = 0;
+            RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+            Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
+            fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
+
+            int[] result = new int[2];
+
+            fillPercentComputeShader.Dispatch(kernelInit, 1, 1, 1);
+
+            fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
+            colorPercentResultBuffer.GetData(result);
+
+            filledPercent = result[0] * 1.0f / result[1];
+            //Debug.Log(filledPercent);
+        }
+    }
+
+    public void SetupNewDrawFillTexture()
+    {
+        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        drawFillQuadMaterial.mainTexture = renderTexture;
+        fillComputeShader.SetTexture(0, resultTextureId, renderTexture);
+        fillComputeShader.SetFloat(widthId, renderTexture.width);
+        fillComputeShader.SetFloat(heightId, renderTexture.height);
+        fillComputeShader.SetFloats(colorId, new float[] { 0, 0, 0, 0 });
+
+        fillPercentComputeShader.SetFloat(widthId, renderTexture.width);
+        fillPercentComputeShader.SetFloat(heightId, renderTexture.height);
+
+        ResetComputeBuffers(renderTexture.width, renderTexture.height);
+        fillComputeShader.SetBuffer(0, setPixelsBufferId, textureSetBuffer);
+        fillComputeShader.SetFloat(painterCountId, 1);
+        fillComputeShader.SetBuffer(0, colorPaintersBufferId, colorPainterComputeBuffer);
+
+        fillPercentComputeShader.SetBuffer(kernelInit, resultSumId, colorPercentResultBuffer);
+        fillPercentComputeShader.SetBuffer(kernelMain, resultSumId, colorPercentResultBuffer);
+
+
+        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        fillPercentComputeShader.SetTexture(kernelInit, drawTexId, rt);
+        fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
+        
+
+        drawFillQuad.transform.localScale = new Vector3(renderTexture.width / PositionConverter.SvgPixelsPerUnit,
+            renderTexture.height / PositionConverter.SvgPixelsPerUnit, 1);
+
+        DispatchShader();
+    }
+
+    private float[] ColorToFloat4(Color32 color)
+    {
+        float[] ret = new float[4];
+        ret[0] = (float)color.r / 255;
+        ret[1] = (float)color.g / 255;
+        ret[2] = (float)color.b / 255;
+        ret[3] = (float)color.a / 255;
+        return ret;
+    }
+
+    private void CreateAndSetPainterBuffer()
+    {
+       // Debug.Log("Create buffer: " + colorPainters.Count);
+        colorPainterComputeBuffer = CreateColorPainterComputeBuffer(10000);
+        colorPainterComputeBuffer.SetData(colorPainters);
+        fillComputeShader.SetBuffer(0, colorPaintersBufferId, colorPainterComputeBuffer);
+    }
+
+    private void UpdatePainterBuffer()
+    {
+        colorPainterComputeBuffer.SetData(colorPainters);
+        fillComputeShader.SetFloat(painterCountId, colorPainters.Count);
+    }
+
+    public float TimeToMaxRadius
+    {
+        get
+        {
+            return (fillStrokeMaxRadius - fillStrokeStartRadius) / fillStrokeRadiusPerTime;
+        }
+    }
+
+    public void RemoveExpiredPainters()
+    {
+        for(int i = 0; i < colorPainters.Count; i++)
+        {
+            ColorPainter cp = colorPainters[i];
+            if (cp.startTime + TimeToMaxRadius < Time.time)
+            {
+                colorPainters.Remove(cp);
+                i--;
+            }
+        }
+        UpdatePainterBuffer();
+    }
+
+    public void AddColorPainter(Vector2 pos, int fillStageId)
+    {
+        fillComputeShader.SetFloats(colorId, ColorToFloat4(Pencil.instance.GetColorByStage(fillStageId)));
+
+        ColorPainter painter = new ColorPainter();
+        painter.texturePos = pos;
+        painter.startTime = Time.time;
+        colorPainters.Add(painter);
+
+        UpdatePainterBuffer();
+
+    }
+
     #endregion
 }
 

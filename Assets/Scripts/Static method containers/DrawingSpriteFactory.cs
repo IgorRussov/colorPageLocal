@@ -29,7 +29,7 @@ public class DrawingSpriteFactory
     /// <param name="shape"></param>
     /// <param name="newShape"></param>
     /// <returns></returns>
-    private static Scene CreateSceneWithClonedShape(Shape shape, out Shape newShape)
+    private static Scene CreateSceneWithClonedShape(Shape shape, out Shape newShape, bool addEmptyRectToScene)
     {
         Scene scene = new Scene();
         SceneNode node = new SceneNode();
@@ -38,6 +38,21 @@ public class DrawingSpriteFactory
         node.Shapes = new List<Shape>();
 
         newShape = CloneShape(shape);
+
+        if (addEmptyRectToScene)
+        {
+            Shape rectShape = new Shape();
+            rectShape.Fill = CreateSolidFill(Color.clear, 1);
+
+            Rect rect = new Rect(ShapeUtils.sceneRect);
+            rect.x -= 50;
+            rect.y -= 50;
+            rect.width += 100;
+            rect.height += 100;
+            VectorUtils.MakeRectangleShape(rectShape, rect);
+            node.Shapes.Add(rectShape);
+        }
+
         node.Shapes.Add(newShape);
 
         return scene;
@@ -54,7 +69,7 @@ public class DrawingSpriteFactory
         SolidFill fill = new SolidFill();
         fill.Color = fillColor;
         fill.Opacity = opacity;
-        fill.Mode = FillMode.NonZero;
+        fill.Mode = FillMode.OddEven;
 
         return fill;
     }
@@ -161,10 +176,10 @@ public class DrawingSpriteFactory
     /// <param name="fill"></param>
     /// <param name="stroke"></param>
     /// <returns></returns>
-    private static Sprite CreateSprite(Shape shape, IFill fill, Stroke stroke)
+    private static Sprite CreateSprite(Shape shape, IFill fill, Stroke stroke, bool addEmptyRectToScene = false)
     {
         Shape newShape = null;
-        Scene newScene = CreateSceneWithClonedShape(shape, out newShape);
+        Scene newScene = CreateSceneWithClonedShape(shape, out newShape, addEmptyRectToScene);
 
         PathProperties props = CreatePathProperties(stroke);
 
@@ -190,7 +205,7 @@ public class DrawingSpriteFactory
         Color strokeColor)
     {
         Shape newShape = null;
-        Scene newScene = CreateSceneWithClonedShape(shape, out newShape);
+        Scene newScene = CreateSceneWithClonedShape(shape, out newShape, false);
 
         Stroke original = shape.PathProps.Stroke;
         Stroke stroke = CreateStroke(dashesArray, strokeWidth, strokeColor, original);
@@ -228,7 +243,19 @@ public class DrawingSpriteFactory
     {
         return CreateSprite(shape, patternFill, null);
     }
-    
+
+    public static RenderTexture TextureFromSprite(Shape sourceShape, Sprite sprite, Material material)
+    {
+        Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(sprite, 904, 900, material);
+        Rect rect = sprite.rect;
+        float offsetX = 0;
+        float offsetY = 0;
+
+        RenderTexture renderTexture = TextureConverter.Instance.PanTexture(texture2d, new Vector2(offsetX, offsetY));
+
+        return renderTexture;
+    }
+
     /// <summary>
     /// Creates a sprite with solid fill of provided color and no stroke
     /// </summary>
@@ -242,6 +269,13 @@ public class DrawingSpriteFactory
         SolidFill fill = CreateSolidFill(fillColor, 1);
 
         return CreateSprite(shape, fill, null);
+    }
+
+    public static Sprite CreateMaskSprite(Shape shape)
+    {
+        SolidFill fill = CreateSolidFill(Color.white, 1);
+
+        return CreateSprite(shape, fill, null, true);
     }
 
     /// <summary>
@@ -322,7 +356,7 @@ public class DrawingSpriteFactory
     {
 
         Shape newShape = null;
-        Scene newScene = CreateSceneWithClonedShape(shape, out newShape);
+        Scene newScene = CreateSceneWithClonedShape(shape, out newShape, false);
      
         if (shape.Contours.Length > 1)
         {

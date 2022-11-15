@@ -13,6 +13,7 @@ using System;
 public class ShapeUtils
 {
     public static Vector2 drawingSize; //stores the size of the scene we are working with, required for texture generation
+    public static Rect sceneRect;
 
     /// <summary>
     /// Shape is expected to contain only one contour.
@@ -212,6 +213,12 @@ public class ShapeUtils
     {
         Rect rect = VectorUtils.SceneNodeBounds(scene.Root);
         drawingSize = new Vector2(rect.width, rect.height);
+        sceneRect = rect;
+    }
+
+    public static Color GetShapeColor(Shape shape)
+    {
+        return ((SolidFill)shape.Fill).Color;
     }
 
     /// <summary>
@@ -231,13 +238,20 @@ public class ShapeUtils
         List<Shape> shapes = getAllShapes(source.Root, Matrix2D.identity);
         strokeShapes = new List<Shape>();
         fillShapes = new List<Shape>();
+        Dictionary<Color, List<Shape>> shapesOfColor = new Dictionary<Color, List<Shape>>();
+
 
         foreach (Shape s in shapes)
         {  
             if (s.Fill != null)
             {
                 Shape fillShape = GetNoStrokeShape(s);
-                fillShapes.Add(fillShape);
+                Color color = GetShapeColor(fillShape);
+
+                if (!shapesOfColor.ContainsKey(color))
+                    shapesOfColor.Add(color, new List<Shape>());
+                shapesOfColor[color].Add(fillShape);
+               
             }
             if (s.PathProps.Stroke != null)
             {
@@ -245,7 +259,16 @@ public class ShapeUtils
                 strokeShapes.Add(strokeShape);
             }
         }
+
+        foreach(List<Shape> shapesWithColor in shapesOfColor.Values)
+        {
+            Shape baseShape = shapesWithColor[0];
+            baseShape.Contours = shapesWithColor.Select(s => s.Contours[0]).ToArray();
+            fillShapes.Add(baseShape);
+        }
     }
+
+
 
     public static Shape ContinueShape(Shape shape, Vector2 direction, float dist)
     {
@@ -382,5 +405,16 @@ public class ShapeUtils
         spriteTexture.SetPixels32(fillColorArray);
         spriteTexture.Apply();
         return spriteTexture;
+    }
+
+    public static RenderTexture CreateSceneSizedRenderTexture(Vector2 padding)
+    {
+        int textureWidth = Mathf.RoundToInt(drawingSize.x + padding.x);
+        int textureHeigth = Mathf.RoundToInt(drawingSize.y + padding.y);
+        RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGB32);
+        texture.enableRandomWrite = true;
+        texture.Create();
+        texture.Release();
+        return texture;
     }
 }

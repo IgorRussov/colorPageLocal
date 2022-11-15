@@ -70,7 +70,7 @@ public class LevelEditDrawingZone : MonoBehaviour
 
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
-        ShapeUtils.ScaleSceneToFit(scene, 1000);
+        //ShapeUtils.ScaleSceneToFit(scene, 1000);
         DrawingZone.originalSceneMatrix = scene.Root.Transform;
 
         fillSpriteRenderers = new SpriteRenderer[fillShapes.Count];
