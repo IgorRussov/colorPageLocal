@@ -1658,7 +1658,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f329f8f216658444ac913f6fc405895, type: 3}
   m_Name: 
@@ -3390,7 +3390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: butterfly
+  svgFileName: butterfly2
   sourceLevelData: {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
@@ -3442,7 +3442,7 @@ MonoBehaviour:
     possibleColors:
     - {r: 0.9019608, g: 0.5411765, b: 0.7137255, a: 1}
     - {r: 0.9019608, g: 0.60784316, b: 0.5411765, a: 1}
-  wantRead: 0
+  wantRead: 1
   wantSave: 0
   wantReadData: 0
   highlightStrokeShapeId: 0

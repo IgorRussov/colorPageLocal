@@ -173,8 +173,6 @@ public class DrawingZone : MonoBehaviour
 
         List<Shape> strokeShapes;
 
-
-        ShapeUtils.SetDrawingSize(scene);
         ShapeUtils.SeparateStrokeAndFill(scene, out strokeShapes, out fillShapes);
 
         Shape[] sortedFillShapes = new Shape[fillShapes.Count];
@@ -341,14 +339,23 @@ public class DrawingZone : MonoBehaviour
         Sprite maskSprite =
             DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
         drawFillMask.sprite = maskSprite;
+        int textureWidth = Mathf.RoundToInt(ShapeUtils.drawingSize.x);
+        int textureHeight = Mathf.RoundToInt(ShapeUtils.drawingSize.y);
+        textureWidth = Mathf.RoundToInt(maskSprite.rect.width);
+        textureHeight = Mathf.RoundToInt(maskSprite.rect.height);
+
+
         Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(maskSprite, 
-            Mathf.RoundToInt(ShapeUtils.drawingSize.x),
-            Mathf.RoundToInt(ShapeUtils.drawingSize.y), spriteMaterial);
+            textureWidth, textureHeight, spriteMaterial);
 
         drawFillQuadMaterial.SetTexture("_Alpha", texture2d);
         fillPercentComputeShader.SetTexture(kernelInit, maskTexId, texture2d);
         fillPercentComputeShader.SetTexture(kernelMain, maskTexId, texture2d);
         setMaskTexture = true;
+
+        drawFillQuad.transform.localScale = new Vector3(textureWidth / PositionConverter.SvgPixelsPerUnit,
+           textureHeight / PositionConverter.SvgPixelsPerUnit, 1);
+
         //drawFillQuadMaterial.SetTexture("_Alpha", 
         //    DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
     }
@@ -616,7 +623,7 @@ public class DrawingZone : MonoBehaviour
         if (counter++ >= 10)
         {
             counter = 0;
-            RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+            RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
             Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
             fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
 
@@ -634,7 +641,7 @@ public class DrawingZone : MonoBehaviour
 
     public void SetupNewDrawFillTexture()
     {
-        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
         drawFillQuadMaterial.mainTexture = renderTexture;
         fillComputeShader.SetTexture(0, resultTextureId, renderTexture);
         fillComputeShader.SetFloat(widthId, renderTexture.width);
@@ -653,7 +660,7 @@ public class DrawingZone : MonoBehaviour
         fillPercentComputeShader.SetBuffer(kernelMain, resultSumId, colorPercentResultBuffer);
 
 
-        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
         fillPercentComputeShader.SetTexture(kernelInit, drawTexId, rt);
         fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
         

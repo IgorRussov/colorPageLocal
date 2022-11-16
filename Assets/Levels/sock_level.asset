@@ -10,35 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: bow_level
+  m_Name: sock_level
   m_EditorClassIdentifier: 
-  svgFileName: bow
-  strokeShapesOrder: 00000000010000000200000003000000040000000500000006000000
+  svgFileName: sock
+  strokeShapesOrder: 000000000100000002000000
   fillShapesOrder: 0000000001000000
   colors:
   - row:
-    - r: 255
-      g: 225
-      b: 49
-      a: 255
-    - r: 255
-      g: 49
-      b: 79
-      a: 255
-    - r: 255
-      g: 156
-      b: 49
-      a: 255
-  - row:
-    - r: 46
-      g: 225
+    - r: 204
+      g: 80
       b: 255
       a: 255
-    - r: 46
-      g: 255
-      b: 76
+    - r: 80
+      g: 131
+      b: 255
       a: 255
-    - r: 154
-      g: 39
-      b: 14
+    - r: 146
+      g: 80
+      b: 255
+      a: 255
+  - row:
+    - r: 71
+      g: 244
+      b: 244
+      a: 255
+    - r: 71
+      g: 244
+      b: 71
+      a: 255
+    - r: 188
+      g: 85
+      b: 68
       a: 255

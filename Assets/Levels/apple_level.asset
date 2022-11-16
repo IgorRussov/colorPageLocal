@@ -10,48 +10,61 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: kite_level
+  m_Name: apple_level
   m_EditorClassIdentifier: 
-  svgFileName: kite
+  svgFileName: apple
   strokeShapesOrder: 00000000010000000200000003000000
-  fillShapesOrder: 000000000100000002000000
+  fillShapesOrder: 00000000010000000200000003000000
   colors:
   - row:
-    - r: 46
-      g: 225
+    - r: 193
+      g: 40
+      b: 46
+      a: 255
+    - r: 187
+      g: 40
+      b: 193
+      a: 255
+    - r: 193
+      g: 40
+      b: 97
+      a: 255
+  - row:
+    - r: 255
+      g: 255
       b: 255
       a: 255
-    - r: 46
+    - r: 255
       g: 255
-      b: 76
+      b: 255
       a: 255
-    - r: 46
+    - r: 255
       g: 255
-      b: 215
+      b: 255
       a: 255
   - row:
-    - r: 239
-      g: 69
-      b: 239
+    - r: 180
+      g: 232
+      b: 91
       a: 255
-    - r: 69
-      g: 69
-      b: 239
+    - r: 232
+      g: 143
+      b: 91
       a: 255
-    - r: 182
-      g: 69
-      b: 239
+    - r: 227
+      g: 232
+      b: 91
       a: 255
   - row:
-    - r: 255
-      g: 230
-      b: 49
+    - r: 139
+      g: 98
+      b: 57
       a: 255
-    - r: 255
-      g: 49
-      b: 74
+    - r: 139
+      g: 57
+      b: 98
       a: 255
-    - r: 255
-      g: 161
-      b: 49
+    - r: 139
+      g: 71
+      b: 57
       a: 255

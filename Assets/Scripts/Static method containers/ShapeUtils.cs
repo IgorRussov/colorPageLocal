@@ -209,11 +209,12 @@ public class ShapeUtils
     /// Must be called before the drawing stage begins, during setup
     /// </summary>
     /// <param name="scene"></param>
-    public static void SetDrawingSize(Scene scene)
+    public static void SetDrawingSize(float width, float height)
     {
-        Rect rect = VectorUtils.SceneNodeBounds(scene.Root);
-        drawingSize = new Vector2(rect.width, rect.height);
+        Rect rect = new Rect(0, 0, width, height);
         sceneRect = rect;
+        drawingSize.x = width;
+        drawingSize.y = height;
     }
 
     public static Color GetShapeColor(Shape shape)

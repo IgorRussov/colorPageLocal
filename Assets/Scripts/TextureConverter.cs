@@ -27,7 +27,7 @@ public class TextureConverter : MonoBehaviour
         textureConvertShader.SetFloats(offsetId, new float[] { offset.x, offset.y });
         textureConvertShader.SetTexture(0, textureInId, sourceTexture);
 
-        RenderTexture ret = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.one * 100);
+        RenderTexture ret = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
 
         int height = sourceTexture.height;
         int width = sourceTexture.width;

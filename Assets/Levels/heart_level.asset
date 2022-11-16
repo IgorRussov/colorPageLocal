@@ -10,48 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: butterfly_level
+  m_Name: heart_level
   m_EditorClassIdentifier: 
-  svgFileName: butterfly
-  strokeShapesOrder: ffffffffffffffffffffffffffffffff0100000002000000030000000400000000000000
-  fillShapesOrder: 000000000100000002000000
+  svgFileName: heart
+  strokeShapesOrder: 00000000ffffffff
+  fillShapesOrder: 0000000001000000
   colors:
   - row:
     - r: 255
-      g: 67
-      b: 67
+      g: 82
+      b: 193
       a: 255
     - r: 255
-      g: 67
+      g: 42
+      b: 0
+      a: 255
+    - r: 36
+      g: 73
+      b: 231
+      a: 255
+  - row:
+    - r: 255
+      g: 255
       b: 255
       a: 255
     - r: 255
-      g: 67
-      b: 130
-      a: 255
-  - row:
-    - r: 255
-      g: 230
-      b: 49
+      g: 255
+      b: 255
       a: 255
     - r: 255
-      g: 49
-      b: 74
-      a: 255
-    - r: 255
-      g: 161
-      b: 49
-      a: 255
-  - row:
-    - r: 53
-      g: 53
-      b: 53
-      a: 255
-    - r: 53
-      g: 53
-      b: 53
-      a: 255
-    - r: 53
-      g: 53
-      b: 53
+      g: 255
+      b: 255
       a: 255

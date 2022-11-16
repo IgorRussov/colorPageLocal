@@ -10,35 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: bow_level
+  m_Name: baloon2_level
   m_EditorClassIdentifier: 
-  svgFileName: bow
-  strokeShapesOrder: 00000000010000000200000003000000040000000500000006000000
+  svgFileName: baloon2
+  strokeShapesOrder: 00000000010000000200000003000000
   fillShapesOrder: 0000000001000000
   colors:
   - row:
-    - r: 255
-      g: 225
-      b: 49
+    - r: 60
+      g: 145
+      b: 229
       a: 255
-    - r: 255
-      g: 49
-      b: 79
+    - r: 60
+      g: 229
+      b: 144
       a: 255
-    - r: 255
-      g: 156
-      b: 49
+    - r: 60
+      g: 201
+      b: 229
       a: 255
   - row:
-    - r: 46
-      g: 225
+    - r: 255
+      g: 255
       b: 255
       a: 255
-    - r: 46
+    - r: 255
       g: 255
-      b: 76
+      b: 255
       a: 255
-    - r: 154
-      g: 39
-      b: 14
+    - r: 255
+      g: 255
+      b: 255
       a: 255

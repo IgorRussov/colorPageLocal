@@ -10,48 +10,48 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: butterfly_level
+  m_Name: yellow_duck_level
   m_EditorClassIdentifier: 
-  svgFileName: butterfly
-  strokeShapesOrder: ffffffffffffffffffffffffffffffff0100000002000000030000000400000000000000
-  fillShapesOrder: 000000000100000002000000
+  svgFileName: yellow_duck
+  strokeShapesOrder: 00000000ffffffff
+  fillShapesOrder: 020000000000000001000000
   colors:
   - row:
+    - r: 30
+      g: 30
+      b: 30
+      a: 255
+    - r: 30
+      g: 30
+      b: 30
+      a: 255
+    - r: 30
+      g: 30
+      b: 30
+      a: 255
+  - row:
     - r: 255
-      g: 67
+      g: 219
       b: 67
       a: 255
     - r: 255
       g: 67
-      b: 255
+      b: 103
       a: 255
     - r: 255
-      g: 67
-      b: 130
+      g: 156
+      b: 67
       a: 255
   - row:
     - r: 255
-      g: 230
-      b: 49
+      g: 131
+      b: 39
       a: 255
     - r: 255
-      g: 49
-      b: 74
+      g: 39
+      b: 163
       a: 255
     - r: 255
-      g: 161
-      b: 49
-      a: 255
-  - row:
-    - r: 53
-      g: 53
-      b: 53
-      a: 255
-    - r: 53
-      g: 53
-      b: 53
-      a: 255
-    - r: 53
-      g: 53
-      b: 53
+      g: 59
+      b: 39
       a: 255

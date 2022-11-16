@@ -49,5 +49,5 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     }
 
     Result[id.xy] = _SetPixels[pixelIndex] ? _Color : float4(0, 0, 0, 0);
-   // Result[id.xy] = ((id.x % 100) < 10) | ((id.y % 100) < 10) ? float4(1, 0, 0, 1) : float4(0, 0, 0, 0);
+    //Result[id.xy] = ((id.x % 100) < 10) | ((id.y % 100) < 10) ? float4(1, 0, 0, 1) : float4(0, 0, 0, 0);
 }

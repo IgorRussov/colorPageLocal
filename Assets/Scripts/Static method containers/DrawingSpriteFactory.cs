@@ -45,10 +45,10 @@ public class DrawingSpriteFactory
             rectShape.Fill = CreateSolidFill(Color.clear, 1);
 
             Rect rect = new Rect(ShapeUtils.sceneRect);
-            rect.x -= 50;
-            rect.y -= 50;
-            rect.width += 100;
-            rect.height += 100;
+            //rect.x -= 50;
+            //rect.y -= 50;
+            //rect.width += 100;
+            //rect.height += 100;
             VectorUtils.MakeRectangleShape(rectShape, rect);
             node.Shapes.Add(rectShape);
         }

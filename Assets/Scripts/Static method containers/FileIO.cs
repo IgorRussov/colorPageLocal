@@ -8,6 +8,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System;
+using System.Globalization;
 
 /// <summary>
 /// Has methods for working with file system
@@ -70,8 +71,17 @@ public class FileIO
             textReader = new StreamReader(filePath);
         }
         XDocument doc = XDocument.Parse(textReader.ReadToEnd());
-        //XElement root = doc.Nodes().ElementAt(1) as XElement;
+        //Get viewbox info
+        string viewBox = doc.Root.Attribute("viewBox").Value;
+        string[] viewBoxNumbers = viewBox.Split(' ');
+        CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
+        float width = Single.Parse(viewBoxNumbers[2], NumberStyles.Any, ci);
+        float height = Single.Parse(viewBoxNumbers[3], NumberStyles.Any, ci);
+        ShapeUtils.SetDrawingSize(width, height);
+
+        //Split path into separate elements
         List<XElement> startingPathElements = new List<XElement>();
 
         IEnumerable<XElement> e1 = doc.Descendants("path");
