@@ -1,0 +1,28 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+Texture2D<float4> _MainTex;
+SamplerState linearClampSampler;
+
+float2 _Offset;
+float2 _SourceTextureSize;
+
+
+[numthreads(32,32,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    float x = (id.x - _Offset.x) / _SourceTextureSize.x;
+    float y = (id.y - _Offset.y) / _SourceTextureSize.y;
+
+
+    float2 uv = float2(x, y);
+    
+    if (uv.x < 0 || uv.y < 0 || uv.x > 1 || uv.y > 1)
+        Result[id.xy] = float4(0, 0, 0, 0);
+    else
+        Result[id.xy] = _MainTex.SampleLevel(linearClampSampler, uv, 0);
+    
+}

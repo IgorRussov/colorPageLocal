@@ -1,0 +1,41 @@
+// Each #kernel tells which function to compile; you can have many kernels
+
+
+Texture2D<float4> DrawTex;
+Texture2D<float4> MaskTex;
+SamplerState linearClampSampler;
+
+float _Width, _Height;
+
+RWStructuredBuffer<int> _ResultSum;
+
+
+#pragma kernel CSInit
+[numthreads(1, 1, 1)]
+void CSInit(uint3 id : SV_DispatchThreadID)
+{
+    _ResultSum[0] = 0;
+    _ResultSum[1] = 0;
+}
+#pragma kernel CSMain
+
+
+[numthreads(8,8,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    float4 tex = DrawTex[id.xy];
+    
+    float x = id.x / _Width;
+    float y = id.y / _Height;
+
+    float2 uv = float2(x, y);
+
+    float4 mask = MaskTex.SampleLevel(linearClampSampler, uv, 0);
+    if (mask.r > 0)
+    {
+        InterlockedAdd(_ResultSum[1], 1);
+        if (tex.x > 0 | tex.y > 0 | tex.z > 0)
+            InterlockedAdd(_ResultSum[0], 1);
+    }
+    
+}

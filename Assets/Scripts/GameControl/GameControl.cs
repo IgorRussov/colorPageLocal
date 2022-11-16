@@ -16,6 +16,9 @@ public class GameControl : MonoBehaviour
     [Range(0, 1)]
     public float perfectStrokeMargin;
     public float continueLineLength;
+    [Range(0, 1)]
+    public float requiredFillToContinue;
+
 
     public static GameControl Instance;
     public DrawingZone drawingZone;
