@@ -101,7 +101,7 @@ public class DrawingZone : MonoBehaviour
         else
             shape = drawStrokeShapes[shapeOrder];
         return VectorUtils.SegmentsLength(shape.Contours[0].Segments,
-               drawStrokeShapes[shapeOrder].IsConvex, 0.01f);
+               shape.Contours[0].Closed, 0.01f);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ public class DrawingZone : MonoBehaviour
         //Get main drawing scene and set some values based on it
         Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        //ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+        ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         cameraControl.ViewRectWithCamera(sceneRect);
@@ -512,7 +512,14 @@ public class DrawingZone : MonoBehaviour
 
     private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
     {
+        textureWidth *= 2;
         ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
+        /*
+        float[] data = new float[textureWidth * textureHeight];
+        for (int i = 0; i < data.Length; i++)
+            data[i] = (i % 10) / 5;
+        buffer.SetData(data);
+        */
         return buffer;
     }
 
@@ -562,21 +569,13 @@ public class DrawingZone : MonoBehaviour
         fillComputeShader.SetFloat(radiusPerSecondId, fillStrokeRadiusPerTime);
     }
 
-    private void UpdateFilledPercent()
-    {
-
-    }
-
     public void UpdateDrawFill()
     {
         SetShaderConstants();
         fillComputeShader.SetFloat(timeId, Time.time);
         RemoveExpiredPainters();
         DispatchShader();
-
-
     }
-
 
     public void ResetComputeBuffers()
     {

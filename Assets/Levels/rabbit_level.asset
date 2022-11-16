@@ -10,61 +10,61 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: "\u0441\u043E\u043B\u043D\u0446\u0435_level"
+  m_Name: rabbit_level
   m_EditorClassIdentifier: 
-  svgFileName: "\u0441\u043E\u043B\u043D\u0446\u0435"
-  strokeShapesOrder: ffffffffffffffffffffffff0000000001000000
+  svgFileName: rabbit
+  strokeShapesOrder: 000000000100000002000000030000000400000005000000
   fillShapesOrder: 00000000010000000200000003000000
   colors:
   - row:
-    - r: 247
-      g: 164
-      b: 24
+    - r: 139
+      g: 121
+      b: 173
       a: 255
-    - r: 247
-      g: 24
-      b: 107
+    - r: 121
+      g: 155
+      b: 173
       a: 255
-    - r: 247
-      g: 90
-      b: 24
-      a: 255
-  - row:
-    - r: 251
-      g: 221
-      b: 58
-      a: 255
-    - r: 251
-      g: 58
-      b: 88
-      a: 255
-    - r: 251
-      g: 157
-      b: 58
+    - r: 122
+      g: 121
+      b: 173
       a: 255
   - row:
-    - r: 30
-      g: 30
-      b: 28
+    - r: 194
+      g: 156
+      b: 239
+      a: 255
+    - r: 156
+      g: 201
+      b: 239
+      a: 255
+    - r: 166
+      g: 156
+      b: 239
+      a: 255
+  - row:
+    - r: 255
+      g: 148
+      b: 148
       a: 255
     - r: 255
-      g: 0
-      b: 0
-      a: 255
-    - r: 22
-      g: 0
+      g: 148
       b: 255
       a: 255
-  - row:
-    - r: 30
-      g: 30
-      b: 28
-      a: 255
     - r: 255
-      g: 0
-      b: 0
+      g: 148
+      b: 184
       a: 255
-    - r: 10
-      g: 58
-      b: 200
+  - row:
+    - r: 25
+      g: 25
+      b: 25
+      a: 255
+    - r: 25
+      g: 25
+      b: 25
+      a: 255
+    - r: 25
+      g: 25
+      b: 25
       a: 255

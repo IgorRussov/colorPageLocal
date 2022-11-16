@@ -3385,7 +3385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: pictures2
+  svgFileName: kite
   sourceLevelData: {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels

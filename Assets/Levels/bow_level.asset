@@ -10,48 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 589e7e959e35e6f4c8dab12053a9da55, type: 3}
-  m_Name: ICE_level
+  m_Name: bow_level
   m_EditorClassIdentifier: 
-  svgFileName: ICE
+  svgFileName: bow
   strokeShapesOrder: 00000000010000000200000003000000040000000500000006000000
-  fillShapesOrder: 000000000100000002000000
+  fillShapesOrder: 0000000001000000
   colors:
   - row:
-    - r: 218
-      g: 91
-      b: 107
+    - r: 255
+      g: 225
+      b: 49
       a: 255
-    - r: 202
-      g: 91
-      b: 218
+    - r: 255
+      g: 49
+      b: 79
       a: 255
-    - r: 218
-      g: 91
-      b: 149
-      a: 255
-  - row:
-    - r: 252
-      g: 242
-      b: 219
-      a: 255
-    - r: 252
-      g: 219
-      b: 229
-      a: 255
-    - r: 252
-      g: 231
-      b: 219
+    - r: 255
+      g: 156
+      b: 49
       a: 255
   - row:
-    - r: 176
-      g: 107
-      b: 107
+    - r: 46
+      g: 225
+      b: 255
       a: 255
-    - r: 176
-      g: 107
-      b: 176
+    - r: 46
+      g: 255
+      b: 76
       a: 255
-    - r: 176
-      g: 107
-      b: 130
+    - r: 152
+      g: 27
+      b: 24
       a: 255
