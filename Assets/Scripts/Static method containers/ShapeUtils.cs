@@ -348,6 +348,14 @@ public class ShapeUtils
         return ret;
     }
 
+    public static Rect GetShapeRect(Shape shape)
+    {
+        Shape newShape = null;
+        Scene newScene = DrawingSpriteFactory.CreateSceneWithClonedShape(shape, out newShape, false);
+
+        return VectorUtils.SceneNodeBounds(newScene.Root);
+    }
+
     public static void ScaleSceneToFit(Scene scene, float desiredWitdh)
     {
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);

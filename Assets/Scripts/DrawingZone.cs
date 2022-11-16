@@ -167,7 +167,7 @@ public class DrawingZone : MonoBehaviour
         ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
-        cameraControl.ViewRectWithCamera(sceneRect);
+
         shapesParentObject.transform.position = -PositionConverter.GetWorldCenterPos(sceneRect);
         PositionConverter.shapesObjectPos = shapesParentObject.transform.position;
 
@@ -400,6 +400,9 @@ public class DrawingZone : MonoBehaviour
 
         startLineCueObject = CreateSpriteObject(startLineSprite, startLinePos, "Start line marker");
         endLineCueObject = CreateSpriteObject(endLineSprite, endLinePos, "End line marker");
+
+        //Add camera targets
+        CameraControl.Instance.AddShapeToView(previewStrokeShapes[drawingStage], drawingStage);
 
         endLineCueObject.SetActive(false);
     }

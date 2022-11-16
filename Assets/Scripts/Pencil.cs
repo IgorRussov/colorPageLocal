@@ -92,8 +92,22 @@ public class Pencil : MonoBehaviour
         gameControl.StrokeDrawStopped += LiftPencil;
     }
 
+    public void InstantMove(Vector2 target, bool moveInWorldSpace)
+    {
+        Debug.Log("Instant move to " + target);
+        Vector2 currentDiff;
+        if (moveInWorldSpace)
+            currentDiff = target - new Vector2(transform.position.x, transform.position.y);
+        else
+            currentDiff = target - new Vector2(transform.localPosition.x, transform.localPosition.y);
+        Vector2 newPos = new Vector2(transform.localPosition.x, transform.localPosition.y) + currentDiff;
+        rigidbody.MovePosition((Vector3)newPos + transform.parent.position);
+
+    }
+
     public void ForcedMove(Vector2 target, bool moveInWorldSpace)
     {
+        Debug.Log("Forced move to " + target);
         Vector2 currentDiff;
         if (moveInWorldSpace)
             currentDiff = target - new Vector2(transform.position.x, transform.position.y);

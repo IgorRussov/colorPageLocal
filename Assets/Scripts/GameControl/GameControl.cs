@@ -144,7 +144,7 @@ public class GameControl : MonoBehaviour
         }
         prevDrawShapePos = newDrawShapePos;
         drawingZone.UpdateStrokeDrawSprite(gameStageInfo.drawnAmmount, gameStageInfo.drawStage);
-        Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(newDrawShapePos), false);
+        Pencil.instance.InstantMove(PositionConverter.VectorPosToWorldPos(newDrawShapePos), false);
         if (gameStageInfo.MustEndDraw)
         {
             canDraw = false;
@@ -214,6 +214,7 @@ public class GameControl : MonoBehaviour
     public void PreviousStrokeDrawStage()
     {
         drawingZone.HideCurrentStrokeDrawStageSprites(gameStageInfo.drawStage);
+        CameraControl.Instance.RemoveTargetsOfStage(gameStageInfo.drawStage);
         gameStageInfo.drawStage--;
 
         gameStateManager.SwitchState(gameStateManager.waitingDrawLineState);

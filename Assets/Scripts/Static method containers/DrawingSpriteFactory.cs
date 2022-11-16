@@ -29,7 +29,7 @@ public class DrawingSpriteFactory
     /// <param name="shape"></param>
     /// <param name="newShape"></param>
     /// <returns></returns>
-    private static Scene CreateSceneWithClonedShape(Shape shape, out Shape newShape, bool addEmptyRectToScene)
+    public static Scene CreateSceneWithClonedShape(Shape shape, out Shape newShape, bool addEmptyRectToScene)
     {
         Scene scene = new Scene();
         SceneNode node = new SceneNode();

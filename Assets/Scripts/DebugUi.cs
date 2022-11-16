@@ -80,7 +80,7 @@ public class DebugUi : MonoBehaviour
 
     public void PencilToOrigin()
     {
-        Pencil.instance.ForcedMove(Vector2.zero, false);
+        Pencil.instance.InstantMove(Vector2.zero, false);
     }
 
     public void ResetButtonPressed()
