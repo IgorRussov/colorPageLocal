@@ -1664,7 +1664,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingPadding: 0
-  camera: {fileID: 0}
+  cinemachineTargetGroup: {fileID: 0}
+  cinemachineVirtualCamera: {fileID: 0}
+  targetParentObject: {fileID: 0}
+  fullWeightTime: 0
+  startWeight: 0
+  cameraDamping: 0
 --- !u!1 &526869856
 GameObject:
   m_ObjectHideFlags: 0
@@ -3385,7 +3390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: kite
+  svgFileName: butterfly
   sourceLevelData: {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
