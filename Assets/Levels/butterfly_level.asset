@@ -13,33 +13,33 @@ MonoBehaviour:
   m_Name: butterfly_level
   m_EditorClassIdentifier: 
   svgFileName: butterfly
-  strokeShapesOrder: ffffffffffffffffffffffffffffffff0100000002000000030000000400000000000000
-  fillShapesOrder: 000000000100000002000000
+  strokeShapesOrder: 0300000004000000ffffffffffffffff0100000002000000050000000600000000000000
+  fillShapesOrder: 010000000000000002000000
   colors:
   - row:
     - r: 255
       g: 67
       b: 67
       a: 255
-    - r: 255
+    - r: 67
       g: 67
       b: 255
       a: 255
     - r: 255
       g: 67
-      b: 130
+      b: 192
       a: 255
   - row:
     - r: 255
       g: 230
       b: 49
       a: 255
-    - r: 255
+    - r: 230
       g: 49
-      b: 74
+      b: 255
       a: 255
     - r: 255
-      g: 161
+      g: 93
       b: 49
       a: 255
   - row:
@@ -47,11 +47,11 @@ MonoBehaviour:
       g: 53
       b: 53
       a: 255
-    - r: 53
-      g: 53
-      b: 53
+    - r: 75
+      g: 111
+      b: 58
       a: 255
-    - r: 53
-      g: 53
-      b: 53
+    - r: 152
+      g: 136
+      b: 61
       a: 255

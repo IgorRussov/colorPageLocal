@@ -94,7 +94,7 @@ public class Pencil : MonoBehaviour
 
     public void InstantMove(Vector2 target, bool moveInWorldSpace)
     {
-        Debug.Log("Instant move to " + target);
+        //Debug.Log("Instant move to " + target);
         Vector2 currentDiff;
         if (moveInWorldSpace)
             currentDiff = target - new Vector2(transform.position.x, transform.position.y);
@@ -107,7 +107,7 @@ public class Pencil : MonoBehaviour
 
     public void ForcedMove(Vector2 target, bool moveInWorldSpace)
     {
-        Debug.Log("Forced move to " + target);
+       // Debug.Log("Forced move to " + target);
         Vector2 currentDiff;
         if (moveInWorldSpace)
             currentDiff = target - new Vector2(transform.position.x, transform.position.y);

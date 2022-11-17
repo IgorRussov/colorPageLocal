@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 831.98 885.5">
+	<defs>
+		<style>
+			.cls-1{fill:#2ee1ff;}
+			.cls-2{fill:#ef45ef;}
+			.cls-3{fill:#ffe631;}
+			.cls-4{fill:none;stroke:#191919;stroke-linecap:round;stroke-linejoin:round;stroke-width:25px;}
+		</style>
+	</defs>
+	<g id="Слой_2" data-name="Слой 2">
+		<g id="Layer_1" data-name="Layer 1">
+			<g id="kite">
+				<path class="cls-3" d="M 416.68, 33.6 L 233.78, 600.5, L 600.68, 225.6 Z" />
+				<path class="cls-3" d="M 819.48, 12.5 L 600.68, 225.6, L 787.58 413.6 Z" />
+				<polygon class="cls-4" points="416.68 33.6 819.48 12.5 787.58 413.6 233.78 600.5 416.68 33.6"/>
+				
+				
+			</g>
+		</g>
+	</g>
+</svg>

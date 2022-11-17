@@ -97,6 +97,8 @@ public struct GameStageInfo
         }
     }
 
+
+
     public void SetDrawSpeed(float minDrawTime, float maxDrawTime, float midDrawTime, float midLength, float length)
     {
 

@@ -13,33 +13,33 @@ MonoBehaviour:
   m_Name: pyramid_level
   m_EditorClassIdentifier: 
   svgFileName: pyramid
-  strokeShapesOrder: 0300000000000000ffffffff0100000002000000
-  fillShapesOrder: 00000000010000000200000003000000
+  strokeShapesOrder: 0000000003000000ffffffff0200000001000000
+  fillShapesOrder: 00000000030000000200000001000000
   colors:
   - row:
     - r: 255
       g: 54
       b: 54
       a: 255
-    - r: 255
+    - r: 54
       g: 54
       b: 255
       a: 255
     - r: 255
       g: 54
-      b: 121
+      b: 188
       a: 255
   - row:
     - r: 55
       g: 116
       b: 239
       a: 255
-    - r: 55
+    - r: 116
       g: 239
-      b: 178
+      b: 55
       a: 255
     - r: 55
-      g: 177
+      g: 239
       b: 239
       a: 255
   - row:
@@ -48,11 +48,11 @@ MonoBehaviour:
       b: 94
       a: 255
     - r: 239
-      g: 182
-      b: 94
+      g: 94
+      b: 151
       a: 255
-    - r: 199
-      g: 239
+    - r: 239
+      g: 230
       b: 94
       a: 255
   - row:
@@ -60,11 +60,11 @@ MonoBehaviour:
       g: 219
       b: 67
       a: 255
-    - r: 255
+    - r: 219
       g: 67
-      b: 103
+      b: 255
       a: 255
     - r: 255
-      g: 156
+      g: 94
       b: 67
       a: 255

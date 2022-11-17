@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: yellow_duck_level
   m_EditorClassIdentifier: 
   svgFileName: yellow_duck
-  strokeShapesOrder: 00000000ffffffff
-  fillShapesOrder: 020000000000000001000000
+  strokeShapesOrder: 0000000001000000
+  fillShapesOrder: ffffffff0000000001000000
   colors:
   - row:
     - r: 30
@@ -34,12 +34,12 @@ MonoBehaviour:
       g: 219
       b: 67
       a: 255
-    - r: 255
+    - r: 219
       g: 67
-      b: 103
+      b: 255
       a: 255
     - r: 255
-      g: 156
+      g: 94
       b: 67
       a: 255
   - row:
@@ -47,11 +47,11 @@ MonoBehaviour:
       g: 131
       b: 39
       a: 255
-    - r: 255
+    - r: 131
       g: 39
-      b: 163
+      b: 255
       a: 255
     - r: 255
-      g: 59
-      b: 39
+      g: 39
+      b: 91
       a: 255

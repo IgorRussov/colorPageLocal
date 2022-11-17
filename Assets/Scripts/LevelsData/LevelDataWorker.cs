@@ -50,13 +50,15 @@ public struct FillShapeData
 {
     [ReadOnly]
     public int fillShapeId;
+    public bool autoDraw;
     [ReadOnly]
     public Color mainColor;
     public Color[] possibleColors;
 
-    public FillShapeData(int fillShapeId, Color mainColor, Color[] possibleColors)
+    public FillShapeData(int fillShapeId, bool autoDraw, Color mainColor, Color[] possibleColors)
     {
         this.fillShapeId = fillShapeId;
+        this.autoDraw = autoDraw;
         this.mainColor = mainColor;
         this.possibleColors = possibleColors;
     }
@@ -146,10 +148,12 @@ public class LevelDataWorker : MonoBehaviour
             
 
         fillShapeData = new FillShapeData[fillShapes.Count];
+        int autoFillIndex = fillShapes.Count - 1;
         for (int i = 0; i < fillShapes.Count; i++)
         {
-            int index = originalLevelData.fillShapesOrder[i];
-            fillShapeData[index] = new FillShapeData(i, originalLevelData.GetColor(i, 0),
+            int baseIndex = originalLevelData.fillShapesOrder[i];
+            int index = baseIndex != -1 ? baseIndex : autoDrawIndex--;
+            fillShapeData[index] = new FillShapeData(i, baseIndex == 1, originalLevelData.GetColor(i, 0),
                 new Color[2]);
             fillShapeData[index].possibleColors[0] = originalLevelData.GetColor(i, 1);
             fillShapeData[index].possibleColors[1] = originalLevelData.GetColor(i, 2);
@@ -179,7 +183,7 @@ public class LevelDataWorker : MonoBehaviour
         for(int i = 0; i < originalLevelData.fillShapesOrder.Length; i++)
         {
             SolidFill fill = fillShapes[i].Fill as SolidFill;
-            List<Color32> colors = ColorUtils.GetAdjacentColors(fill.Color, colorOptionsCount, 60);
+            List<Color32> colors = ColorUtils.GetAdjacentColors(fill.Color, colorOptionsCount, 120);
             for (int j = 0; j < colorOptionsCount; j++)
                 originalLevelData.SetColor(colors[j], i, j);
         }
@@ -191,7 +195,7 @@ public class LevelDataWorker : MonoBehaviour
         fillShapeData = new FillShapeData[fillShapes.Count];
         for(int i = 0; i < fillShapes.Count; i++)
         {
-            fillShapeData[i] = new FillShapeData(i, originalLevelData.GetColor(i, 0),
+            fillShapeData[i] = new FillShapeData(i, false, originalLevelData.GetColor(i, 0),
                 new Color[2]);
             fillShapeData[i].possibleColors[0] = originalLevelData.GetColor(i, 1);
             fillShapeData[i].possibleColors[1] = originalLevelData.GetColor(i, 2);
@@ -206,18 +210,37 @@ public class LevelDataWorker : MonoBehaviour
         levelData.svgFileName = svgFileName;
 
         levelData.strokeShapesOrder = new int[strokeShapeData.Length];
-
+        int autoDrawShapes = 0;
         for (int i = 0; i < strokeShapeData.Length; i++)
-            levelData.strokeShapesOrder[strokeShapeData[i].strokeShapeId] = 
-                strokeShapeData[i].autoDraw ? 
-                -1 : i;
+        {
+            if (strokeShapeData[i].autoDraw)
+            {
+                levelData.strokeShapesOrder[strokeShapeData[i].strokeShapeId] = -1;
+                autoDrawShapes++;
+            }
+            else
+            {
+                levelData.strokeShapesOrder[strokeShapeData[i].strokeShapeId] = i - autoDrawShapes;
+            }
+        }
 
         levelData.fillShapesOrder = new int[fillShapeData.Length];
         levelData.InitColorsArray(fillShapeData.Length, colorOptionsCount);
+        autoDrawShapes = 0;
+
         for(int i = 0; i < fillShapeData.Length; i++)
         {
             int fillShapeId = fillShapeData[i].fillShapeId;
-            levelData.fillShapesOrder[fillShapeId] = i;
+            if (fillShapeData[i].autoDraw)
+            {
+                levelData.fillShapesOrder[fillShapeId] = -1;
+                autoDrawShapes++;
+            }
+            else
+            {
+                levelData.fillShapesOrder[fillShapeId] = i -  autoDrawShapes;
+            }
+            
             levelData.SetColor(fillShapeData[i].mainColor, fillShapeId, 0);
             for (int j = 1; j < colorOptionsCount; j++)
                 levelData.SetColor(fillShapeData[i].possibleColors[j - 1], fillShapeId, j);

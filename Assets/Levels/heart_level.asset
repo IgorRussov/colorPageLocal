@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   svgFileName: heart
   strokeShapesOrder: 00000000ffffffff
-  fillShapesOrder: 0000000001000000
+  fillShapesOrder: 00000000ffffffff
   colors:
   - row:
     - r: 255
       g: 82
       b: 193
       a: 255
-    - r: 255
-      g: 42
-      b: 0
+    - r: 82
+      g: 193
+      b: 255
       a: 255
-    - r: 36
-      g: 73
-      b: 231
+    - r: 255
+      g: 13
+      b: 0
       a: 255
   - row:
     - r: 255

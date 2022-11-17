@@ -45,6 +45,7 @@ public class DrawingSpriteFactory
             rectShape.Fill = CreateSolidFill(Color.clear, 1);
 
             Rect rect = new Rect(ShapeUtils.sceneRect);
+            //Debug.Log("Mask rect: " + rect);
             //rect.x -= 50;
             //rect.y -= 50;
             //rect.width += 100;

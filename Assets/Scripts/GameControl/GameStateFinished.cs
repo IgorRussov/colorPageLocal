@@ -11,6 +11,7 @@ public class GameStateFinished : GameBaseState
     {
         UiControl.Instance.ShowFinishedText();
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
+        game.gameControl.drawingZone.SetAutoFillSpritesEnabled(true);
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
@@ -32,6 +33,7 @@ public class GameStateFinished : GameBaseState
     {
         UiControl.Instance.HideFinishedText();
         game.gameControl.PreviousFillDrawStage();
+        game.gameControl.drawingZone.SetAutoFillSpritesEnabled(false);
 
     }
 

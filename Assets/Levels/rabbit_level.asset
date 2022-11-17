@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: rabbit_level
   m_EditorClassIdentifier: 
   svgFileName: rabbit
-  strokeShapesOrder: 000000000100000002000000030000000400000005000000
-  fillShapesOrder: 00000000010000000200000003000000
+  strokeShapesOrder: 0000000001000000020000000300000004000000ffffffff
+  fillShapesOrder: 000000000100000002000000ffffffff
   colors:
   - row:
     - r: 139
@@ -22,11 +22,11 @@ MonoBehaviour:
       b: 173
       a: 255
     - r: 121
-      g: 155
-      b: 173
+      g: 173
+      b: 139
       a: 255
-    - r: 122
-      g: 121
+    - r: 121
+      g: 138
       b: 173
       a: 255
   - row:
@@ -35,11 +35,11 @@ MonoBehaviour:
       b: 239
       a: 255
     - r: 156
-      g: 201
-      b: 239
+      g: 239
+      b: 194
       a: 255
-    - r: 166
-      g: 156
+    - r: 156
+      g: 173
       b: 239
       a: 255
   - row:
@@ -47,13 +47,13 @@ MonoBehaviour:
       g: 148
       b: 148
       a: 255
-    - r: 255
+    - r: 148
       g: 148
       b: 255
       a: 255
     - r: 255
       g: 148
-      b: 184
+      b: 219
       a: 255
   - row:
     - r: 25

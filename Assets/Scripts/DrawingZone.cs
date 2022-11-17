@@ -16,6 +16,7 @@ public class DrawingZone : MonoBehaviour
     public Transform strokeShapesParentObject;
     public Transform fillShapesParentObject;
     public Transform autoStrokeShapesParentObject;
+    public Transform autoFillShapesParentObject;
     public GameObject drawFillQuad;
     public GameObject shapesParentObject;
     public MeshCollider drawFillBoundsMeshCollider;
@@ -57,6 +58,7 @@ public class DrawingZone : MonoBehaviour
     private List<Shape> previewStrokeShapes; //Contour shapes from original image
     private List<Shape> drawStrokeShapes;    //Contour shapes from original image with line continuation added (for the late release mechanic)
     private List<Shape> autoStrokeShapes;    //Contour shapes which are drawn automaticaly after all strokes are drawn
+    private List<Shape> autoFillShapes;
     private List<Shape> fillShapes;          //Fill zone shapes from original image
     private SpriteRenderer[] drawingSprites; //References to spriteRenderer components in the hierarcy
     public List<Color>[] fillColors;         //Colors that can be used 
@@ -65,6 +67,14 @@ public class DrawingZone : MonoBehaviour
     private Rect patternRect;
     private GameObject startLineCueObject;
     private GameObject endLineCueObject;
+
+    public Vector3 EndLineWorldPos
+    {
+        get
+        {
+            return endLineCueObject.transform.position;
+        }
+    }
 
     private Material drawFillQuadMaterial;
 
@@ -176,18 +186,29 @@ public class DrawingZone : MonoBehaviour
         ShapeUtils.SeparateStrokeAndFill(scene, out strokeShapes, out fillShapes);
 
         Shape[] sortedFillShapes = new Shape[fillShapes.Count];
+        autoFillShapes = new List<Shape>();
         fillColors = new List<Color>[fillShapes.Count];
-
+        int autoFillShapesCount = 0;
         for (int i = 0; i < levelData.fillShapesOrder.Length; i++)
         {
             Shape fillShape = fillShapes[i];
             List<Color> colors = levelData.GetColorsRow(i);
             int shapeSortedOrder = levelData.fillShapesOrder[i];
-            sortedFillShapes[shapeSortedOrder] = fillShape;
-            fillColors[shapeSortedOrder] = colors;
+            if (shapeSortedOrder == -1)
+            {
+                autoFillShapes.Add(fillShape);
+                fillColors[fillShapes.Count - autoFillShapesCount - 1] = colors;
+                autoFillShapesCount++;
+            }
+            else
+            {
+                sortedFillShapes[shapeSortedOrder] = fillShape;
+                fillColors[shapeSortedOrder] = colors;
+            }
         }
 
-        fillShapes = sortedFillShapes.ToList();
+        fillShapes = sortedFillShapes.Where(s => s != null).ToList();
+
         Shape[] sortedStrokeShapes = new Shape[strokeShapes.Count];
         autoStrokeShapes = new List<Shape>();
 
@@ -220,7 +241,8 @@ public class DrawingZone : MonoBehaviour
         previewStrokeShapes = strokeShapes;
         originalSceneMatrix = sourceScene.Root.Transform;
         int strokeSpritesCount = strokeShapes.Count * 2;
-        drawingSprites = new SpriteRenderer[strokeSpritesCount + fillShapes.Count + autoStrokeShapes.Count];
+        drawingSprites = new SpriteRenderer[strokeSpritesCount + fillShapes.Count + 
+            autoStrokeShapes.Count + autoFillShapes.Count];
 
         //Create stroke preview and stroke draw sprite renderer objects
         GameObject originalStrokeSprite = strokeShapesParentObject.GetChild(0).gameObject;
@@ -265,6 +287,18 @@ public class DrawingZone : MonoBehaviour
                 ShapeUtils.CreateStrokeArray(1000000, 0),
                 drawStrokeWidth, drawStrokeColor);
             drawingSprites[strokeSpritesCount + fillShapes.Count + i].sprite = autoDrawSprite;
+        }
+        //Create auto fill sprite renderers and sprites
+        GameObject originalAutoFillSprite = autoStrokeShapesParentObject.GetChild(0).gameObject;
+        for (int i = 0; i < autoFillShapes.Count; i++)
+        {
+            GameObject newSprite = GameObject.Instantiate(originalAutoFillSprite, autoFillShapesParentObject);
+            int index = strokeSpritesCount + fillShapes.Count + autoStrokeShapes.Count;
+            drawingSprites[index] = newSprite.GetComponent<SpriteRenderer>();
+            drawingSprites[index].enabled = false;
+            Sprite autoFillSprite = DrawingSpriteFactory.CreateSolidColorFillSprite(autoFillShapes[i],
+                fillColors[fillShapes.Count + autoFillShapes.Count - i - 1].First());
+            drawingSprites[index].sprite = autoFillSprite;
         }
 
         drawStrokeShapes = ShapeUtils.CreateDrawShapes(strokeShapes, GameControl.Instance.continueLineLength);
@@ -339,10 +373,11 @@ public class DrawingZone : MonoBehaviour
         Sprite maskSprite =
             DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
         drawFillMask.sprite = maskSprite;
+
+        ShapeUtils.SetDrawingSize(maskSprite.rect.width, maskSprite.rect.height);
         int textureWidth = Mathf.RoundToInt(ShapeUtils.drawingSize.x);
         int textureHeight = Mathf.RoundToInt(ShapeUtils.drawingSize.y);
-        textureWidth = Mathf.RoundToInt(maskSprite.rect.width);
-        textureHeight = Mathf.RoundToInt(maskSprite.rect.height);
+
 
 
         Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(maskSprite, 
@@ -355,6 +390,8 @@ public class DrawingZone : MonoBehaviour
 
         drawFillQuad.transform.localScale = new Vector3(textureWidth / PositionConverter.SvgPixelsPerUnit,
            textureHeight / PositionConverter.SvgPixelsPerUnit, 1);
+        Vector3 pos = PositionConverter.GetCenterPosition(drawFillMask.gameObject);
+        drawFillQuad.transform.localPosition = pos;
 
         //drawFillQuadMaterial.SetTexture("_Alpha", 
         //    DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
@@ -453,6 +490,14 @@ public class DrawingZone : MonoBehaviour
         }
     }
 
+    public void SetAutoFillSpritesEnabled(bool enabled)
+    {
+        for (int i = 0; i < autoFillShapes.Count; i++)
+        {
+            drawingSprites[previewStrokeShapes.Count * 2 + fillShapes.Count + autoStrokeShapes.Count + i].enabled = enabled;
+        }
+    }
+
     #endregion
     #region Visual functions not for drawing sprites
     /// <summary>
@@ -523,6 +568,7 @@ public class DrawingZone : MonoBehaviour
     private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
     {
         textureWidth *= 2;
+        textureHeight *= 2;
         ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
         /*
         float[] data = new float[textureWidth * textureHeight];
@@ -623,7 +669,11 @@ public class DrawingZone : MonoBehaviour
         if (counter++ >= 10)
         {
             counter = 0;
-            RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
+            RenderTexture rt = new RenderTexture(drawFillQuadMaterial.mainTexture.width,
+                drawFillQuadMaterial.mainTexture.height, 0, RenderTextureFormat.ARGB32);
+            rt.enableRandomWrite = true;
+            rt.Create();
+
             Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
             fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
 

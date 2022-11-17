@@ -212,7 +212,9 @@ public class ShapeUtils
     public static void SetDrawingSize(float width, float height)
     {
         Rect rect = new Rect(0, 0, width, height);
-        sceneRect = rect;
+        if (sceneRect.height == 0)
+            sceneRect = rect;
+
         drawingSize.x = width;
         drawingSize.y = height;
     }

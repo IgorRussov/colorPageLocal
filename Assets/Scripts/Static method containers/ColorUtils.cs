@@ -33,8 +33,18 @@ public class ColorUtils : MonoBehaviour
 
         List<Color32> result = new List<Color32>();
         result.Add(centerColor);
+
         for (int i = 0; i < totalColors - 0; i++)
-            result.Add(Color.HSVToRGB(Mathf.Lerp(H - maxDeviation, H + maxDeviation, (float)i / totalColors - 0), S, V));
+        {
+            float devH = Mathf.Lerp(H - maxDeviation, H + maxDeviation, (float)i / totalColors - 0);
+            if (devH < 0)
+                devH += 1;
+            if (devH > 1)
+                devH -= 1;
+
+            result.Add(Color.HSVToRGB(devH, S, V));
+        }
+            
   
         return result;
     }

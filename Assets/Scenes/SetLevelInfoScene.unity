@@ -1956,7 +1956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &618550352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3390,8 +3390,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: butterfly2
-  sourceLevelData: {fileID: 11400000, guid: 369c0f99b14dd434bba1277164f6111b, type: 2}
+  svgFileName: rabbit
+  sourceLevelData: {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels
   strokeShapeData:
@@ -3423,26 +3423,30 @@ MonoBehaviour:
     autoDraw: 0
   fillShapeData:
   - fillShapeId: 0
+    autoDraw: 0
     mainColor: {r: 0.69803923, g: 0.6784314, b: 0.6862745, a: 1}
     possibleColors:
     - {r: 0.6901961, g: 0.6784314, b: 0.69803923, a: 1}
     - {r: 0.69803923, g: 0.6784314, b: 0.69411767, a: 1}
   - fillShapeId: 1
+    autoDraw: 0
     mainColor: {r: 0.8509804, g: 0.87058824, b: 0.8862745, a: 1}
     possibleColors:
     - {r: 0.8509804, g: 0.8862745, b: 0.8666667, a: 1}
     - {r: 0.8509804, g: 0.88235295, b: 0.8862745, a: 1}
   - fillShapeId: 2
+    autoDraw: 0
     mainColor: {r: 0.40392157, g: 0.61960787, b: 0.85882354, a: 1}
     possibleColors:
     - {r: 0.40392157, g: 0.85882354, b: 0.6431373, a: 1}
     - {r: 0.40392157, g: 0.77254903, b: 0.85882354, a: 1}
   - fillShapeId: 3
+    autoDraw: 0
     mainColor: {r: 0.9019608, g: 0.7294118, b: 0.5411765, a: 1}
     possibleColors:
     - {r: 0.9019608, g: 0.5411765, b: 0.7137255, a: 1}
     - {r: 0.9019608, g: 0.60784316, b: 0.5411765, a: 1}
-  wantRead: 1
+  wantRead: 0
   wantSave: 0
   wantReadData: 0
   highlightStrokeShapeId: 0

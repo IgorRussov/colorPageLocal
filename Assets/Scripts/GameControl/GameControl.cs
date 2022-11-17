@@ -22,6 +22,7 @@ public class GameControl : MonoBehaviour
 
     public static GameControl Instance;
     public DrawingZone drawingZone;
+    public EffectsControl effectsControl;
 
     public GameStageInfo gameStageInfo;
     [HideInInspector]
@@ -34,6 +35,7 @@ public class GameControl : MonoBehaviour
 
     public Action StrokeDrawStarted;
     public Action StrokeDrawStopped;
+    public Action<Vector3, float> StrokeShapeFinished;
 
     private GameStateManager gameStateManager;
 
@@ -58,6 +60,17 @@ public class GameControl : MonoBehaviour
             float needLength = GetRequiredLength;
             return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth  > needLength * (1 - perfectStrokeMargin);
                
+        }
+    }
+
+    public float CurrentError
+    {
+        get
+        {
+            float needLength = GetRequiredLength;
+            float drawn = gameStageInfo.drawnAmmount;
+
+            return Mathf.Abs(needLength - drawn) / needLength;
         }
     }
 
@@ -99,6 +112,7 @@ public class GameControl : MonoBehaviour
     private void Start()
     {
         Pencil.instance.BindGameControlEvents(this);
+        effectsControl.BindToEvents(this);
     }
 
     public void StartLevel(LevelData levelData)
@@ -112,6 +126,7 @@ public class GameControl : MonoBehaviour
     /// </summary>
     private void EndStrokeLineDraw()
     {
+        StrokeShapeFinished?.Invoke(drawingZone.EndLineWorldPos, CurrentError);
         if (WithinPerfectStroke)
             drawingZone.SetPerfectStrokeDrawSprite(gameStageInfo.drawStage);
 

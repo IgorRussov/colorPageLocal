@@ -77,4 +77,9 @@ public class PositionConverter
 
         return new Vector2(posX, posY);
     }
+
+    public static Vector3 GetCenterPosition(GameObject obj)
+    {
+       return  obj.GetComponent<Renderer>().bounds.center;
+    }
 }

@@ -35,6 +35,9 @@ public class FileIO
     /// <returns></returns>
     public static Scene GetVectorSceneFromFile(string fileName)
     {
+        ShapeUtils.sceneRect = new Rect();
+
+
         string filePath = GetSvgPath(fileName);
 
         return SVGParser.ImportSVG(GetFixedSceneReader(fileName)).Scene;
