@@ -51,8 +51,8 @@ public class DrawingZone : MonoBehaviour
     //public string svgFileName;
     public string patternSvgFileName;
     [Header("Cue sprites")]
-    public Sprite startLineSprite;
-    public Sprite endLineSprite;
+    public GameObject startLineSpritePrefab;
+    public GameObject endLineSpritePrefab;
 
 
     private List<Shape> previewStrokeShapes; //Contour shapes from original image
@@ -326,6 +326,7 @@ public class DrawingZone : MonoBehaviour
         //Fill preview sprite
         SpriteRenderer renderer = drawingSprites[previewStrokeShapes.Count * 2 + drawStageIndex];
         renderer.enabled = true;
+        renderer.sprite = null;
         //renderer.sprite = ShapeUtils.CreatePatternFillSprite(
         //    fillShapes[drawStageIndex],
         //    patternFill);
@@ -442,9 +443,9 @@ public class DrawingZone : MonoBehaviour
         Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0));
         Vector2 endLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 1));
 
-        startLineCueObject = CreateSpriteObject(startLineSprite, startLinePos, "Start line marker");
-        endLineCueObject = CreateSpriteObject(endLineSprite, endLinePos, "End line marker");
-
+        startLineCueObject = CreateSpriteObject(startLineSpritePrefab, startLinePos, "Start line marker");
+        endLineCueObject = CreateSpriteObject(endLineSpritePrefab, endLinePos, "End line marker");
+        startLineCueObject.GetComponent<Animator>().SetTrigger("Appear");
         //Add camera targets
         CameraControl.Instance.AddShapeToView(previewStrokeShapes[drawingStage], drawingStage);
 
@@ -455,6 +456,7 @@ public class DrawingZone : MonoBehaviour
     {
         drawingSprites[drawingStage].enabled = false;
         drawingSprites[previewStrokeShapes.Count + drawingStage].enabled = false;
+        startLineCueObject.GetComponent<Animator>().SetTrigger("Remove");
         HideEndLineSprite();
     }
 
@@ -507,12 +509,11 @@ public class DrawingZone : MonoBehaviour
     /// <param name="position"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    private GameObject CreateSpriteObject(Sprite sprite, Vector2 position, string name = "Sprite")
+    private GameObject CreateSpriteObject(GameObject prefab, Vector2 position, string name = "Sprite")
     {
-        GameObject newObject = new GameObject(name);
-        SpriteRenderer spriteRenderer = newObject.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = sprite;
-        spriteRenderer.sortingOrder = 100;
+        GameObject newObject = GameObject.Instantiate(prefab);
+        newObject.name = name;
+
         newObject.transform.SetParent(transform.GetChild(0).transform, true);
         newObject.transform.localPosition = position;
 
@@ -524,8 +525,9 @@ public class DrawingZone : MonoBehaviour
     /// </summary>
     public void ShowEndLineSprite()
     {
-        startLineCueObject.SetActive(false);
+        startLineCueObject.GetComponent<Animator>().SetTrigger("Remove");
         endLineCueObject.SetActive(true);
+        endLineCueObject.GetComponent<Animator>().SetTrigger("Appear");
     }
 
     /// <summary>
@@ -533,8 +535,9 @@ public class DrawingZone : MonoBehaviour
     /// </summary>
     public void HideEndLineSprite()
     {
-        GameObject.Destroy(startLineCueObject);
-        GameObject.Destroy(endLineCueObject);
+        endLineCueObject.GetComponent<Animator>().SetTrigger("Remove");
+     
+       
     }
     #endregion
     #region Draw fill shader work

@@ -17,10 +17,11 @@ public class TextQuip : MonoBehaviour
         
     }
 
-    public void SetTextAndColor(string text, Color color)
+    public void SetProperties(string text, Color color, bool goingLeft)
     {
         this.text.text = text;
         this.text.outlineColor = color;
+        GetComponent<Animator>().SetInteger("FlyDirection", goingLeft ? -1 : 1);
     }
 
     public void RemoveQuip()

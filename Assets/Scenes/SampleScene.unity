@@ -852,7 +852,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 118070492}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 64c9a98c380a1b3418bd80c41685d47e, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1579,6 +1579,7 @@ MonoBehaviour:
   - COOL
   - AMAZING
   textQuipPrefab: {fileID: 6640260990873769104, guid: 159dda9f73510b84bb2c83d478823391, type: 3}
+  endLineParticlesPrefab: {fileID: 100106214904707666, guid: 87fddf363080c6642b7d1bcc88effe1a, type: 3}
 --- !u!1 &297644291
 GameObject:
   m_ObjectHideFlags: 0
@@ -2437,11 +2438,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
-  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
-  - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
   - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
+  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
   - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
---- !u!4 &599220231
+  - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5936,8 +5936,8 @@ MonoBehaviour:
   samplingStepSize: 0.1
   svgPixelsPerUnit: 100
   patternSvgFileName: pattern
-  startLineSprite: {fileID: 21300000, guid: 1770750481546ab45aaa342124e8bb21, type: 3}
-  endLineSprite: {fileID: 21300000, guid: a9dbf9e10a143974e8c266efe97fece8, type: 3}
+  startLineSpritePrefab: {fileID: 6081603364998566769, guid: 2e517d3b9886a424c8baa19eab4a3c4a, type: 3}
+  endLineSpritePrefab: {fileID: 6081603364998566769, guid: 3eabd39774899954db2128dd6048380d, type: 3}
   filledPercent: 0
   drawFillTexture: {fileID: 0}
 --- !u!1 &1736414568
