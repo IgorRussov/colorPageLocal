@@ -14,9 +14,12 @@ public class UiControl : MonoBehaviour
     public Button[] colorButtons;
     private Color[] buttonColors;
     private GameStateSelectColor selectColorState;
+    public GameObject undoButton;
     public GameObject nextFillButton;
-    public GameObject startOverButton;
-    public GameObject nextLevelButton;
+    public GameObject winScreen;
+
+    public GameObject flashImage;
+    public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
 
     private void Awake()
     {
@@ -82,9 +85,17 @@ public class UiControl : MonoBehaviour
         colorButtonsPanel.SetActive(false);
     }
 
-    public void ShowFinishedText()
+    public void ShowVictoryScreen()
     {
-        nextLevelButton.SetActive(true);
+        //GameObject.FindObjectOfType<CameraControl>().CreateSnapshot(winSnapshotTexture);
+        flashImage.SetActive(true);
+        flashImage.GetComponent<Animator>().SetTrigger("Flash");
+        LeanTween.delayedCall(1.0f / 60 * 3, () =>
+            {
+                snapshotVirtualCamera.Priority = 11;
+                winScreen.SetActive(true);
+                undoButton.SetActive(false);
+            });
     }
 
     public void NextLevel()
@@ -92,10 +103,12 @@ public class UiControl : MonoBehaviour
         GameObject.FindObjectOfType<LevelManager>().NextLevel();
     }
 
-    public void HideFinishedText()
+    public void RestartLevel()
     {
-        nextLevelButton.SetActive(false);
+        GameObject.FindObjectOfType<LevelManager>().RestartLevel();
     }
+
+ 
 
     public void UndoButtonPressed()
     {

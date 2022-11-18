@@ -120,4 +120,10 @@ public class CameraControl : MonoBehaviour
         targetMembers.Add(tm);
     }
 
+    public void CreateSnapshot(RenderTexture snapshotTexture)
+    {
+        GetComponent<Camera>().targetTexture = snapshotTexture;
+        cinemachineVirtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_MinimumOrthoSize = 0;
+    }
+
 }
