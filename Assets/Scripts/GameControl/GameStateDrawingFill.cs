@@ -27,6 +27,7 @@ public class GameStateDrawingFill : GameBaseState
     {
 
         this.gameStateManager = game;
+        Pencil.instance.MoveToPosForNextFillShape();
         //game.gameControl.drawingZone.SetMaskSprite(game.gameControl.gameStageInfo.FillStageIndex);
         UiControl.Instance.StartFill(this);
         lastPos = Vector2.zero;
@@ -45,7 +46,8 @@ public class GameStateDrawingFill : GameBaseState
 
     public override void InputPressed(GameStateManager game)
     {
-        Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition);
+       
+            Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition);
         //Pencil.instance.lifted = false;
     }
 
@@ -57,17 +59,17 @@ public class GameStateDrawingFill : GameBaseState
     public override void UpdateState(GameStateManager game)
     {
         Vector2 pos = Pencil.instance.gameObject.transform.position;
+        if (!Pencil.instance.mustForcedMove)
+            if ((lastPos - pos).magnitude > minPointDiff)
+            {
+                Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit;
+                fillerPos += drawTextureSize * 0.5f;
+                //Debug.Log("Adding filler at pos + " + fillerPos);
+                lastPos = pos;
 
-        if ((lastPos - pos).magnitude > minPointDiff)
-        {
-            Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit;
-            fillerPos += drawTextureSize * 0.5f;
-            //Debug.Log("Adding filler at pos + " + fillerPos);
-            lastPos = pos;
-
-            game.gameControl.drawingZone.AddColorPainter(fillerPos, 
-                game.gameControl.gameStageInfo.FillStageIndex);
-        }
+                game.gameControl.drawingZone.AddColorPainter(fillerPos, 
+                    game.gameControl.gameStageInfo.FillStageIndex);
+            }
 
         game.gameControl.drawingZone.UpdateDrawFill();
         if (game.gameControl.drawingZone.filledPercent > game.gameControl.requiredFillToContinue)
