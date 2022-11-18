@@ -18,6 +18,11 @@ public class LevelManager : MonoBehaviour
         GameControl.Instance.StartLevel(levelData[levelIndex]);
     }
 
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
 
     public void NextLevel()
     {

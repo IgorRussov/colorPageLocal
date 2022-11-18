@@ -9,8 +9,9 @@ public class GameStateFinished : GameBaseState
 {
     public override void EnterState(GameStateManager game)
     {
-        UiControl.Instance.ShowFinishedText();
+        UiControl.Instance.ShowVictoryScreen();
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
+        Pencil.instance.MoveOffscren();
         game.gameControl.drawingZone.SetAutoFillSpritesEnabled(true);
     }
 
@@ -31,7 +32,7 @@ public class GameStateFinished : GameBaseState
 
     public override void UndoRequested(GameStateManager game, GameStageInfo info)
     {
-        UiControl.Instance.HideFinishedText();
+        //UiControl.Instance.HideFinishedText();
         game.gameControl.PreviousFillDrawStage();
         game.gameControl.drawingZone.SetAutoFillSpritesEnabled(false);
 

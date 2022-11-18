@@ -28,7 +28,7 @@ public class GameStateSelectColor : GameBaseState
         game.gameControl.drawingZone.SetFillPreviewSprite(game.gameControl.gameStageInfo.FillStageIndex); 
         UiControl.Instance.EnableColorSelection(game.gameControl.GetFillStageColors(), this);
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
-        Pencil.instance.MoveToPosForNextFillShape();
+        Pencil.instance.MoveOffscren();
         Pencil.instance.lifted = false;
     }
 
