@@ -11,6 +11,7 @@ public class GameStateFinished : GameBaseState
     {
         UiControl.Instance.ShowFinishedText();
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
+        Pencil.instance.MoveOffscren();
         game.gameControl.drawingZone.SetAutoFillSpritesEnabled(true);
     }
 

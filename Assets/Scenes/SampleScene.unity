@@ -149,8 +149,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16987211}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.23, y: -1.44, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalPosition: {x: 17.86, y: -5.11, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 118070493}
   - {fileID: 81655339}
@@ -171,17 +171,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipSpriteRenderer: {fileID: 1838675362}
   pencilRepresObject: {fileID: 81655338}
-  forcedMoveSpeed: 30
-  drawFillMaxSpeed: 10
-  drawFillSmoothTime: 0.2
+  forcedMoveMaxSpeed: 100
+  forcedMoveSmoothTime: 0.2
+  drawFillMaxSpeed: 20
+  drawFillSmoothTime: 0.1
   liftSpeed: 10
   liftedOffset: {x: 0.5, y: -0.5}
+  liftedScaleChange: 0.03
+  offscreenOffset: {x: 2, y: -5.2}
   rotationAmplitude: 3
   strokeRotationSpeed: 0.02
   fillRotationSpeed: 1
   lifted: 0
+  mustForcedMove: 0
   acceleration: {x: 0, y: 0}
   target: {x: 0, y: 0}
+  currentVelocity: {x: 0, y: 0}
 --- !u!54 &16987214
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4294,9 +4299,9 @@ MonoBehaviour:
   maxStrokeTime: 5
   midStrokeTime: 2
   midStrokeLength: 1500
-  perfectStrokeMargin: 0.2
+  perfectStrokeMargin: 1
   continueLineLength: 100
-  requiredFillToContinue: 0.75
+  requiredFillToContinue: 0.006
   drawingZone: {fileID: 1736346571}
   effectsControl: {fileID: 293480301}
   drawingNow: 0
