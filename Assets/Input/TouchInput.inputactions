@@ -67,6 +67,17 @@
                 },
                 {
                     "name": "",
+                    "id": "0d537b8b-6321-478a-bd19-9e9b22c68dfa",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "22055b50-1215-47a9-ac56-d437630ef7b9",
                     "path": "<Touchscreen>/primaryTouch/delta",
                     "interactions": "",
@@ -78,8 +89,30 @@
                 },
                 {
                     "name": "",
+                    "id": "5158adc9-3563-41dd-8f2f-2b9030cf9a4b",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e533638c-29b5-43c2-ba5f-e3d18afe9fd6",
                     "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "776b71fe-ad34-4343-8c8e-e9f88158ab2b",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -21,6 +21,8 @@ public class UiControl : MonoBehaviour
     public GameObject flashImage;
     public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
 
+    public TMPro.TMP_Text currentLevelText;
+
     private void Awake()
     {
         Instance = this;
@@ -108,7 +110,10 @@ public class UiControl : MonoBehaviour
         GameObject.FindObjectOfType<LevelManager>().RestartLevel();
     }
 
- 
+    public void SetCurrentLevelText(string text)
+    {
+        currentLevelText.text = text;
+    }
 
     public void UndoButtonPressed()
     {

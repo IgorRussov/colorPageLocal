@@ -61,7 +61,13 @@ public class ShapeUtils
             + 6 * t * (1 - t) * s.P2
             + 3 * t * t * s.P3;
         return tan;
-    } 
+    }
+
+
+    private static float prevEvalPoint;
+    private static int prevIndex;
+    private static Shape prevShape;
+    private static float prevLength;
 
     /// <summary>
     /// Gets svg space coordinates of a point on the shape's contour which is 
@@ -76,6 +82,17 @@ public class ShapeUtils
         BezierSegment[] arr = ShapeToBezierSegments(shape);
         int i = -1;
         float length = 1;
+
+        if (shape == prevShape && evalPoint > prevEvalPoint)
+        { 
+            if (prevIndex != 0)
+                i = prevIndex - 1;
+            lengthRemaining -= prevLength;
+        }
+            
+
+        prevLength = 0;
+
         bool flag = false;
         try
         {
@@ -83,6 +100,7 @@ public class ShapeUtils
             {
                 i++;
                 length = VectorUtils.SegmentLength(arr[i]);
+                prevLength += length;
                 if (lengthRemaining <= length)
                     flag = true;
                 else
@@ -94,6 +112,12 @@ public class ShapeUtils
         {
                Debug.Log("Shape index wrong");
         }
+
+        prevLength -= length;
+
+        prevEvalPoint = evalPoint;
+        prevIndex = i;
+        prevShape = shape;
 
         BezierSegment evalSegment = i < arr.Length ? arr[i] : arr.Last();
         //The parameter must be from 0 to 1 for the VecturUtils lib funcion used here
