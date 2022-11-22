@@ -97,6 +97,19 @@ public class DrawingZone : MonoBehaviour
             return options;
         }
     }
+
+    private void FixedUpdate()
+    {
+        /*
+        if (updateStrokeSprite != null)
+        {
+            Debug.Log("Update");
+            spriteRendererToUpdate.sprite = updateStrokeSprite;
+            spriteRendererToUpdate = null;
+        }
+        */
+    }
+
     #region Helper functions
     /// <summary>
     /// Get total svg unit length of a draw shape with the provided index
@@ -120,20 +133,20 @@ public class DrawingZone : MonoBehaviour
     /// <param name="shapeIndex"></param>
     /// <param name="pos0to1"></param>
     /// <returns></returns>
-    public Vector2 GetDrawShapePos(int shapeIndex, float pos0to1)
+    public Vector2 GetDrawShapePos(int shapeIndex, float pos0to1, bool setSegmentsLength)
     {
         Shape shape = drawStrokeShapes[shapeIndex];
         float length = GetDrawShapeLength(shapeIndex, false);
         float compLength = length * pos0to1;
-        return ShapeUtils.EvalShape(shape, compLength);
+        return ShapeUtils.EvalShape(shape, compLength, setSegmentsLength);
     }
 
-    public Vector2 GetPreviewShapePos(int shapeIndex, float pos0to1)
+    public Vector2 GetPreviewShapePos(int shapeIndex, float pos0to1, bool setSegmentsLength)
     {
         Shape shape = previewStrokeShapes[shapeIndex];
         float length = GetDrawShapeLength(shapeIndex, true);
         float compLength = length * pos0to1;
-        return ShapeUtils.EvalShape(shape, compLength);
+        return ShapeUtils.EvalShape(shape, compLength, setSegmentsLength);
     }
 
     
@@ -440,8 +453,8 @@ public class DrawingZone : MonoBehaviour
 
 
         //Create cue sprites
-        Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0));
-        Vector2 endLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 1));
+        Vector2 startLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 0, false));
+        Vector2 endLinePos = PositionConverter.VectorPosToWorldPos(GetPreviewShapePos(drawingStage, 1, true));
 
         startLineCueObject = CreateSpriteObject(startLineSpritePrefab, startLinePos, "Start line marker");
         endLineCueObject = CreateSpriteObject(endLineSpritePrefab, endLinePos, "End line marker");
@@ -461,6 +474,8 @@ public class DrawingZone : MonoBehaviour
     }
 
 
+    SpriteRenderer spriteRendererToUpdate;
+    //Sprite updateStrokeSprite;
     /// <summary>
     /// Updates the currently being drawn stroke sprite to be drawn for the required ammount
     /// </summary>
@@ -468,11 +483,19 @@ public class DrawingZone : MonoBehaviour
     /// <param name="drawStageIndex"></param>
     public void UpdateStrokeDrawSprite(float drawnAmmount, int drawStageIndex)
     {
-        Sprite newSprite = DrawingSpriteFactory.CreateLineSprite(
+        List<Sprite> sprites = new List<Sprite>();
+        spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
+        DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
            drawStrokeShapes[drawStageIndex],
            ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
            drawStrokeWidth, drawStrokeColor);
-        drawingSprites[previewStrokeShapes.Count + drawStageIndex].sprite = newSprite;
+        
+    }
+
+    private void UpdateStrokeDrawCallback(Sprite sprite)
+    {
+        //Debug.Log("Callback");
+        spriteRendererToUpdate.sprite = sprite;
     }
 
     public void SetPerfectStrokeDrawSprite(int drawStageIndex)

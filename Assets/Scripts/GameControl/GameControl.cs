@@ -148,7 +148,7 @@ public class GameControl : MonoBehaviour
         if (!canDraw)
             return;
         gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
-        Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart);
+        Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart, false);
         if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedLine)
         {
             Debug.Log("CONTINUE");
@@ -176,7 +176,7 @@ public class GameControl : MonoBehaviour
         gameStageInfo.drawnAmmount = 0;
         Pencil.instance.lifted = true;
         Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
-            drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0)
+            drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0, false)
             ), false);
         continuedLine = false;
         gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage, false);

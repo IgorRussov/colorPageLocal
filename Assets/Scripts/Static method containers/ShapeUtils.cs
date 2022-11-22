@@ -67,7 +67,7 @@ public class ShapeUtils
     private static float prevEvalPoint;
     private static int prevIndex;
     private static Shape prevShape;
-    private static float prevLength;
+    private static float[] segmentsLength;
 
     /// <summary>
     /// Gets svg space coordinates of a point on the shape's contour which is 
@@ -76,22 +76,27 @@ public class ShapeUtils
     /// <param name="shape"></param>
     /// <param name="evalPoint"></param>
     /// <returns></returns>
-    public static Vector2 EvalShape(Shape shape, float evalPoint)
+    public static Vector2 EvalShape(Shape shape, float evalPoint, bool setSegmentsLength)
     {
         float lengthRemaining = evalPoint;
         BezierSegment[] arr = ShapeToBezierSegments(shape);
         int i = -1;
         float length = 1;
-
-        if (shape == prevShape && evalPoint > prevEvalPoint)
+        
+        if (shape == prevShape && evalPoint > prevEvalPoint && !setSegmentsLength)
         { 
             if (prevIndex != 0)
+            {
                 i = prevIndex - 1;
-            lengthRemaining -= prevLength;
-        }
+                if (i < segmentsLength.Length)
+                    lengthRemaining -= segmentsLength[i];
+            }
             
+           
+        }
 
-        prevLength = 0;
+        if (setSegmentsLength)
+            segmentsLength = new float[arr.Length]; 
 
         bool flag = false;
         try
@@ -100,7 +105,13 @@ public class ShapeUtils
             {
                 i++;
                 length = VectorUtils.SegmentLength(arr[i]);
-                prevLength += length;
+                if (setSegmentsLength)
+                {
+                    segmentsLength[i] = length;
+                    if (i != 0)
+                        segmentsLength[i] += segmentsLength[i - 1];
+                }    
+                    
                 if (lengthRemaining <= length)
                     flag = true;
                 else
@@ -113,8 +124,6 @@ public class ShapeUtils
                Debug.Log("Shape index wrong");
         }
 
-        prevLength -= length;
-
         prevEvalPoint = evalPoint;
         prevIndex = i;
         prevShape = shape;
@@ -126,7 +135,7 @@ public class ShapeUtils
             : 1; //if we could not get the required segment we are checking the last segment at its' last point
         
         Vector2 result = VectorUtils.Eval(evalSegment, evalParameter);
-
+        //Debug.Log(result);
         return result * PositionConverter.DrawingScale;
     }
 

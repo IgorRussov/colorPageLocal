@@ -139,8 +139,14 @@ public class DrawingSpriteFactory
     {
         return VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
     }
-    
-    
+
+    private static void GetGeomFromScene(Scene scene, List<List<VectorUtils.Geometry>> retList)
+    {
+        List<VectorUtils.Geometry> retListUnit = VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
+        retList.Add(retListUnit);
+    }
+
+
     /// <summary>
     /// Creates a sprite from a vector scene
     /// </summary>
@@ -214,6 +220,38 @@ public class DrawingSpriteFactory
         return CreateSprite(newShape, null, stroke);
 
     }
+
+    public static async void UpdateLineSprite(System.Action<Sprite> callback, Shape shape,
+        float[] dashesArray,
+        float strokeWidth,
+        Color strokeColor)
+    {
+        Shape newShape = null;
+        Scene newScene = CreateSceneWithClonedShape(shape, out newShape, false);
+
+        Stroke original = shape.PathProps.Stroke;
+        Stroke stroke = CreateStroke(dashesArray, strokeWidth, strokeColor, original);
+
+        PathProperties props = CreatePathProperties(stroke);
+
+        newShape.PathProps = props;
+        newShape.Fill = null;
+
+        List<List<VectorUtils.Geometry>> geomList = new List<List<VectorUtils.Geometry>>();
+
+        await System.Threading.Tasks.Task.Run(() => GetGeomFromScene(newScene, geomList));
+
+        List<VectorUtils.Geometry> geom = geomList.First();
+        Sprite result = null;
+        if (geom.Count > 0) //This check is required because if geom is empty (can happen if it is a transparent scene)
+                            //the method would throw an exception
+            result = VectorUtils.BuildSprite(geom, PositionConverter.SvgPixelsPerUnit, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 64, true);
+
+        callback.Invoke(result);
+         
+    }
+
+
     /// <summary>
     /// Creates a sprite with a fill based on the provided patternNode and patternRect,
     /// and no stroke
