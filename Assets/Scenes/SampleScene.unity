@@ -2194,7 +2194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f329f8f216658444ac913f6fc405895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawingPadding: 4
+  drawingPadding: 6
   cinemachineTargetGroup: {fileID: 1797379018}
   cinemachineVirtualCamera: {fileID: 1651156707}
   targetParentObject: {fileID: 102609385}
@@ -2440,12 +2440,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
-  - {fileID: 11400000, guid: a8241ff08aed4aa4281443ef7aff0729, type: 2}
-  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
   - {fileID: 11400000, guid: 3b18549502a29014889986c6c32531cd, type: 2}
   - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
+  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
   - {fileID: 11400000, guid: bbdf7c669aac70e49aa81f525b5ecd0c, type: 2}
   - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
+  - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
+  - {fileID: 11400000, guid: b6ab546afcf21024580e2f645f985506, type: 2}
+  - {fileID: 11400000, guid: 4f18d2cc31de7f14abe849386f3a6f40, type: 2}
   - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
 --- !u!4 &599220231
 Transform:
@@ -6206,7 +6208,7 @@ MonoBehaviour:
   drawFillBoundsMeshCollider2: {fileID: 1579144419}
   cameraControl: {fileID: 519420033}
   drawFillMask: {fileID: 1316100775}
-  desiredSvgWidth: 400
+  desiredSvgWidth: 800
   spriteMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   previewStrokeWidth: 5
   previewStrokeFillLength: 1
@@ -6214,8 +6216,8 @@ MonoBehaviour:
   previewStrokeColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
   drawStrokeWidth: 30
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
-  fillStrokeStartRadius: 30
-  fillStrokeMaxRadius: 50
+  fillStrokeStartRadius: 50
+  fillStrokeMaxRadius: 80
   fillStrokeRadiusPerTime: 50
   fillComputeShader: {fileID: 7200000, guid: e876e417277405040a226e9a3d6c97a9, type: 3}
   fillPercentComputeShader: {fileID: 7200000, guid: 53d04eaad5d4a114e979a0a34f6dee0b, type: 3}
@@ -6856,7 +6858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2082849fded338498378c8621af2dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetFrameRate: 30
+  targetFrameRate: 60
 --- !u!1 &1881916753
 GameObject:
   m_ObjectHideFlags: 0

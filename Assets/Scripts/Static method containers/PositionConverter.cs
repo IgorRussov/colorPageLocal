@@ -15,7 +15,7 @@ public class PositionConverter
     public static float DrawingScale = 1;
     public static Vector2 shapesObjectPos;
 
-    public static float TextureScale = 0.5f;
+    public static float TextureScale = 1f;
     
     /// <summary>
     /// Returns the unity world position of the center of a svg coordinates rect

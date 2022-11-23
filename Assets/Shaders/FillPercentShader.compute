@@ -31,7 +31,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     float2 uv = float2(x, y);
 
     float4 mask = MaskTex.SampleLevel(linearClampSampler, uv, 0);
-    if (mask.r > 0)
+    if (mask.r + mask.g + mask.b > 0)
     {
         InterlockedAdd(_ResultSum[1], 1);
         if (tex.x > 0 | tex.y > 0 | tex.z > 0)

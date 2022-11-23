@@ -1527,7 +1527,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &513411914
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1567,6 +1567,7 @@ MonoBehaviour:
   strokeSpeedInput: {fileID: 715605137}
   fillSpeedInput: {fileID: 801037560}
   gameControl: {fileID: 0}
+  frameTimeText: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,9 +1976,12 @@ MonoBehaviour:
   - {fileID: 261916733}
   - {fileID: 2131332475}
   - {fileID: 852623779}
+  undoButton: {fileID: 0}
   nextFillButton: {fileID: 605366377}
-  startOverButton: {fileID: 1513303380}
-  nextLevelButton: {fileID: 0}
+  winScreen: {fileID: 0}
+  flashImage: {fileID: 0}
+  snapshotVirtualCamera: {fileID: 0}
+  currentLevelText: {fileID: 0}
 --- !u!114 &618550353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3390,7 +3394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: rabbit
+  svgFileName: apple
   sourceLevelData: {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels

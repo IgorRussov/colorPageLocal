@@ -718,7 +718,9 @@ public class DrawingZone : MonoBehaviour
             colorPercentResultBuffer.GetData(result);
 
             filledPercent = result[0] * 1.0f / result[1];
-            //Debug.Log(filledPercent);
+            if (float.IsNaN(filledPercent))
+                filledPercent = 1.0f;
+            Debug.Log(result[0] + " " + result[1]);
         }
     }
 

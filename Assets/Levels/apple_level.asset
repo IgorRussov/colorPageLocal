@@ -14,33 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   svgFileName: apple
   strokeShapesOrder: 00000000010000000200000003000000
-  fillShapesOrder: 00000000010000000200000003000000
+  fillShapesOrder: 00000000ffffffff0100000002000000
   colors:
   - row:
     - r: 193
       g: 40
       b: 46
       a: 255
-    - r: 193
-      g: 192
-      b: 40
+    - r: 40
+      g: 46
+      b: 193
       a: 255
-    - r: 83
-      g: 193
-      b: 40
+    - r: 193
+      g: 40
+      b: 148
       a: 255
   - row:
     - r: 255
       g: 255
       b: 255
       a: 255
-    - r: 197
-      g: 185
-      b: 31
+    - r: 255
+      g: 255
+      b: 255
       a: 255
-    - r: 161
-      g: 5
-      b: 5
+    - r: 255
+      g: 255
+      b: 255
       a: 255
   - row:
     - r: 180
@@ -48,23 +48,23 @@ MonoBehaviour:
       b: 91
       a: 255
     - r: 232
-      g: 160
-      b: 91
+      g: 91
+      b: 180
       a: 255
-    - r: 56
-      g: 48
-      b: 236
+    - r: 232
+      g: 190
+      b: 91
       a: 255
   - row:
     - r: 139
       g: 98
       b: 57
       a: 255
-    - r: 89
-      g: 140
-      b: 64
+    - r: 98
+      g: 57
+      b: 139
       a: 255
-    - r: 204
-      g: 41
-      b: 69
+    - r: 139
+      g: 57
+      b: 71
       a: 255
