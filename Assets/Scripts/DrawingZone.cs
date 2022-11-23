@@ -484,16 +484,16 @@ public class DrawingZone : MonoBehaviour
     /// <param name="drawStageIndex"></param>
     public void UpdateStrokeDrawSprite(float drawnAmmount, int drawStageIndex)
     {
-        if (!tesselatingSpriteNow)
-        {
-            tesselatingSpriteNow = true;
+        //if (!tesselatingSpriteNow)
+        //{
+        //    tesselatingSpriteNow = true;
             List<Sprite> sprites = new List<Sprite>();
             spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
             DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
                drawStrokeShapes[drawStageIndex],
                ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
                drawStrokeWidth, drawStrokeColor);
-        }
+        //}
        
         
     }
@@ -502,7 +502,7 @@ public class DrawingZone : MonoBehaviour
     {
         //Debug.Log("Callback");
         spriteRendererToUpdate.sprite = sprite;
-        tesselatingSpriteNow = false;
+        //tesselatingSpriteNow = false;
     }
 
     public void SetPerfectStrokeDrawSprite(int drawStageIndex)
@@ -600,15 +600,15 @@ public class DrawingZone : MonoBehaviour
 
     private ComputeBuffer CreateTextureSetComputeBuffer(int textureWidth, int textureHeight)
     {
-        textureWidth *= 2;
-        textureHeight *= 2;
         ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
-        /*
+        
         float[] data = new float[textureWidth * textureHeight];
+        
         for (int i = 0; i < data.Length; i++)
-            data[i] = (i % 10) / 5;
-        buffer.SetData(data);
-        */
+            data[i] = (i % textureWidth) < 100 ? 1 : 0;
+        
+
+        
         return buffer;
     }
 
@@ -653,9 +653,9 @@ public class DrawingZone : MonoBehaviour
 
     public void SetShaderConstants()
     {
-        fillComputeShader.SetFloat(startRadiusId, fillStrokeStartRadius);
-        fillComputeShader.SetFloat(maxRadiusId, fillStrokeMaxRadius);
-        fillComputeShader.SetFloat(radiusPerSecondId, fillStrokeRadiusPerTime);
+        fillComputeShader.SetFloat(startRadiusId, fillStrokeStartRadius * PositionConverter.TextureScale);
+        fillComputeShader.SetFloat(maxRadiusId, fillStrokeMaxRadius * PositionConverter.TextureScale);
+        fillComputeShader.SetFloat(radiusPerSecondId, fillStrokeRadiusPerTime * PositionConverter.TextureScale);
     }
 
     public void UpdateDrawFill()
@@ -694,7 +694,7 @@ public class DrawingZone : MonoBehaviour
 
     private void DispatchShader()
     {
-        int width = drawFillQuadMaterial.mainTexture.width / 8 + 1;
+        int width = drawFillQuadMaterial.mainTexture.width / 16 + 1;
         int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
 
         fillComputeShader.Dispatch(0, width, height, 1);
@@ -724,7 +724,7 @@ public class DrawingZone : MonoBehaviour
 
     public void SetupNewDrawFillTexture()
     {
-        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
+        RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture();
         drawFillQuadMaterial.mainTexture = renderTexture;
         fillComputeShader.SetTexture(0, resultTextureId, renderTexture);
         fillComputeShader.SetFloat(widthId, renderTexture.width);
@@ -743,7 +743,7 @@ public class DrawingZone : MonoBehaviour
         fillPercentComputeShader.SetBuffer(kernelMain, resultSumId, colorPercentResultBuffer);
 
 
-        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
+        RenderTexture rt = ShapeUtils.CreateSceneSizedRenderTexture();
         fillPercentComputeShader.SetTexture(kernelInit, drawTexId, rt);
         fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
         

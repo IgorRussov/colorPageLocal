@@ -10,6 +10,8 @@ public class DebugUi : MonoBehaviour
     public TMPro.TMP_InputField fillSpeedInput;
     public GameControl gameControl;
 
+    public TMPro.TMP_Text frameTimeText;
+
     public void ToggleDebugMenu()
     {
         debugMenu.SetActive(!debugMenu.activeSelf);
@@ -17,6 +19,11 @@ public class DebugUi : MonoBehaviour
             GameStateManager.DisableInput();
         else
             GameStateManager.EnableInput();
+    }
+
+    private void Update()
+    {
+        frameTimeText.text = Time.deltaTime * 1000 + " ms";
     }
 
     public void OnEnable()

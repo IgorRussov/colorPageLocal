@@ -283,17 +283,6 @@ public class DrawingSpriteFactory
         return CreateSprite(shape, patternFill, null);
     }
 
-    public static RenderTexture TextureFromSprite(Shape sourceShape, Sprite sprite, Material material)
-    {
-        Texture2D texture2d = VectorUtils.RenderSpriteToTexture2D(sprite, 904, 900, material);
-        Rect rect = sprite.rect;
-        float offsetX = 0;
-        float offsetY = 0;
-
-        RenderTexture renderTexture = TextureConverter.Instance.PanTexture(texture2d, new Vector2(offsetX, offsetY));
-
-        return renderTexture;
-    }
 
     /// <summary>
     /// Creates a sprite with solid fill of provided color and no stroke

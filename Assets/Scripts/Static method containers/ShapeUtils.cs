@@ -317,7 +317,7 @@ public class ShapeUtils
         BezierSegment[] segments = ShapeToBezierSegments(shape);
         BezierSegment lastSegment;
         if (shapeContour.Closed)
-            lastSegment = segments[segments.Length - 1]; //2
+            lastSegment = segments[segments.Length - 1];
         else
             lastSegment = segments[segments.Length - 1];
 
@@ -455,10 +455,10 @@ public class ShapeUtils
         return spriteTexture;
     }
 
-    public static RenderTexture CreateSceneSizedRenderTexture(Vector2 padding)
+    public static RenderTexture CreateSceneSizedRenderTexture()
     {
-        int textureWidth = Mathf.RoundToInt(drawingSize.x + padding.x);
-        int textureHeigth = Mathf.RoundToInt(drawingSize.y + padding.y);
+        int textureWidth = Mathf.RoundToInt(drawingSize.x * PositionConverter.DrawingScale * PositionConverter.TextureScale);
+        int textureHeigth = Mathf.RoundToInt(drawingSize.y * PositionConverter.DrawingScale * PositionConverter.TextureScale);
         RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGB32);
         texture.enableRandomWrite = true;
         texture.Create();

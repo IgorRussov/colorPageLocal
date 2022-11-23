@@ -62,7 +62,7 @@ public class GameStateDrawingFill : GameBaseState
         if (!Pencil.instance.mustForcedMove)
             if ((lastPos - pos).magnitude > minPointDiff)
             {
-                Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit;
+                Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit * PositionConverter.TextureScale;
                 fillerPos += drawTextureSize * 0.5f;
                 //Debug.Log("Adding filler at pos + " + fillerPos);
                 lastPos = pos;

@@ -22,19 +22,4 @@ public class TextureConverter : MonoBehaviour
         sourceTextureSizeId = Shader.PropertyToID("_SourceTextureSize");
     }
 
-    public RenderTexture PanTexture(Texture2D sourceTexture, Vector2 offset)
-    {
-        textureConvertShader.SetFloats(offsetId, new float[] { offset.x, offset.y });
-        textureConvertShader.SetTexture(0, textureInId, sourceTexture);
-
-        RenderTexture ret = ShapeUtils.CreateSceneSizedRenderTexture(Vector2.zero);
-
-        int height = sourceTexture.height;
-        int width = sourceTexture.width;
-        textureConvertShader.SetFloats(sourceTextureSizeId, new float[] { width, height });
-
-        textureConvertShader.SetTexture(0, resultId, ret);
-        textureConvertShader.Dispatch(0, ret.width / 32 + 1, ret.height / 32 + 1, 1);
-        return ret;
-    }
 }
