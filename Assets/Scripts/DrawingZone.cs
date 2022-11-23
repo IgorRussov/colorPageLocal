@@ -475,6 +475,7 @@ public class DrawingZone : MonoBehaviour
 
 
     SpriteRenderer spriteRendererToUpdate;
+    bool tesselatingSpriteNow;
     //Sprite updateStrokeSprite;
     /// <summary>
     /// Updates the currently being drawn stroke sprite to be drawn for the required ammount
@@ -483,12 +484,17 @@ public class DrawingZone : MonoBehaviour
     /// <param name="drawStageIndex"></param>
     public void UpdateStrokeDrawSprite(float drawnAmmount, int drawStageIndex)
     {
-        List<Sprite> sprites = new List<Sprite>();
-        spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
-        DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
-           drawStrokeShapes[drawStageIndex],
-           ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
-           drawStrokeWidth, drawStrokeColor);
+        if (!tesselatingSpriteNow)
+        {
+            tesselatingSpriteNow = true;
+            List<Sprite> sprites = new List<Sprite>();
+            spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
+            DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
+               drawStrokeShapes[drawStageIndex],
+               ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
+               drawStrokeWidth, drawStrokeColor);
+        }
+       
         
     }
 
@@ -496,6 +502,7 @@ public class DrawingZone : MonoBehaviour
     {
         //Debug.Log("Callback");
         spriteRendererToUpdate.sprite = sprite;
+        tesselatingSpriteNow = false;
     }
 
     public void SetPerfectStrokeDrawSprite(int drawStageIndex)

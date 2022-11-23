@@ -58,7 +58,7 @@ public class GameControl : MonoBehaviour
         get
         {
             float needLength = GetRequiredLength;
-            return gameStageInfo.drawnAmmount + drawingZone.drawStrokeWidth  > needLength * (1 - perfectStrokeMargin);
+            return gameStageInfo.drawnAmmount /*+ drawingZone.drawStrokeWidth*/  > needLength * (1 - perfectStrokeMargin);
                
         }
     }
@@ -79,7 +79,7 @@ public class GameControl : MonoBehaviour
         get
         {
             float needLength = GetRequiredLength;
-            float drawn = gameStageInfo.drawnAmmount;
+            float drawn = gameStageInfo.drawnAmmount/*+ drawingZone.drawStrokeWidth*/;
 
             if (drawn > needLength * (1 + perfectStrokeMargin))
                 return false;
@@ -147,11 +147,11 @@ public class GameControl : MonoBehaviour
     {
         if (!canDraw)
             return;
-        gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
         Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart, false);
+        gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
+       
         if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedLine)
         {
-            Debug.Log("CONTINUE");
             Vector2 direction = newDrawShapePos - prevDrawShapePos;
             drawingZone.ContinueFillDrawSprite(gameStageInfo.drawStage, direction, continueLineLength);
             gameStageInfo.strokeShapeLength += continueLineLength;

@@ -110,6 +110,7 @@ public class Pencil : MonoBehaviour
     public void InstantMove(Vector2 target, bool moveInWorldSpace)
     {
         //Debug.Log("Instant move to " + target);
+        mustForcedMove = false;
         Vector2 currentDiff;
         if (moveInWorldSpace)
             currentDiff = target - new Vector2(transform.position.x, transform.position.y);

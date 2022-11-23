@@ -82,7 +82,7 @@ public class ShapeUtils
         BezierSegment[] arr = ShapeToBezierSegments(shape);
         int i = -1;
         float length = 1;
-        
+        /*
         if (shape == prevShape && evalPoint > prevEvalPoint && !setSegmentsLength)
         { 
             if (prevIndex != 0)
@@ -94,34 +94,38 @@ public class ShapeUtils
             
            
         }
-
+        
         if (setSegmentsLength)
             segmentsLength = new float[arr.Length]; 
-
+        */
         bool flag = false;
         try
         {
             do //We are looking for the segment which contains the required point
             {
                 i++;
-                length = VectorUtils.SegmentLength(arr[i]);
+                if (i >= arr.Length)
+                    flag = true;
+                else
+                {
+                    length = VectorUtils.SegmentLength(arr[i]);
+                    if (lengthRemaining <= length)
+                        flag = true;
+                    else
+                        lengthRemaining -= length;
+                }
+                /*
                 if (setSegmentsLength)
                 {
                     segmentsLength[i] = length;
                     if (i != 0)
                         segmentsLength[i] += segmentsLength[i - 1];
                 }    
-                    
-                if (lengthRemaining <= length)
-                    flag = true;
-                else
-                    lengthRemaining -= length;
-                if (i >= arr.Length)
-                    flag = true;
+                */ 
             } while (!flag );
         }catch (Exception e)
         {
-               Debug.Log("Shape index wrong");
+           Debug.Log("Shape index wrong");
         }
 
         prevEvalPoint = evalPoint;
@@ -313,7 +317,7 @@ public class ShapeUtils
         BezierSegment[] segments = ShapeToBezierSegments(shape);
         BezierSegment lastSegment;
         if (shapeContour.Closed)
-            lastSegment = segments[segments.Length - 2];
+            lastSegment = segments[segments.Length - 1]; //2
         else
             lastSegment = segments[segments.Length - 1];
 

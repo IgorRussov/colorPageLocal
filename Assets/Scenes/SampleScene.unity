@@ -2438,10 +2438,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
+  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
+  - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
   - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
   - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
-  - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
-  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
 --- !u!4 &599220231
 Transform:
   m_ObjectHideFlags: 0
@@ -4921,9 +4921,9 @@ MonoBehaviour:
   maxStrokeTime: 5
   midStrokeTime: 2
   midStrokeLength: 1500
-  perfectStrokeMargin: 0.099
+  perfectStrokeMargin: 0.15
   continueLineLength: 400
-  requiredFillToContinue: 0.755
+  requiredFillToContinue: 0
   drawingZone: {fileID: 1736346571}
   effectsControl: {fileID: 293480301}
   drawingNow: 0
