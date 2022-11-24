@@ -704,7 +704,7 @@ public class DrawingZone : MonoBehaviour
 
     private void DispatchShader()
     {
-        int width = drawFillQuadMaterial.mainTexture.width / 8 + 1;
+        int width = drawFillQuadMaterial.mainTexture.width / 16 + 1;
         int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
 
         fillComputeShader.Dispatch(0, width, height, 1);

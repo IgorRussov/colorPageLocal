@@ -459,7 +459,7 @@ public class ShapeUtils
     {
         int textureWidth = Mathf.RoundToInt(drawingSize.x * PositionConverter.DrawingScale * PositionConverter.TextureScale);
         int textureHeigth = Mathf.RoundToInt(drawingSize.y * PositionConverter.DrawingScale * PositionConverter.TextureScale);
-        RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGB32);
+        RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGBFloat);
         texture.enableRandomWrite = true;
         texture.Create();
         texture.Release();
