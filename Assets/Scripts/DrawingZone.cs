@@ -376,6 +376,8 @@ public class DrawingZone : MonoBehaviour
     }
 
     bool setMaskTexture = false;
+    [HideInInspector]
+    public  Texture2D maskTexture;
 
     /// <summary>
     /// Sets the mask sprite for drawing fill
@@ -400,6 +402,7 @@ public class DrawingZone : MonoBehaviour
         drawFillQuadMaterial.SetTexture("_Alpha", texture2d);
         fillPercentComputeShader.SetTexture(kernelInit, maskTexId, texture2d);
         fillPercentComputeShader.SetTexture(kernelMain, maskTexId, texture2d);
+        maskTexture = texture2d;
         setMaskTexture = true;
 
         drawFillQuad.transform.localScale = new Vector3(textureWidth / PositionConverter.SvgPixelsPerUnit,
@@ -668,6 +671,8 @@ public class DrawingZone : MonoBehaviour
 
     public void ResetComputeBuffers()
     {
+        
+
         textureSetBuffer = CreateTextureSetComputeBuffer(32, 32);
         colorPainterComputeBuffer = CreateColorPainterComputeBuffer(1);
         colorPainters = new List<ColorPainter>();
@@ -676,9 +681,12 @@ public class DrawingZone : MonoBehaviour
 
     public void ResetComputeBuffers(int width, int height)
     {
+        textureSetBuffer.Release();
         textureSetBuffer = CreateTextureSetComputeBuffer(width, height);
+        colorPainterComputeBuffer.Release();
         colorPainterComputeBuffer = CreateColorPainterComputeBuffer(10000);
         colorPainters = new List<ColorPainter>();
+        colorPercentResultBuffer.Release();
         colorPercentResultBuffer = CreateColorSetResultBuffer();
     }
 
@@ -690,38 +698,79 @@ public class DrawingZone : MonoBehaviour
         }
     }
 
-    private int counter = 0;
+    private float lastCalcTime;
+    private float fillPercentCalculationInterval = 1;
+    private float fillPercentResultDelay = 0.9f;
 
     private void DispatchShader()
     {
-        int width = drawFillQuadMaterial.mainTexture.width / 16 + 1;
+        int width = drawFillQuadMaterial.mainTexture.width / 8 + 1;
         int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
 
         fillComputeShader.Dispatch(0, width, height, 1);
-        
-        if (counter++ >= 10)
+        /*
+        if (Time.time - lastCalcTime > fillPercentCalculationInterval)
         {
-            counter = 0;
-            RenderTexture rt = new RenderTexture(drawFillQuadMaterial.mainTexture.width,
-                drawFillQuadMaterial.mainTexture.height, 0, RenderTextureFormat.ARGB32);
-            rt.enableRandomWrite = true;
-            rt.Create();
+            lastCalcTime = Time.time;
 
-            Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
-            fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
-
-            int[] result = new int[2];
-
-            fillPercentComputeShader.Dispatch(kernelInit, 1, 1, 1);
-
-            fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
-            colorPercentResultBuffer.GetData(result);
-
-            filledPercent = result[0] * 1.0f / result[1];
-            if (float.IsNaN(filledPercent))
-                filledPercent = 1.0f;
-            Debug.Log(result[0] + " " + result[1]);
+            try
+            {
+                StartFillPrecentCalculation(width, height);
+            }
+            catch { }
         }
+        
+        if (Time.time - lastCalcTime > fillPercentResultDelay && lastCalcTime > 0)
+        {
+            ReadFillPercentShaderData();
+        }
+        */
+    }
+
+    private void SetFillPercentShaderTexture(int nameId, Texture originalTexture)
+    {
+
+        int width = originalTexture.width / 4;
+
+    }
+
+    private void StartFillPrecentCalculation(int width, int height)
+    {
+        /*
+        RenderTexture rt = new RenderTexture(drawFillQuadMaterial.mainTexture.width,
+                drawFillQuadMaterial.mainTexture.height, 0, RenderTextureFormat.ARGB32);
+        rt.enableRandomWrite = true;
+        rt.Create();
+
+        Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
+        */
+
+        int tw = drawFillQuadMaterial.mainTexture.width;
+        int th = drawFillQuadMaterial.mainTexture.height;
+        Texture2D texture2d = new Texture2D(tw, th, TextureFormat.ARGB32, false);
+
+        RenderTexture.active = drawFillQuadMaterial.mainTexture as RenderTexture;
+        texture2d.ReadPixels(new Rect(0, 0, tw, th), 0, 0);
+        texture2d.Apply();
+        RenderTexture.active = null;
+
+        TextureCounter.CalculateFillPercent(texture2d, maskTexture, (res) => { filledPercent = res; });
+        /*
+        fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
+        fillPercentComputeShader.Dispatch(kernelInit, 1, 1, 1);
+        fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
+        */
+   
+    }
+
+    private void ReadFillPercentShaderData()
+    {
+        int[] result = new int[2];
+        colorPercentResultBuffer.GetData(result);
+
+        filledPercent = result[0] * 1.0f / result[1];
+        if (float.IsNaN(filledPercent))
+            filledPercent = 1.0f;
     }
 
     public void SetupNewDrawFillTexture()
@@ -735,6 +784,7 @@ public class DrawingZone : MonoBehaviour
 
         fillPercentComputeShader.SetFloat(widthId, renderTexture.width);
         fillPercentComputeShader.SetFloat(heightId, renderTexture.height);
+        
 
         ResetComputeBuffers(renderTexture.width, renderTexture.height);
         fillComputeShader.SetBuffer(0, setPixelsBufferId, textureSetBuffer);

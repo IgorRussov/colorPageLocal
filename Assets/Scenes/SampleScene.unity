@@ -2023,7 +2023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &513411914
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2440,10 +2440,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
+  - {fileID: 11400000, guid: bbdf7c669aac70e49aa81f525b5ecd0c, type: 2}
   - {fileID: 11400000, guid: 3b18549502a29014889986c6c32531cd, type: 2}
   - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
   - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
-  - {fileID: 11400000, guid: bbdf7c669aac70e49aa81f525b5ecd0c, type: 2}
   - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
   - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
   - {fileID: 11400000, guid: b6ab546afcf21024580e2f645f985506, type: 2}
@@ -4930,7 +4930,7 @@ MonoBehaviour:
   midStrokeLength: 1500
   perfectStrokeMargin: 0.1
   continueLineLength: 400
-  requiredFillToContinue: 0.75
+  requiredFillToContinue: 0.5
   drawingZone: {fileID: 1736346571}
   effectsControl: {fileID: 293480301}
   drawingNow: 0
@@ -6231,6 +6231,7 @@ MonoBehaviour:
   endLineSpritePrefab: {fileID: 6081603364998566769, guid: 3eabd39774899954db2128dd6048380d, type: 3}
   filledPercent: 0
   drawFillTexture: {fileID: 0}
+  maskTexture: {fileID: 0}
 --- !u!1 &1736414568
 GameObject:
   m_ObjectHideFlags: 0
@@ -6853,7 +6854,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848351381}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2082849fded338498378c8621af2dfe, type: 3}
   m_Name: 
