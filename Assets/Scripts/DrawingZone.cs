@@ -704,8 +704,9 @@ public class DrawingZone : MonoBehaviour
 
     private void DispatchShader()
     {
-        int width = drawFillQuadMaterial.mainTexture.width / 16 + 1;
-        int height = drawFillQuadMaterial.mainTexture.height / 8 + 1;
+        //Debug.Log("Dispatch");
+        int width = drawFillQuadMaterial.mainTexture.width / 16 + 0;
+        int height = drawFillQuadMaterial.mainTexture.height / 8 + 0;
 
         fillComputeShader.Dispatch(0, width, height, 1);
         /*
@@ -736,15 +737,15 @@ public class DrawingZone : MonoBehaviour
 
     private void StartFillPrecentCalculation(int width, int height)
     {
-        /*
+        
         RenderTexture rt = new RenderTexture(drawFillQuadMaterial.mainTexture.width,
                 drawFillQuadMaterial.mainTexture.height, 0, RenderTextureFormat.ARGB32);
         rt.enableRandomWrite = true;
         rt.Create();
 
         Graphics.CopyTexture(drawFillQuadMaterial.mainTexture, rt);
-        */
-
+        
+        /*
         int tw = drawFillQuadMaterial.mainTexture.width;
         int th = drawFillQuadMaterial.mainTexture.height;
         Texture2D texture2d = new Texture2D(tw, th, TextureFormat.ARGB32, false);
@@ -753,13 +754,13 @@ public class DrawingZone : MonoBehaviour
         texture2d.ReadPixels(new Rect(0, 0, tw, th), 0, 0);
         texture2d.Apply();
         RenderTexture.active = null;
-
+        
         TextureCounter.CalculateFillPercent(texture2d, maskTexture, (res) => { filledPercent = res; });
-        /*
+        */
         fillPercentComputeShader.SetTexture(kernelMain, drawTexId, rt);
         fillPercentComputeShader.Dispatch(kernelInit, 1, 1, 1);
         fillPercentComputeShader.Dispatch(kernelMain, width, height, 1);
-        */
+        
    
     }
 

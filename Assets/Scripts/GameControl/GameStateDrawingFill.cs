@@ -90,7 +90,7 @@ public class GameStateDrawingFill : GameBaseState
                         quadrants[qi, qj] = FillQuadrant.Visited;
 
                         visitedQuadrants++;
-                        Debug.Log(visitedQuadrants + " " + quadrantsToContinue);
+                        //Debug.Log(visitedQuadrants + " " + quadrantsToContinue);
                     }
                     if (visitedQuadrants >= quadrantsToContinue)
                         UiControl.Instance.ShowNextFillButton();
@@ -126,7 +126,7 @@ public class GameStateDrawingFill : GameBaseState
 
             UiControl.Instance.ShowNextFillButton();
         }
-           */ 
+          */ 
 
     }
 

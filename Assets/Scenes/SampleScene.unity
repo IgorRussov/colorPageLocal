@@ -173,7 +173,7 @@ MonoBehaviour:
   pencilRepresObject: {fileID: 81655338}
   forcedMoveMaxSpeed: 100
   forcedMoveSmoothTime: 0.2
-  drawFillMaxSpeed: 10
+  drawFillMaxSpeed: 20
   drawFillSmoothTime: 0.1
   liftSpeed: 10
   liftedOffset: {x: 0.5, y: -0.5}
@@ -4690,7 +4690,7 @@ SpriteMask:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316100774}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

@@ -23,7 +23,7 @@ public class DebugUi : MonoBehaviour
 
     private void Update()
     {
-        frameTimeText.text = Time.deltaTime * 1000 + " ms";
+        frameTimeText.text = (Time.deltaTime * 1000).ToString("00.00 ") + " ms";
     }
 
     public void OnEnable()

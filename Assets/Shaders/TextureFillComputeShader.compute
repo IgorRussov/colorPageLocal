@@ -37,6 +37,7 @@ bool PointInPainterRadius(float2 pos, float painterIndex)
 [numthreads(16,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+    
     float pixelIndex = PixelIndex(id.xy);
     if (!_SetPixels[pixelIndex])
     {
@@ -53,4 +54,5 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     Result[id.xy] = _SetPixels[pixelIndex] ? _Color : float4(0, 0, 0, 0);
     //if (((id.x % 100) < 10) | ((id.y % 100) < 10))
     //   Result[id.xy] =  float4(1, 0, 0, 1);
+    
 }

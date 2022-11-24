@@ -140,10 +140,10 @@ public class DrawingSpriteFactory
         return VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
     }
 
-    private static void GetGeomFromScene(Scene scene, List<List<VectorUtils.Geometry>> retList)
+    private static void GetGeomFromScene(Scene scene, ref List<VectorUtils.Geometry> retList)
     {
-        List<VectorUtils.Geometry> retListUnit = VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
-        retList.Add(retListUnit);
+        retList = VectorUtils.TessellateScene(scene, DrawingZone.TesselationOptions);
+
     }
 
 
@@ -237,11 +237,10 @@ public class DrawingSpriteFactory
         newShape.PathProps = props;
         newShape.Fill = null;
 
-        List<List<VectorUtils.Geometry>> geomList = new List<List<VectorUtils.Geometry>>();
+        List<VectorUtils.Geometry> geom = null;
 
-        await System.Threading.Tasks.Task.Run(() => GetGeomFromScene(newScene, geomList));
+        await System.Threading.Tasks.Task.Run(() => GetGeomFromScene(newScene, ref geom));
 
-        List<VectorUtils.Geometry> geom = geomList.First();
         Sprite result = null;
         if (geom.Count > 0) //This check is required because if geom is empty (can happen if it is a transparent scene)
                             //the method would throw an exception
