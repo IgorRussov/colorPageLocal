@@ -24,8 +24,8 @@ public class GameStateDrawingFill : GameBaseState
         quadrants = TextureCounter.GetFillQuadrants(maskTexture, pixelsPerQuadrant, out unvisitedNumber);
         visitedQuadrants = 0;
         quadrantsToContinue = Mathf.RoundToInt(unvisitedNumber * percentToContinue);
-        if (unvisitedNumber < 500 / (pixelsPerQuadrant))
-            quadrantsToContinue /= 4;
+        //if (unvisitedNumber < 500 / (pixelsPerQuadrant))
+        //    quadrantsToContinue /= 4;
     }
 
     public void FinishFill()
@@ -69,7 +69,7 @@ public class GameStateDrawingFill : GameBaseState
 
     public override void InputReleased(GameStateManager game)
     {
-        //Pencil.instance.lifted = true;
+        Pencil.instance.DrawFillRelease();
     }
 
     private void UpdateQuadrants(Vector2 pos)
@@ -77,9 +77,9 @@ public class GameStateDrawingFill : GameBaseState
         int posi = Mathf.FloorToInt(pos.x / pixelsPerQuadrant);
         int posj = Mathf.FloorToInt(pos.y / pixelsPerQuadrant);
 
-        int radius = 4;
-        for (int i = -radius; i < radius; i++)
-            for(int j = -radius; j < radius; j++)
+        int radius = 1;
+        for (int i = -radius; i <= radius; i++)
+            for(int j = -radius; j <= radius; j++)
             {
                 int qi = posi + i;
                 int qj = posj + j;

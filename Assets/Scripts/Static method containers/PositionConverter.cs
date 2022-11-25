@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
+  
 /// <summary>
 /// Has methods and values required to convert positions in svg space to world space
 /// </summary>
@@ -16,6 +18,37 @@ public class PositionConverter
     public static Vector2 shapesObjectPos;
 
     public static float TextureScale = 1f;
+
+    private static Vector2 firstTipPosition;
+    public static Vector2 tipPosition;
+
+    public static Vector2 PencilAtTipPosition
+    {
+        get
+        {
+            return VectorPosToWorldPos(tipPosition) * DrawingScale;
+        }
+    }
+
+    public static void SetTipPosition(Vector2 pos)
+    {
+        if (firstTipPosition == Vector2.one * -1)
+            firstTipPosition = pos;
+        float dist = Vector2.Distance(pos, firstTipPosition);
+        if (dist > 0.1f)
+        {
+            
+            tipPosition = pos;
+        }
+            
+    }
+
+    public static void ResetFirstTipPosition()
+    {
+        firstTipPosition = Vector2.one * -1;
+    }
+    
+
     
     /// <summary>
     /// Returns the unity world position of the center of a svg coordinates rect

@@ -12,6 +12,30 @@ using System;
 /// </summary>
 public class ShapeUtils
 {
+    /// <summary>
+    /// Determines if the given point is inside the polygon
+    /// </summary>
+    /// <param name="polygon">the vertices of polygon</param>
+    /// <param name="testPoint">the given point</param>
+    /// <returns>true if the point is inside the polygon; otherwise, false</returns>
+    public static bool IsPointInPolygon4(Vector2[] polygon, Vector2 testPoint)
+    {
+        bool result = false;
+        int j = polygon.Count() - 1;
+        for (int i = 0; i < polygon.Count(); i++)
+        {
+            if (polygon[i].y < testPoint.y && polygon[j].y >= testPoint.y || polygon[j].y < testPoint.y && polygon[i].y >= testPoint.y)
+            {
+                if (polygon[i].x + (testPoint.y - polygon[i].y) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < testPoint.x)
+                {
+                    result = !result;
+                }
+            }
+            j = i;
+        }
+        return result;
+    }
+
     public static Vector2 drawingSize; //stores the size of the scene we are working with, required for texture generation
     public static Rect sceneRect;
 
@@ -82,22 +106,7 @@ public class ShapeUtils
         BezierSegment[] arr = ShapeToBezierSegments(shape);
         int i = -1;
         float length = 1;
-        /*
-        if (shape == prevShape && evalPoint > prevEvalPoint && !setSegmentsLength)
-        { 
-            if (prevIndex != 0)
-            {
-                i = prevIndex - 1;
-                if (i < segmentsLength.Length)
-                    lengthRemaining -= segmentsLength[i];
-            }
-            
-           
-        }
         
-        if (setSegmentsLength)
-            segmentsLength = new float[arr.Length]; 
-        */
         bool flag = false;
         try
         {
@@ -114,14 +123,6 @@ public class ShapeUtils
                     else
                         lengthRemaining -= length;
                 }
-                /*
-                if (setSegmentsLength)
-                {
-                    segmentsLength[i] = length;
-                    if (i != 0)
-                        segmentsLength[i] += segmentsLength[i - 1];
-                }    
-                */ 
             } while (!flag );
         }catch (Exception e)
         {
@@ -139,7 +140,7 @@ public class ShapeUtils
             : 1; //if we could not get the required segment we are checking the last segment at its' last point
         
         Vector2 result = VectorUtils.Eval(evalSegment, evalParameter);
-        //Debug.Log(result);
+
         return result * PositionConverter.DrawingScale;
     }
 
@@ -457,8 +458,8 @@ public class ShapeUtils
 
     public static RenderTexture CreateSceneSizedRenderTexture()
     {
-        int textureWidth = Mathf.RoundToInt(drawingSize.x * PositionConverter.DrawingScale * PositionConverter.TextureScale);
-        int textureHeigth = Mathf.RoundToInt(drawingSize.y * PositionConverter.DrawingScale * PositionConverter.TextureScale);
+        int textureWidth = Mathf.RoundToInt(drawingSize.x */* PositionConverter.DrawingScale **/ PositionConverter.TextureScale);
+        int textureHeigth = Mathf.RoundToInt(drawingSize.y * /*PositionConverter.DrawingScale **/ PositionConverter.TextureScale);
         RenderTexture texture = new RenderTexture(textureWidth, textureHeigth, 0, RenderTextureFormat.ARGBFloat);
         texture.enableRandomWrite = true;
         texture.Create();

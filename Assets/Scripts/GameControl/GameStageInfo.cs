@@ -93,7 +93,7 @@ public struct GameStageInfo
     {
         get
         {
-            return drawnAmmount / strokeShapeLength;
+            return Mathf.Clamp01(drawnAmmount / strokeShapeLength);
         }
     }
 

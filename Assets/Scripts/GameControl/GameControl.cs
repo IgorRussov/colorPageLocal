@@ -58,7 +58,9 @@ public class GameControl : MonoBehaviour
         get
         {
             float needLength = GetRequiredLength;
-            return gameStageInfo.drawnAmmount /*+ drawingZone.drawStrokeWidth*/  > needLength * (1 - perfectStrokeMargin);
+            if (gameStageInfo.drawnAmmount > needLength)
+                return true;
+            return WithinPerfectStroke;
                
         }
     }
@@ -103,7 +105,7 @@ public class GameControl : MonoBehaviour
         Instance = this;
         
         gameStateManager = gameObject.GetComponent<GameStateManager>();
-
+        VectorUtils.tipGenerated += PositionConverter.SetTipPosition;
     }
 
     /// <summary>
@@ -147,9 +149,10 @@ public class GameControl : MonoBehaviour
     {
         if (!canDraw)
             return;
-        Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart, false);
-        gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
        
+        gameStageInfo.drawnAmmount += gameStageInfo.drawSpeed * Time.fixedDeltaTime;
+        Vector2 newDrawShapePos = drawingZone.GetDrawShapePos(gameStageInfo.drawStage, gameStageInfo.DrawnPart, false);
+        
         if (gameStageInfo.drawnAmmount / gameStageInfo.strokeShapeLength > 0.999f && !continuedLine)
         {
             Vector2 direction = newDrawShapePos - prevDrawShapePos;
@@ -159,7 +162,8 @@ public class GameControl : MonoBehaviour
         }
         prevDrawShapePos = newDrawShapePos;
         drawingZone.UpdateStrokeDrawSprite(gameStageInfo.drawnAmmount, gameStageInfo.drawStage);
-        Pencil.instance.InstantMove(PositionConverter.VectorPosToWorldPos(newDrawShapePos), false);
+        //Pencil.instance.InstantMove(PositionConverter.VectorPosToWorldPos(newDrawShapePos), false);
+        Pencil.instance.InstantMove(PositionConverter.PencilAtTipPosition, false);
         if (gameStageInfo.MustEndDraw)
         {
             canDraw = false;
@@ -178,6 +182,7 @@ public class GameControl : MonoBehaviour
         Pencil.instance.ForcedMove(PositionConverter.VectorPosToWorldPos(
             drawingZone.GetDrawShapePos(gameStageInfo.drawStage, 0, false)
             ), false);
+        PositionConverter.ResetFirstTipPosition();
         continuedLine = false;
         gameStageInfo.strokeShapeLength = drawingZone.GetDrawShapeLength(gameStageInfo.drawStage, false);
         gameStageInfo.SetDrawSpeed(minStrokeTime, maxStrokeTime, midStrokeTime, midStrokeLength, gameStageInfo.strokeShapeLength);

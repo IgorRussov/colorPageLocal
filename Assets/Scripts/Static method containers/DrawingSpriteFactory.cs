@@ -324,6 +324,8 @@ public class DrawingSpriteFactory
         int l = p.Length;
         height *= -PositionConverter.SvgPixelsPerUnit;
         Vector3[] vertices = new Vector3[l * 2];
+
+        Pencil.instance.insidePolygon = p.Select(point => point / PositionConverter.SvgPixelsPerUnit).ToArray();
         for(int i = 0; i < l; i++)
         {
             avg += p[i];

@@ -45,6 +45,9 @@ public class Pencil : MonoBehaviour
     [HideInInspector]
     public bool mustForcedMove = false;
 
+    [HideInInspector]
+    public Vector2[] insidePolygon;
+
     public bool PressedCompletely
     {
         get
@@ -149,8 +152,12 @@ public class Pencil : MonoBehaviour
     {
         if (mustForcedMove)
             UpdateForcedMove();
-        else if (pencilMode == PencilMode.DrawFill && wantMove)
+        else if (pencilMode == PencilMode.DrawFill && wantMove) 
+        {
             UpdateDrawFill();
+            //CheckStuckState();
+        }
+            
         UpdateRepresPosition();
     }
 
@@ -170,6 +177,7 @@ public class Pencil : MonoBehaviour
 
     public void RecieveInitialPosition(Vector2 pointerPosition)
     {
+        rigidbody.drag = 1;
         wantMove = true;
         this.pointerPosition = pointerPosition;
         pointerOffset = PositionConverter.LocalSpaceToScreenSpace(transform.localPosition) - this.pointerPosition;
@@ -181,6 +189,13 @@ public class Pencil : MonoBehaviour
         pointerPosition += delta;
     }
 
+    public void DrawFillRelease()
+    {
+        
+        wantMove = false;
+        rigidbody.drag = 10;
+    }
+
    
     [HideInInspector]
     public Vector2 currentVelocity;
@@ -188,7 +203,6 @@ public class Pencil : MonoBehaviour
     private void OnDrawGizmos()
     {
         /*
-        Gizmos.DrawCube(newPos + (Vector2)transform.position, Vector3.one * 0.5f);
         Gizmos.DrawCube(transform.position, Vector3.one * 0.3f);
 
         Vector2 screenSpacePosition = pointerPosition + pointerOffset;
@@ -197,12 +211,47 @@ public class Pencil : MonoBehaviour
         */
     }
 
+    Vector2 prevPos;
+
+    private Vector3 normal;
+    void CheckStuckState()
+    {
+        Vector2 pos = rigidbody.position;
+
+        if (Vector2.Distance(prevPos, pos) < 1 * Time.fixedDeltaTime)
+        {
+            rigidbody.MovePosition(rigidbody.position + normal);
+        }
+        prevPos = pos;
+    }
+
+    float collisionEnterTime;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        collisionEnterTime = Time.time;
+    }
+
+    void OnCollisionStay(Collision collisionInfo)
+    {
+        if (Time.time - collisionEnterTime > 0.1f)
+        {
+            normal = collisionInfo.contacts[0].normal;
+            rigidbody.MovePosition(rigidbody.position + normal * 0.001f);
+            rigidbody.velocity = Vector3.zero;
+            currentVelocity = Vector2.zero;
+        }
+       
+    }
+
+   
+
     void UpdateDrawFill()
     {
         //Debug.Log(pointerPosition);
         Vector2 screenSpacePosition = pointerPosition + pointerOffset;
         Vector2 localSpacePosition = PositionConverter.ScreenSpaceToLocalSpace(screenSpacePosition);
-
+        
         Vector2 localPos = (Vector2)transform.localPosition;
 
         Vector2.SmoothDamp(localPos, localSpacePosition, ref currentVelocity, drawFillSmoothTime, drawFillMaxSpeed);

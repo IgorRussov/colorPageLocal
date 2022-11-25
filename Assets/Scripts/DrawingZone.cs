@@ -138,6 +138,7 @@ public class DrawingZone : MonoBehaviour
         Shape shape = drawStrokeShapes[shapeIndex];
         float length = GetDrawShapeLength(shapeIndex, false);
         float compLength = length * pos0to1;
+      
         return ShapeUtils.EvalShape(shape, compLength, setSegmentsLength);
     }
 
@@ -348,8 +349,9 @@ public class DrawingZone : MonoBehaviour
         //    patternNode, patternRect);
         //Clear fill draw texture
 
-        SetupNewDrawFillTexture();
+        
         SetMaskSprite(drawStageIndex);
+        SetupNewDrawFillTexture();
         SetDrawFillBoundsCollider(drawStageIndex);
     }
 
@@ -390,7 +392,8 @@ public class DrawingZone : MonoBehaviour
             DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
         drawFillMask.sprite = maskSprite;
 
-        ShapeUtils.SetDrawingSize(maskSprite.rect.width, maskSprite.rect.height);
+        ShapeUtils.SetDrawingSize(maskSprite.rect.width,  maskSprite.rect.height);
+        Debug.Log("Set size:" + new Vector2(maskSprite.rect.width, maskSprite.rect.height) * PositionConverter.DrawingScale);
         int textureWidth = Mathf.RoundToInt(ShapeUtils.drawingSize.x);
         int textureHeight = Mathf.RoundToInt(ShapeUtils.drawingSize.y);
 
@@ -479,7 +482,8 @@ public class DrawingZone : MonoBehaviour
 
     SpriteRenderer spriteRendererToUpdate;
     bool tesselatingSpriteNow;
-    //Sprite updateStrokeSprite;
+    bool canSetSprite;
+
     /// <summary>
     /// Updates the currently being drawn stroke sprite to be drawn for the required ammount
     /// </summary>
@@ -487,29 +491,25 @@ public class DrawingZone : MonoBehaviour
     /// <param name="drawStageIndex"></param>
     public void UpdateStrokeDrawSprite(float drawnAmmount, int drawStageIndex)
     {
-        //if (!tesselatingSpriteNow)
-        //{
-        //    tesselatingSpriteNow = true;
-            List<Sprite> sprites = new List<Sprite>();
-            spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
-            DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
-               drawStrokeShapes[drawStageIndex],
-               ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
-               drawStrokeWidth, drawStrokeColor);
-        //}
-       
-        
+        canSetSprite = true;
+        List<Sprite> sprites = new List<Sprite>();
+        spriteRendererToUpdate = drawingSprites[previewStrokeShapes.Count + drawStageIndex];
+        DrawingSpriteFactory.UpdateLineSprite(UpdateStrokeDrawCallback,
+            drawStrokeShapes[drawStageIndex],
+            ShapeUtils.CreateStrokeArray(drawnAmmount, 100000f),
+            drawStrokeWidth, drawStrokeColor);
     }
 
     private void UpdateStrokeDrawCallback(Sprite sprite)
     {
-        //Debug.Log("Callback");
-        spriteRendererToUpdate.sprite = sprite;
-        //tesselatingSpriteNow = false;
+        if (canSetSprite)
+            spriteRendererToUpdate.sprite = sprite;
+        
     }
 
     public void SetPerfectStrokeDrawSprite(int drawStageIndex)
     {
+        canSetSprite = false;
         Sprite newSprite = DrawingSpriteFactory.CreateLineSprite(
           previewStrokeShapes[drawStageIndex],
           ShapeUtils.CreateStrokeArray(1000000f, 0),
@@ -606,9 +606,8 @@ public class DrawingZone : MonoBehaviour
         ComputeBuffer buffer = new ComputeBuffer(textureWidth * textureHeight, 4);
         
         float[] data = new float[textureWidth * textureHeight];
-        
-        for (int i = 0; i < data.Length; i++)
-            data[i] = (i % textureWidth) < 100 ? 1 : 0;
+
+        buffer.SetData(data);
         
 
         
@@ -626,6 +625,8 @@ public class DrawingZone : MonoBehaviour
     private ComputeBuffer CreateColorSetResultBuffer()
     {
         ComputeBuffer buffer = new ComputeBuffer(2, sizeof(int));
+        int[] data = new int[2];
+        buffer.SetData(data);
         return buffer;
     }
 
@@ -777,6 +778,7 @@ public class DrawingZone : MonoBehaviour
     public void SetupNewDrawFillTexture()
     {
         RenderTexture renderTexture = ShapeUtils.CreateSceneSizedRenderTexture();
+        Debug.Log("Create render texture");
         drawFillQuadMaterial.mainTexture = renderTexture;
         fillComputeShader.SetTexture(0, resultTextureId, renderTexture);
         fillComputeShader.SetFloat(widthId, renderTexture.width);
