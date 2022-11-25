@@ -600,6 +600,8 @@ namespace Unity.VectorGraphics
                     return (float)l0;
 
                 var l1 = (q / (8.0f * Math.Pow(c, 1.5f))) * (Math.Log(2.0f * Math.Sqrt(c * sumCBA) + twoCpB) - Math.Log(2.0f * Math.Sqrt(c * a) + b));
+                if (double.IsNaN(l1))
+                    return (float)l0;
                 return (float)(l0 + l1);
             }
             else return 2.0f * A0.magnitude;
