@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: baloon_level
   m_EditorClassIdentifier: 
   svgFileName: baloon
-  strokeShapesOrder: 00000000ffffffff01000000
+  strokeShapesOrder: 000000000100000002000000
   fillShapesOrder: 00000000ffffffff
   colors:
   - row:
@@ -21,13 +21,13 @@ MonoBehaviour:
       g: 145
       b: 229
       a: 255
-    - r: 229
-      g: 60
+    - r: 145
+      g: 229
       b: 60
       a: 255
-    - r: 209
-      g: 226
-      b: 0
+    - r: 60
+      g: 229
+      b: 200
       a: 255
   - row:
     - r: 255
@@ -42,3 +42,6 @@ MonoBehaviour:
       g: 255
       b: 255
       a: 255
+  startPositions:
+  - {x: 3.49, y: -5.38}
+  - {x: 0.14, y: 0}

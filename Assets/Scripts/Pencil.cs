@@ -175,12 +175,13 @@ public class Pencil : MonoBehaviour
 
 
 
-    public void RecieveInitialPosition(Vector2 pointerPosition)
+    public void RecieveInitialPosition(Vector2 pointerPosition, bool setOffset)
     {
         rigidbody.drag = 1;
         wantMove = true;
         this.pointerPosition = pointerPosition;
-        pointerOffset = PositionConverter.LocalSpaceToScreenSpace(transform.localPosition) - this.pointerPosition;
+        if (setOffset)
+            pointerOffset = PositionConverter.LocalSpaceToScreenSpace(transform.localPosition) - this.pointerPosition;
     }    
 
     public void GetDelta(Vector2 delta)
@@ -191,7 +192,6 @@ public class Pencil : MonoBehaviour
 
     public void DrawFillRelease()
     {
-        
         wantMove = false;
         rigidbody.drag = 10;
     }

@@ -62,6 +62,8 @@ public class DrawingZone : MonoBehaviour
     private List<Shape> fillShapes;          //Fill zone shapes from original image
     private SpriteRenderer[] drawingSprites; //References to spriteRenderer components in the hierarcy
     public List<Color>[] fillColors;         //Colors that can be used 
+    [HideInInspector]
+    public Vector2[] fillStartPositions;
     private PatternFill patternFill;
     private SceneNode patternNode;
     private Rect patternRect;
@@ -202,6 +204,7 @@ public class DrawingZone : MonoBehaviour
         Shape[] sortedFillShapes = new Shape[fillShapes.Count];
         autoFillShapes = new List<Shape>();
         fillColors = new List<Color>[fillShapes.Count];
+        fillStartPositions = new Vector2[fillShapes.Count];
         int autoFillShapesCount = 0;
         for (int i = 0; i < levelData.fillShapesOrder.Length; i++)
         {
@@ -218,6 +221,7 @@ public class DrawingZone : MonoBehaviour
             {
                 sortedFillShapes[shapeSortedOrder] = fillShape;
                 fillColors[shapeSortedOrder] = colors;
+                fillStartPositions[shapeSortedOrder] = levelData.startPositions[i];
             }
         }
 

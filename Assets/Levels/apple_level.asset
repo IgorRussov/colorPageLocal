@@ -68,3 +68,8 @@ MonoBehaviour:
       g: 57
       b: 71
       a: 255
+  startPositions:
+  - {x: 2, y: -6.73}
+  - {x: 0, y: 0}
+  - {x: 2.98, y: -1.65}
+  - {x: 3.94, y: -1.29}

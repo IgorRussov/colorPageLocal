@@ -54,18 +54,30 @@ public struct FillShapeData
     [ReadOnly]
     public Color mainColor;
     public Color[] possibleColors;
+    public Vector2 startPosition;
 
-    public FillShapeData(int fillShapeId, bool autoDraw, Color mainColor, Color[] possibleColors)
+    public FillShapeData(int fillShapeId, bool autoDraw, Color mainColor, Color[] possibleColors, Vector2 startPosition)
     {
         this.fillShapeId = fillShapeId;
         this.autoDraw = autoDraw;
         this.mainColor = mainColor;
         this.possibleColors = possibleColors;
+        this.startPosition = startPosition;
     }
 }
 
 public class LevelDataWorker : MonoBehaviour
 {
+    public void OnDrawGizmos()
+    {
+        foreach(FillShapeData fsd in fillShapeData)
+        {
+            Gizmos.color = fsd.mainColor;
+            Gizmos.DrawCube(fsd.startPosition, Vector3.one * 0.3f);
+        }
+    }
+
+
     public LevelEditDrawingZone drawingZone;
     [Header("Create level data from svg file")]
     public string svgFileName;
@@ -152,9 +164,13 @@ public class LevelDataWorker : MonoBehaviour
         for (int i = 0; i < fillShapes.Count; i++)
         {
             int baseIndex = originalLevelData.fillShapesOrder[i];
+
             int index = baseIndex != -1 ? baseIndex : autoDrawIndex--;
-            fillShapeData[index] = new FillShapeData(i, baseIndex == 1, originalLevelData.GetColor(i, 0),
-                new Color[2]);
+            Vector2 startPos = Vector2.zero;
+            if (originalLevelData.startPositions.Length > i)
+                startPos = originalLevelData.startPositions[i];
+            fillShapeData[index] = new FillShapeData(i, baseIndex == -1, originalLevelData.GetColor(i, 0),
+                new Color[2], startPos);
             fillShapeData[index].possibleColors[0] = originalLevelData.GetColor(i, 1);
             fillShapeData[index].possibleColors[1] = originalLevelData.GetColor(i, 2);
         }
@@ -196,7 +212,7 @@ public class LevelDataWorker : MonoBehaviour
         for(int i = 0; i < fillShapes.Count; i++)
         {
             fillShapeData[i] = new FillShapeData(i, false, originalLevelData.GetColor(i, 0),
-                new Color[2]);
+                new Color[2], Vector2.zero);
             fillShapeData[i].possibleColors[0] = originalLevelData.GetColor(i, 1);
             fillShapeData[i].possibleColors[1] = originalLevelData.GetColor(i, 2);
         }
@@ -225,6 +241,7 @@ public class LevelDataWorker : MonoBehaviour
         }
 
         levelData.fillShapesOrder = new int[fillShapeData.Length];
+        levelData.startPositions = new Vector2[fillShapeData.Length];
         levelData.InitColorsArray(fillShapeData.Length, colorOptionsCount);
         autoDrawShapes = 0;
 
@@ -240,8 +257,10 @@ public class LevelDataWorker : MonoBehaviour
             {
                 levelData.fillShapesOrder[fillShapeId] = i -  autoDrawShapes;
             }
-            
+
+            levelData.startPositions[fillShapeId] = fillShapeData[i].startPosition;
             levelData.SetColor(fillShapeData[i].mainColor, fillShapeId, 0);
+           
             for (int j = 1; j < colorOptionsCount; j++)
                 levelData.SetColor(fillShapeData[i].possibleColors[j - 1], fillShapeId, j);
 

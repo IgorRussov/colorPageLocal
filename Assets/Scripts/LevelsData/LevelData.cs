@@ -27,6 +27,7 @@ public class LevelData : ScriptableObject
     public int[] strokeShapesOrder;
     public int[] fillShapesOrder;
     public ColorRow[] colors;
+    public Vector2[] startPositions;
 
     public void InitColorsArray(int rows, int cols)
     {

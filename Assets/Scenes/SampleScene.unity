@@ -2475,8 +2475,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
   - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
   - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
-  - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
   - {fileID: 11400000, guid: a8241ff08aed4aa4281443ef7aff0729, type: 2}
+  - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
   - {fileID: 11400000, guid: b6ab546afcf21024580e2f645f985506, type: 2}
   - {fileID: 11400000, guid: 4f18d2cc31de7f14abe849386f3a6f40, type: 2}
   - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
@@ -5003,8 +5003,8 @@ MonoBehaviour:
   minStrokeTime: 2
   maxStrokeTime: 5
   midStrokeTime: 2
-  midStrokeLength: 1500
-  perfectStrokeMargin: 1
+  midStrokeLength: 2500
+  perfectStrokeMargin: 0.1
   continueLineLength: 400
   requiredFillToContinue: 0.5
   drawingZone: {fileID: 1736346571}
@@ -6329,7 +6329,7 @@ MonoBehaviour:
   drawStrokeWidth: 30
   drawStrokeColor: {r: 0, g: 0, b: 0, a: 1}
   fillStrokeStartRadius: 50
-  fillStrokeMaxRadius: 80
+  fillStrokeMaxRadius: 60
   fillStrokeRadiusPerTime: 50
   fillComputeShader: {fileID: 7200000, guid: e876e417277405040a226e9a3d6c97a9, type: 3}
   fillPercentComputeShader: {fileID: 7200000, guid: 53d04eaad5d4a114e979a0a34f6dee0b, type: 3}
@@ -6341,6 +6341,7 @@ MonoBehaviour:
   patternSvgFileName: pattern
   startLineSpritePrefab: {fileID: 6081603364998566769, guid: 2e517d3b9886a424c8baa19eab4a3c4a, type: 3}
   endLineSpritePrefab: {fileID: 6081603364998566769, guid: 3eabd39774899954db2128dd6048380d, type: 3}
+  fillStartPositions: []
   filledPercent: 0
   drawFillTexture: {fileID: 0}
   maskTexture: {fileID: 0}

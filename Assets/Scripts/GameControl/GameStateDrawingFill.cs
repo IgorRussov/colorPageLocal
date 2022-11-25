@@ -41,7 +41,10 @@ public class GameStateDrawingFill : GameBaseState
     {
 
         this.gameStateManager = game;
-        Pencil.instance.MoveToPosForNextFillShape();
+        //Pencil.instance.MoveToPosForNextFillShape();
+        Pencil.instance.ForcedMove(
+            game.gameControl.drawingZone.fillStartPositions[game.gameControl.gameStageInfo.FillStageIndex] * PositionConverter.DrawingScale,
+            false);
         //game.gameControl.drawingZone.SetMaskSprite(game.gameControl.gameStageInfo.FillStageIndex);
         UiControl.Instance.StartFill(this);
         lastPos = Vector2.zero;
@@ -63,7 +66,7 @@ public class GameStateDrawingFill : GameBaseState
     public override void InputPressed(GameStateManager game)
     {
        
-            Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition);
+        Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition, true);
         //Pencil.instance.lifted = false;
     }
 
@@ -99,8 +102,21 @@ public class GameStateDrawingFill : GameBaseState
         
     }
 
+    int counter;
+
     public override void UpdateState(GameStateManager game)
     {
+        
+        if (counter > 30)
+        {
+            InputReleased(game);
+            Pencil.instance.RecieveInitialPosition(GameStateManager.touchPosition, false);
+            counter = 0;
+
+        }
+        counter++;
+        
+
         Vector2 pos = Pencil.instance.gameObject.transform.position;
         Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit * PositionConverter.TextureScale;
         fillerPos += drawTextureSize * 0.5f;

@@ -42,3 +42,5 @@ MonoBehaviour:
       g: 255
       b: 255
       a: 255
+  startPositions:
+  - {x: 4, y: -3}
