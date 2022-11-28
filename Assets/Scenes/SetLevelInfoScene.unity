@@ -3424,7 +3424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingZone: {fileID: 1070848843}
-  svgFileName: sock
+  svgFileName: rabbit 2
   sourceLevelData: {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
   nameWhenSaved: planet_level
   saveFolder: Assets/Levels

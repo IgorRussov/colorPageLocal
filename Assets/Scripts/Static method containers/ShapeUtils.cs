@@ -304,7 +304,7 @@ public class ShapeUtils
         foreach(List<Shape> shapesWithColor in shapesOfColor.Values)
         {
             Shape baseShape = shapesWithColor[0];
-            baseShape.Contours = shapesWithColor.Select(s => s.Contours[0]).ToArray();
+            baseShape.Contours = shapesWithColor.SelectMany(s => s.Contours).ToArray();
             fillShapes.Add(baseShape);
         }
     }

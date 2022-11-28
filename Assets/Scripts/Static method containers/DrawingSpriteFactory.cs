@@ -70,7 +70,7 @@ public class DrawingSpriteFactory
         SolidFill fill = new SolidFill();
         fill.Color = fillColor;
         fill.Opacity = opacity;
-        fill.Mode = FillMode.NonZero;
+        fill.Mode = FillMode.OddEven;
 
         return fill;
     }
