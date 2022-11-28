@@ -21,6 +21,7 @@ public class UiControl : MonoBehaviour
     public GameObject winScreen;
     public GameObject flashImage;
     public WinScreenAccuracy winScreenAccuracy;
+    public GameObject particleZone;
 
     
 
@@ -104,6 +105,7 @@ public class UiControl : MonoBehaviour
         //GameObject.FindObjectOfType<CameraControl>().CreateSnapshot(winSnapshotTexture);
         flashImage.SetActive(true);
         snapshotVirtualCamera.gameObject.SetActive(true);
+        particleZone.SetActive(true);
         //flashImage.GetComponent<Animator>().SetTrigger("Flash");
         //LeanTween.delayedCall(1.0f / 60 * 3, () =>
         //    {

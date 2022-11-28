@@ -7,6 +7,7 @@ public class WinScreenAccuracy : MonoBehaviour
     public TMPro.TMP_Text accuracyBarText;
     public float maxFillWidth;
     public RectTransform accuracyBarFillImage;
+    public Animator accuracyAnimator;
 
     private bool updateAccuracy;
     private float maxAccuracy;
@@ -34,6 +35,9 @@ public class WinScreenAccuracy : MonoBehaviour
         float timePassed = Time.time - startAccuracyTime;
         if (timePassed > accuracyTime)
         {
+            float currentAccuracy = Mathf.Lerp(maxAccuracy * startAccuracyPercent, maxAccuracy, timePassed / accuracyTime);
+            if (Mathf.Ceil(currentAccuracy * 100) / 100 == 1)
+                accuracyAnimator.SetTrigger("Accuracy100");
             updateAccuracy = false;
         }
         else
