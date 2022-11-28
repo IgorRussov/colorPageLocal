@@ -41,6 +41,8 @@ public class GameControl : MonoBehaviour
 
     [HideInInspector]
     public bool continuedLine;
+    [HideInInspector]
+    public float[] errorByStage;
 
     public float GetRequiredLength
     {
@@ -65,14 +67,16 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public float CurrentError
+    public float CurrentStrokeError
     {
         get
         {
-            float needLength = GetRequiredLength;
+            if (WithinPerfectStroke)
+                return 0;
+            float baseLength = GetRequiredLength;
             float drawn = gameStageInfo.drawnAmmount;
-
-            return Mathf.Abs(needLength - drawn) / needLength;
+            float overDraw = drawn - baseLength;
+            return overDraw / continueLineLength;
         }
     }
 
@@ -120,6 +124,9 @@ public class GameControl : MonoBehaviour
     public void StartLevel(LevelData levelData)
     {
         gameStageInfo = drawingZone.SetupDrawing(levelData);
+        int totalStages = gameStageInfo.fillShapesCount + gameStageInfo.strokeShapesCount;
+        errorByStage = new float[totalStages];
+
     }
 
 
@@ -128,9 +135,10 @@ public class GameControl : MonoBehaviour
     /// </summary>
     private void EndStrokeLineDraw()
     {
-        StrokeShapeFinished?.Invoke(drawingZone.EndLineWorldPos, CurrentError);
+        StrokeShapeFinished?.Invoke(drawingZone.EndLineWorldPos, CurrentStrokeError);
         if (WithinPerfectStroke)
             drawingZone.SetPerfectStrokeDrawSprite(gameStageInfo.drawStage);
+        errorByStage[gameStageInfo.drawStage] = CurrentStrokeError;
 
         gameStageInfo.drawnAmmount = 0;
         gameStageInfo.drawStage++;

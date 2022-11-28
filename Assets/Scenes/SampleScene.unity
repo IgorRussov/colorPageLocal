@@ -2470,7 +2470,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData:
-  - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
   - {fileID: 11400000, guid: bbdf7c669aac70e49aa81f525b5ecd0c, type: 2}
   - {fileID: 11400000, guid: 3b18549502a29014889986c6c32531cd, type: 2}
   - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
@@ -2480,6 +2479,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
   - {fileID: 11400000, guid: b6ab546afcf21024580e2f645f985506, type: 2}
   - {fileID: 11400000, guid: 4f18d2cc31de7f14abe849386f3a6f40, type: 2}
+  - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
 --- !u!4 &599220231
 Transform:
   m_ObjectHideFlags: 0
@@ -5011,6 +5011,7 @@ MonoBehaviour:
   effectsControl: {fileID: 293480301}
   drawingNow: 0
   continuedLine: 0
+  errorByStage: []
 --- !u!114 &1356946718
 MonoBehaviour:
   m_ObjectHideFlags: 0

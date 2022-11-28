@@ -10,23 +10,29 @@ public class GameStateSelectColor : GameBaseState
 {
     GameStateManager stateManager;
 
+    private Color correctColor;
+
     /// <summary>
     /// Called from the Ui manager when player presses the required button
     /// </summary>
     /// <param name="color"></param>
     public void ColorSelected(Color color)
     {
-        Pencil.instance.SetColorByStage(color, stateManager.gameControl.gameStageInfo.FillStageIndex);
+        int fillStageIndex = stateManager.gameControl.gameStageInfo.FillStageIndex;
+        Pencil.instance.SetColorByStage(color, fillStageIndex);
         stateManager.SwitchState(stateManager.drawingFillState);
-
+        float error = color == correctColor ? 0 : 0.7f;
+        stateManager.gameControl.errorByStage[stateManager.gameControl.gameStageInfo.drawStage] = error;
     }
 
     public override void EnterState(GameStateManager game)
     {
        
         stateManager = game;
-        game.gameControl.drawingZone.SetFillPreviewSprite(game.gameControl.gameStageInfo.FillStageIndex); 
-        UiControl.Instance.EnableColorSelection(game.gameControl.GetFillStageColors(), this);
+        game.gameControl.drawingZone.SetFillPreviewSprite(game.gameControl.gameStageInfo.FillStageIndex);
+        Color[] stageColors = game.gameControl.GetFillStageColors();
+        correctColor = stageColors[0];
+        UiControl.Instance.EnableColorSelection(stageColors, this);
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
         Pencil.instance.MoveOffscren();
         Pencil.instance.lifted = false;

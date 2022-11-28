@@ -49,10 +49,11 @@ public class UiControl : MonoBehaviour
     public void EnableColorSelection(Color[] colors, GameStateSelectColor selectColorState)
     {
         this.selectColorState = selectColorState;
-        buttonColors = colors;
+        buttonColors = (Color[])colors.Clone();
+        ColorUtils.Shuffle(buttonColors);
         colorButtonsPanel.SetActive(true);
         for (int i = 0; i < buttonColors.Length; i++)
-            colorButtons[i].image.color = colors[i];
+            colorButtons[i].image.color = buttonColors[i];
         nextFillButton.SetActive(false);
     }
 
