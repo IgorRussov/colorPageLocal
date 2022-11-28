@@ -7,26 +7,37 @@ using UnityEngine.SceneManagement;
 public class UiControl : MonoBehaviour
 {
     public static UiControl Instance;
-
     public GameControl gameControl;
-
+    [Header("Camera")]
+    public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
+    [Header("Main game screen")]
     public GameObject colorButtonsPanel;
     public Button[] colorButtons;
-    private Color[] buttonColors;
-    private GameStateSelectColor selectColorState;
     public GameObject undoButton;
     public GameObject nextFillButton;
-    public GameObject winScreen;
-
-    public GameObject flashImage;
-    public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
-
+    public Animator extraPanelAnimator;
     public TMPro.TMP_Text currentLevelText;
+    [Header("Win screen")]
+    public GameObject winScreen;
+    public GameObject flashImage;
+    public WinScreenAccuracy winScreenAccuracy;
+
+    
+
+    private Color[] buttonColors;
+    private GameStateSelectColor selectColorState;
+    private int appearId;
+    private int disappearId;
+
+    private bool extraPanelToggled;
 
     private void Awake()
     {
         Instance = this;
         gameControl = GameObject.FindObjectOfType<GameControl>();
+
+        appearId = Animator.StringToHash("Appear");
+        disappearId = Animator.StringToHash("Disappear");
     }
 
     // Start is called before the first frame update
@@ -92,13 +103,14 @@ public class UiControl : MonoBehaviour
     {
         //GameObject.FindObjectOfType<CameraControl>().CreateSnapshot(winSnapshotTexture);
         flashImage.SetActive(true);
-        flashImage.GetComponent<Animator>().SetTrigger("Flash");
-        LeanTween.delayedCall(1.0f / 60 * 3, () =>
-            {
+        snapshotVirtualCamera.gameObject.SetActive(true);
+        //flashImage.GetComponent<Animator>().SetTrigger("Flash");
+        //LeanTween.delayedCall(1.0f / 60 * 3, () =>
+        //    {
                 snapshotVirtualCamera.Priority = 11;
                 winScreen.SetActive(true);
                 undoButton.SetActive(false);
-            });
+        //    });
     }
 
     public void NextLevel()
@@ -121,4 +133,19 @@ public class UiControl : MonoBehaviour
         gameControl.Undo();
     }
 
+    public void ToggleExtraPanel()
+    {
+        extraPanelToggled = !extraPanelToggled;
+        if (extraPanelToggled)
+            extraPanelAnimator.SetTrigger(appearId);
+        else
+            extraPanelAnimator.SetTrigger(disappearId);
+    }
+
+    public void ShowAccuracyDisplay(float accuracy)
+    {
+        winScreenAccuracy.ShowAccuracyDisplay(accuracy);
+    }
+
+    
 }

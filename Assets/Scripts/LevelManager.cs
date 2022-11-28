@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         GameControl.Instance.StartLevel(levelData[levelIndex]);
-        UiControl.Instance.SetCurrentLevelText("Level " + (levelIndex + 1));
+        UiControl.Instance.SetCurrentLevelText("LEVEL " + (levelIndex + 1));
     }
 
     public void RestartLevel()

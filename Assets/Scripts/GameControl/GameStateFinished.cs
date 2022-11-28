@@ -17,11 +17,14 @@ public class GameStateFinished : GameBaseState
     public override void EnterState(GameStateManager game)
     {
         UiControl.Instance.ShowVictoryScreen();
+        Pencil.instance.gameObject.SetActive(false);
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
         Pencil.instance.MoveOffscren();
         game.gameControl.drawingZone.SetAutoFillSpritesEnabled(true);
+        float accuracy = AccuracyPercent(game.gameControl.errorByStage);
+        UiControl.Instance.ShowAccuracyDisplay(accuracy);
+        Debug.Log("Accuracy: " + accuracy.ToString("0.00%"));
 
-        Debug.Log("Accuracy: " + AccuracyPercent(game.gameControl.errorByStage).ToString("0.00%"));
     }
 
     public override void InputDelta(GameStateManager game, Vector2 delta)
