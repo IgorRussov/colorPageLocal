@@ -357,6 +357,9 @@ public class DrawingZone : MonoBehaviour
         SetMaskSprite(drawStageIndex);
         SetupNewDrawFillTexture();
         SetDrawFillBoundsCollider(drawStageIndex);
+        
+        
+        
     }
 
     public static Mesh CopyMesh(Mesh mesh)
@@ -710,6 +713,8 @@ public class DrawingZone : MonoBehaviour
     private void DispatchShader()
     {
         //Debug.Log("Dispatch");
+        if (drawFillQuadMaterial.mainTexture == null)
+            return;
         int width = drawFillQuadMaterial.mainTexture.width / 16 + 0;
         int height = drawFillQuadMaterial.mainTexture.height / 8 + 0;
 

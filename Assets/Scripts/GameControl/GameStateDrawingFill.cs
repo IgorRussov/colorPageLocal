@@ -10,7 +10,7 @@ public class GameStateDrawingFill : GameBaseState
 {
     private Vector2 lastPos;
     private float minPointDiff = 0.05f;
-    private int pixelsPerQuadrant = 25;
+    private int pixelsPerQuadrant = 10;
     private Vector2 drawTextureSize;
 
     private GameStateManager gameStateManager;
@@ -75,11 +75,11 @@ public class GameStateDrawingFill : GameBaseState
         Pencil.instance.DrawFillRelease();
     }
 
-    private void UpdateQuadrants(Vector2 pos)
+    private bool UpdateQuadrants(Vector2 pos)
     {
         int posi = Mathf.FloorToInt(pos.x / pixelsPerQuadrant);
         int posj = Mathf.FloorToInt(pos.y / pixelsPerQuadrant);
-
+        bool visited = false;
         int radius = 1;
         for (int i = -radius; i <= radius; i++)
             for(int j = -radius; j <= radius; j++)
@@ -91,7 +91,7 @@ public class GameStateDrawingFill : GameBaseState
                     if (quadrants[qi, qj] == FillQuadrant.Unvisited)
                     {
                         quadrants[qi, qj] = FillQuadrant.Visited;
-
+                        visited = true;
                         visitedQuadrants++;
                         //Debug.Log(visitedQuadrants + " " + quadrantsToContinue);
                     }
@@ -99,7 +99,7 @@ public class GameStateDrawingFill : GameBaseState
                         UiControl.Instance.ShowNextFillButton();
                 }
             }
-        
+        return visited;
     }
 
     int counter;
@@ -120,17 +120,17 @@ public class GameStateDrawingFill : GameBaseState
         Vector2 pos = Pencil.instance.gameObject.transform.position;
         Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit * PositionConverter.TextureScale;
         fillerPos += drawTextureSize * 0.5f;
-        UpdateQuadrants(fillerPos / PositionConverter.TextureScale);
+        bool newVisited = UpdateQuadrants(fillerPos / PositionConverter.TextureScale);
 
 
         if (!Pencil.instance.mustForcedMove)
             if ((lastPos - pos).magnitude > minPointDiff)
             {
-              
                 lastPos = pos;
 
-                game.gameControl.drawingZone.AddColorPainter(fillerPos, 
-                    game.gameControl.gameStageInfo.FillStageIndex);
+                if (newVisited)
+                    game.gameControl.drawingZone.AddColorPainter(fillerPos, 
+                        game.gameControl.gameStageInfo.FillStageIndex);
 
 
             }
