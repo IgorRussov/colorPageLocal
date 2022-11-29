@@ -30,4 +30,5 @@ MonoBehaviour:
       b: 239
       a: 255
   startPositions:
-  - {x: 4.16, y: -6.13}
+  - {x: 0, y: 0}
+  previewImage: {fileID: 0}

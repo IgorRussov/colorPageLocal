@@ -368,6 +368,60 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &1276612989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1276612991}
+  - component: {fileID: 1276612990}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1276612990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276612989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5b4541b7c27f9408251cab338542ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelData:
+  - {fileID: 11400000, guid: 3b18549502a29014889986c6c32531cd, type: 2}
+  - {fileID: 11400000, guid: 03d5e005640cbac4ba60d8c8d4001582, type: 2}
+  - {fileID: 11400000, guid: bbdf7c669aac70e49aa81f525b5ecd0c, type: 2}
+  - {fileID: 11400000, guid: 0ba5bab077d563648a2fe78315c08a9d, type: 2}
+  - {fileID: 11400000, guid: ad9a88b72818152478dd4395cf5f3de2, type: 2}
+  - {fileID: 11400000, guid: 68a4501e729925d44874ebe9a6bf1dba, type: 2}
+  - {fileID: 11400000, guid: a8241ff08aed4aa4281443ef7aff0729, type: 2}
+  - {fileID: 11400000, guid: b6ab546afcf21024580e2f645f985506, type: 2}
+  - {fileID: 11400000, guid: 4f18d2cc31de7f14abe849386f3a6f40, type: 2}
+  - {fileID: 11400000, guid: 214a3ff132d6a6b4d89f9005d2569e3e, type: 2}
+--- !u!4 &1276612991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276612989}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.8832364, y: -6.234024, z: -2.9338999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1453321704
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +705,7 @@ MonoBehaviour:
   startPenPosX: 85
   rotationAmplitude: 7
   rotationPeriod: 70
-  progressValue: 0
+  realProgress: 0
 --- !u!1 &1798593305
 GameObject:
   m_ObjectHideFlags: 0

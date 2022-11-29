@@ -29,6 +29,26 @@ public class LevelData : ScriptableObject
     public ColorRow[] colors;
     public Vector2[] startPositions;
 
+    private Texture2D previewTexture;
+    public Texture2D PreviewTexture
+    {
+        get
+        {
+            if (previewTexture == null)
+            {
+                LoadPreviewTexture();   
+            }
+           
+            return previewTexture;
+        }
+    }
+
+    public void LoadPreviewTexture()
+    {
+        string path = "LevelImages/" + svgFileName + "_image";
+        previewTexture = Resources.Load(path) as Texture2D;
+    }
+
     public void InitColorsArray(int rows, int cols)
     {
         colors = new ColorRow[rows];

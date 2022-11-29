@@ -22,6 +22,8 @@ public class UiControl : MonoBehaviour
     public GameObject flashImage;
     public WinScreenAccuracy winScreenAccuracy;
     public GameObject particleZone;
+    public Image taskImage;
+    public Image winPreviewImage;
 
     
 
@@ -32,6 +34,8 @@ public class UiControl : MonoBehaviour
 
     private bool extraPanelToggled;
 
+    private Sprite previewImageSprite;
+
     private void Awake()
     {
         Instance = this;
@@ -39,6 +43,11 @@ public class UiControl : MonoBehaviour
 
         appearId = Animator.StringToHash("Appear");
         disappearId = Animator.StringToHash("Disappear");
+
+        Texture2D tex = LevelManager.CurrentLevelPreviewTexture;
+        
+        previewImageSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
+        taskImage.sprite = previewImageSprite;
     }
 
     // Start is called before the first frame update
@@ -102,17 +111,15 @@ public class UiControl : MonoBehaviour
 
     public void ShowVictoryScreen()
     {
-        //GameObject.FindObjectOfType<CameraControl>().CreateSnapshot(winSnapshotTexture);
         flashImage.SetActive(true);
         snapshotVirtualCamera.gameObject.SetActive(true);
         particleZone.SetActive(true);
-        //flashImage.GetComponent<Animator>().SetTrigger("Flash");
-        //LeanTween.delayedCall(1.0f / 60 * 3, () =>
-        //    {
-                snapshotVirtualCamera.Priority = 11;
-                winScreen.SetActive(true);
-                undoButton.SetActive(false);
-        //    });
+        
+        snapshotVirtualCamera.Priority = 11;
+        winScreen.SetActive(true);
+        undoButton.SetActive(false);
+
+        winPreviewImage.sprite = previewImageSprite;
     }
 
     public void NextLevel()

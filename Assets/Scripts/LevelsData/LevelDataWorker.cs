@@ -148,6 +148,7 @@ public class LevelDataWorker : MonoBehaviour
         originalLevelData = GameObject.Instantiate(sourceLevelData);
 
         nameWhenSaved = sourceLevelData.svgFileName + "_level";
+        svgFileName = sourceLevelData.svgFileName;
 
         strokeShapeData = new StrokeShapeData[strokeShapes.Count];
         int autoDrawIndex = strokeShapes.Count - 1;
@@ -160,6 +161,7 @@ public class LevelDataWorker : MonoBehaviour
             
 
         fillShapeData = new FillShapeData[fillShapes.Count];
+        autoDrawIndex = fillShapes.Count - 1;
         int autoFillIndex = fillShapes.Count - 1;
         for (int i = 0; i < fillShapes.Count; i++)
         {
@@ -222,8 +224,20 @@ public class LevelDataWorker : MonoBehaviour
 
     public void SaveLevelData()
     {
+        drawingZone.StopAllHighlight();
         LevelData levelData = LevelData.CreateInstance<LevelData>();
         levelData.svgFileName = svgFileName;
+
+        //Save snapshot
+        //string path = AssetDatabase.GetAssetPath(baseImageForAssetDirectory);
+        //path = path.Substring(0, path.IndexOf(path.Last(c => c == '/')));
+        string path = "Assets/Resources/LevelImages";
+
+        path = svgFileName + "_image.png";
+        //Debug.Log(path);
+
+        Camera.main.GetComponent<CameraSnapshotSaver>().RenderCameraToAsset(path);
+        
 
         levelData.strokeShapesOrder = new int[strokeShapeData.Length];
         int autoDrawShapes = 0;

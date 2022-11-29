@@ -30,6 +30,7 @@ public class LoadingScene : MonoBehaviour
     private void Start()
     {
         InitInterfaceValues();
+        GameObject.FindObjectOfType<LevelManager>().LoadTextures();
         LoadScene(1);
     }
 

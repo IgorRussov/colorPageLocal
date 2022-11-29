@@ -12,6 +12,7 @@ public class LevelEditDrawingZone : MonoBehaviour
     public Transform strokeShapesParentObject;
     public Transform fillShapesParentObject;
     public GameObject shapesParentObject;
+    public CameraControl cameraControl;
     [Header("Draw stroke settings")]
     public float drawStrokeWidth;
     public Color drawStrokeColor;
@@ -29,6 +30,7 @@ public class LevelEditDrawingZone : MonoBehaviour
     private List<Shape> strokeShapes;
     private List<Shape> fillShapes;
     private LevelData levelData;
+
 
     private VectorUtils.TessellationOptions Options
     {
@@ -88,6 +90,8 @@ public class LevelEditDrawingZone : MonoBehaviour
             Vector3 pos = bounds.center;
             handlesPositions.Add(pos + Vector3.back);
             handlesText.Add("fill shape " + i);
+
+            cameraControl.AddShapeToView(fillShapes[i], 0);
         }
         GameObject.Destroy(originalFillSprite);
 
@@ -99,6 +103,8 @@ public class LevelEditDrawingZone : MonoBehaviour
             strokeSpriteRenderers[i] = newSprite.GetComponent<SpriteRenderer>();
             strokeSpriteRenderers[i].sprite = DrawingSpriteFactory.CreateLineSprite(
                 strokeShapes[i], new float[] { 1000000, 0 }, drawStrokeWidth, drawStrokeColor);
+
+          
         }
         GameObject.Destroy(originalFillSprite);
     }
@@ -129,6 +135,16 @@ public class LevelEditDrawingZone : MonoBehaviour
         fillSpriteRenderers[prevHighlightFill].sprite = DrawingSpriteFactory.CreateSolidColorFillSprite
                 (fillShapes[prevHighlightFill], Color.red);
 
+    }
+
+    public void StopAllHighlight()
+    {
+        if (prevHighlightFill != -1)
+            fillSpriteRenderers[prevHighlightFill].sprite = DrawingSpriteFactory.CreateSolidColorFillSprite
+                (fillShapes[prevHighlightFill], levelData.GetColor(prevHighlightFill, 0));
+        if (prevHighlightStroke != -1)
+            strokeSpriteRenderers[prevHighlightStroke].sprite = DrawingSpriteFactory.CreateLineSprite
+            (strokeShapes[prevHighlightStroke], new float[] { 100000, 0 }, drawStrokeWidth, drawStrokeColor);
     }
 
 }
