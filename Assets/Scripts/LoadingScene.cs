@@ -34,22 +34,22 @@ public class LoadingScene : MonoBehaviour
     }
 
     [Range(0, 1)]
-    public float progressValue = 0;
+    public float realProgress = 0;
 
-    private void UpdatePaintFlow()
+    private void UpdatePaintFlow(float progressValue)
     {
         float newBottom = Mathf.Lerp(startBottom, endBottom, progressValue);
         flowingPaint.offsetMin = new Vector2(flowingPaint.offsetMin.x, newBottom);
     }
 
-    private void UpdateProgressBar()
+    private void UpdateProgressBar(float progressValue)
     {
         float currentRight = Mathf.Lerp(startRight, endRight, progressValue);
         progressBarFill.offsetMax = new Vector2(-currentRight, progressBarFill.offsetMax.y);
         penIcon.anchoredPosition = new Vector2(-currentRight + endRight + startPenPosX + penOffset, penIcon.anchoredPosition.y);
     }
 
-    private void UpdatePenRotation()
+    private void UpdatePenRotation(float progressValue)
     {
         float pos = penIcon.anchoredPosition.x;
         float phase = Mathf.Sin(pos / rotationPeriod);
@@ -58,11 +58,18 @@ public class LoadingScene : MonoBehaviour
         penIcon.rotation = Quaternion.Euler(0, 0, value);
     }
 
+    float adjustedProgress = 0;
+    float currentVelocity = 0; 
+
     private void Update()
     {
-        UpdatePaintFlow();
-        UpdateProgressBar();
-        UpdatePenRotation();
+        Mathf.SmoothDamp(adjustedProgress, 1, ref currentVelocity, realProgress / Time.deltaTime);
+        adjustedProgress += currentVelocity * Time.deltaTime;
+        adjustedProgress = Mathf.Min(adjustedProgress, realProgress);
+        Debug.Log("adj " + adjustedProgress);
+        UpdatePaintFlow(adjustedProgress);
+        UpdateProgressBar(adjustedProgress);
+        UpdatePenRotation(adjustedProgress);
     }
 
     public void LoadScene(int sceneId)
@@ -76,8 +83,8 @@ public class LoadingScene : MonoBehaviour
 
         while (!operation.isDone)
         {
-            progressValue = Mathf.Clamp01(operation.progress * 0.99f);
-
+            realProgress = Mathf.Clamp01(operation.progress * 0.99f);
+            Debug.Log(realProgress);
             yield return null;
         }
     }
