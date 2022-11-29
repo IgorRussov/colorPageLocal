@@ -395,8 +395,9 @@ public class DrawingZone : MonoBehaviour
     public void SetMaskSprite(int drawStageIndex)
     {
         //Set mask sprite
-        Sprite maskSprite =
-            DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
+        Sprite maskSprite = null;
+        maskSprite = DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
+  
         drawFillMask.sprite = maskSprite;
 
         ShapeUtils.SetDrawingSize(maskSprite.rect.width,  maskSprite.rect.height);
