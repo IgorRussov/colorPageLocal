@@ -7,6 +7,9 @@ using System.IO;
 public class CameraSnapshotSaver : MonoBehaviour
 {
     public Vector2Int resolution;
+
+#if UNITY_EDITOR
+
     public void RenderCameraToAsset(string path)
     {
         string saveFullPath = Path.Combine("Assets", "Resources", "LevelImages", path);
@@ -36,4 +39,5 @@ public class CameraSnapshotSaver : MonoBehaviour
 
         //return obj as Texture2D;
     }
+#endif
 }

@@ -17,6 +17,8 @@ public class UiControl : MonoBehaviour
     public GameObject nextFillButton;
     public Animator extraPanelAnimator;
     public TMPro.TMP_Text currentLevelText;
+    public Image avatarImage;
+    public Sprite[] avatarSprites;
     [Header("Win screen")]
     public GameObject winScreen;
     public GameObject flashImage;
@@ -25,7 +27,7 @@ public class UiControl : MonoBehaviour
     public Image taskImage;
     public Image winPreviewImage;
 
-    
+
 
     private Color[] buttonColors;
     private GameStateSelectColor selectColorState;
@@ -44,10 +46,17 @@ public class UiControl : MonoBehaviour
         appearId = Animator.StringToHash("Appear");
         disappearId = Animator.StringToHash("Disappear");
 
+        SetImageTask();
+    }
+
+    private void SetImageTask()
+    {
         Texture2D tex = LevelManager.CurrentLevelPreviewTexture;
-        
         previewImageSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
         taskImage.sprite = previewImageSprite;
+
+        Sprite avatarSprite = avatarSprites[Random.Range(0, avatarSprites.Length)];
+        avatarImage.sprite = avatarSprite;
     }
 
     // Start is called before the first frame update
