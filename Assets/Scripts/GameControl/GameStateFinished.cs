@@ -16,10 +16,11 @@ public class GameStateFinished : GameBaseState
 
     public override void EnterState(GameStateManager game)
     {
-        UiControl.Instance.ShowVictoryScreen();
         Pencil.instance.gameObject.SetActive(false);
         Pencil.instance.SetPencilMode(PencilMode.Inactive);
         Pencil.instance.MoveOffscren();
+        UiControl.Instance.ShowVictoryScreen();
+        
         game.gameControl.drawingZone.SetAutoFillSpritesEnabled(true);
         float accuracy = AccuracyPercent(game.gameControl.errorByStage);
         UiControl.Instance.ShowAccuracyDisplay(accuracy);

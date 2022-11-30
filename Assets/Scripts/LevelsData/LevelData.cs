@@ -43,10 +43,53 @@ public class LevelData : ScriptableObject
         }
     }
 
-    public void LoadPreviewTexture()
+    private Texture2D completedTexture;
+
+    public Texture2D CompletedTexture
+    {
+        get
+        {
+            return completedTexture;
+        }
+        set
+        {
+            completedTexture = value;
+        }
+    }
+
+    public bool CompletedLevel
+    {
+        get
+        {
+            return CompletedTexture != null;
+        }
+    }
+
+    public Texture2D TextureForLevelsList
+    {
+        get
+        {
+            if (CompletedTexture != null)
+                return CompletedTexture;
+            return PreviewTexture;
+        }
+    }
+
+    public void LoadTextures()
+    {
+        LoadPreviewTexture();
+        TryLoadCompletedTexture();
+    }
+
+    private void LoadPreviewTexture()
     {
         string path = "LevelImages/" + svgFileName + "_image";
         previewTexture = Resources.Load(path) as Texture2D;
+    }
+
+    private void TryLoadCompletedTexture()
+    {
+        CompletedTexture = FileIO.LoadTextureForLevel(svgFileName);
     }
 
     public void InitColorsArray(int rows, int cols)

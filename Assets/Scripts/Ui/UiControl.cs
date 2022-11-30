@@ -10,6 +10,7 @@ public class UiControl : MonoBehaviour
     public GameControl gameControl;
     [Header("Camera")]
     public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
+    public CameraSnapshotSaver cameraSnapshotSaver;
     [Header("Main game screen")]
     public GameObject colorButtonsPanel;
     public Button[] colorButtons;
@@ -26,7 +27,11 @@ public class UiControl : MonoBehaviour
     public GameObject particleZone;
     public Image taskImage;
     public Image winPreviewImage;
-
+    [Header("Levels screen")]
+    public LevelsScreenUI levelsScreenUI;
+    public GameObject levelsScreen;
+    public GameObject levelsScreenButtonsContainer;
+    public GameObject gameScreenButtonsContainer;
 
 
     private Color[] buttonColors;
@@ -47,6 +52,7 @@ public class UiControl : MonoBehaviour
         disappearId = Animator.StringToHash("Disappear");
 
         SetImageTask();
+        levelsScreenUI.CreateLevelObjects();
     }
 
     private void SetImageTask()
@@ -122,6 +128,9 @@ public class UiControl : MonoBehaviour
     {
         flashImage.SetActive(true);
         snapshotVirtualCamera.gameObject.SetActive(true);
+        Texture2D levelFinishedImage = cameraSnapshotSaver.RenderCameraToSaveLevel(LevelManager.CurrentLevelName);
+        LevelManager.SetLevelCompletedImage(LevelManager.levelIndex, levelFinishedImage); 
+
         particleZone.SetActive(true);
         
         snapshotVirtualCamera.Priority = 11;
@@ -163,6 +172,20 @@ public class UiControl : MonoBehaviour
     public void ShowAccuracyDisplay(float accuracy)
     {
         winScreenAccuracy.ShowAccuracyDisplay(accuracy);
+    }
+
+    public void ShowLevelsScreen()
+    {
+        levelsScreen.SetActive(true);
+        levelsScreenButtonsContainer.SetActive(true);
+        gameScreenButtonsContainer.SetActive(false);
+    }
+
+    public void HideLevelsScreen()
+    {
+        levelsScreen.SetActive(false);
+        levelsScreenButtonsContainer.SetActive(false);
+        gameScreenButtonsContainer.SetActive(true);
     }
 
     

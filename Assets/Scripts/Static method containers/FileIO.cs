@@ -26,6 +26,18 @@ public class FileIO
         return Path.Combine(saveFolder, dataName + ".asset");
     }
 
+    public static Texture2D LoadTextureForLevel(string levelName)
+    {
+        string path = Path.Combine(Application.persistentDataPath, levelName + "_complete.png");
+        if (!File.Exists(path))
+            return null;
+        WWW reader = new WWW(path);
+        while (!reader.isDone) { }
+        Texture2D ret = new Texture2D(256, 256);
+        reader.LoadImageIntoTexture(ret);
+        return ret;
+    }
+
     /// <summary>
     /// Gets the vector scene from a provided file path.
     /// The file must be in Assets/StreamingAssets/VectorFiles folder
