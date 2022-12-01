@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System;
 using System.Globalization;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Has methods for working with file system
@@ -31,10 +32,21 @@ public class FileIO
         string path = Path.Combine(Application.persistentDataPath, levelName + "_complete.png");
         if (!File.Exists(path))
             return null;
+        /*
         WWW reader = new WWW(path);
         while (!reader.isDone) { }
         Texture2D ret = new Texture2D(256, 256);
         reader.LoadImageIntoTexture(ret);
+        */
+        /*
+        UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(path);
+        uwr.SendWebRequest();
+        Texture2D ret = DownloadHandlerTexture.GetContent(uwr);
+        */
+        byte[] data = File.ReadAllBytes(path);
+        Texture2D ret = new Texture2D(2, 2);
+        ret.LoadImage(data);
+
         return ret;
     }
 

@@ -37,7 +37,7 @@ public class LevelFrameUI : MonoBehaviour
 
     private void SetNewLevelUi()
     {
-        newLevelUi.SetActive(true);
+        //newLevelUi.SetActive(true);
     }
 
     private void SetLockedUi()
