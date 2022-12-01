@@ -47,7 +47,7 @@ public class CameraSnapshotSaver : MonoBehaviour
 
         Camera camera = gameObject.GetComponent<Camera>();
 
-        RenderTexture rt = new RenderTexture(resolution.x, resolution.y, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        RenderTexture rt = new RenderTexture(resolution.x * 2, resolution.y * 2, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
 
         RenderTexture oldRT = camera.targetTexture;
         camera.targetTexture = rt;
@@ -55,8 +55,9 @@ public class CameraSnapshotSaver : MonoBehaviour
         camera.targetTexture = oldRT;
 
         RenderTexture.active = rt;
-        Texture2D tex = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
-        tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        Texture2D tex = new Texture2D(rt.width / 2, rt.height / 2, TextureFormat.ARGB32, false);
+        Rect readPixelsRect = new Rect(rt.width / 4, rt.height / 4, rt.width / 2, rt.height / 2);
+        tex.ReadPixels(readPixelsRect, 0, 0);
         RenderTexture.active = null;
 
         byte[] bytes = tex.EncodeToPNG();

@@ -85,7 +85,7 @@ public class LoadingScene : MonoBehaviour
         while (!operation.isDone)
         {
             realProgress = Mathf.Clamp01(operation.progress * 0.99f);
-            Debug.Log(realProgress);
+            //Debug.Log(realProgress);
             yield return null;
         }
     }

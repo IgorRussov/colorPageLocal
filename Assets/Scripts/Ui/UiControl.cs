@@ -142,6 +142,7 @@ public class UiControl : MonoBehaviour
 
     public void NextLevel()
     {
+        winScreenAccuracy.Disappear();
         GameObject.FindObjectOfType<LevelManager>().NextLevel();
     }
 
@@ -177,13 +178,14 @@ public class UiControl : MonoBehaviour
     public void ShowLevelsScreen()
     {
         levelsScreen.SetActive(true);
+        levelsScreen.GetComponent<LevelsScreenUI>().Appear();
         levelsScreenButtonsContainer.SetActive(true);
         gameScreenButtonsContainer.SetActive(false);
     }
 
     public void HideLevelsScreen()
     {
-        levelsScreen.SetActive(false);
+        levelsScreen.GetComponent<LevelsScreenUI>().Disappear();
         levelsScreenButtonsContainer.SetActive(false);
         gameScreenButtonsContainer.SetActive(true);
     }

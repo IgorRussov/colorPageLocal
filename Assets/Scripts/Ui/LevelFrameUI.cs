@@ -31,7 +31,7 @@ public class LevelFrameUI : MonoBehaviour
 
     private void SetCompletedUi()
     {
-        levelPreviewImage.rectTransform.localScale = Vector3.one * 2;
+        //levelPreviewImage.rectTransform.localScale = Vector3.one * 2;
         //completedUi.SetActive(true);
     }
 

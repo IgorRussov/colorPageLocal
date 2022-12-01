@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WinScreenAnimation
-  serializedVersion: 7
+  serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -89,7 +89,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.96666664
-        value: {x: 1.2, y: 1.2, z: 1}
+        value: {x: 1.1, y: 1.1, z: 1}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -98,7 +98,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 1.4833333
-        value: {x: 1.2, y: 1.2, z: 1}
+        value: {x: 1.1, y: 1.1, z: 1}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -309,7 +309,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4833333
-        value: 161.5
+        value: 212.7
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -487,7 +487,6 @@ AnimationClip:
       typeID: 4
       customType: 4
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 3783608556
       attribute: 3
@@ -495,7 +494,6 @@ AnimationClip:
       typeID: 4
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 2364647151
       attribute: 538195251
@@ -503,7 +501,6 @@ AnimationClip:
       typeID: 224
       customType: 28
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 2364647151
       attribute: 4185109675
@@ -511,7 +508,6 @@ AnimationClip:
       typeID: 114
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 4080383872
       attribute: 304273561
@@ -519,7 +515,6 @@ AnimationClip:
       typeID: 114
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 750807058
       attribute: 2086281974
@@ -527,7 +522,6 @@ AnimationClip:
       typeID: 1
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 3783608556
       attribute: 2086281974
@@ -535,7 +529,6 @@ AnimationClip:
       typeID: 1
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 3783608556
       attribute: 538195251
@@ -543,7 +536,6 @@ AnimationClip:
       typeID: 224
       customType: 28
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 751182857
       attribute: 2086281974
@@ -551,7 +543,6 @@ AnimationClip:
       typeID: 1
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 2634905919
       attribute: 2086281974
@@ -559,7 +550,6 @@ AnimationClip:
       typeID: 1
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 3783608556
       attribute: 1967290853
@@ -567,7 +557,6 @@ AnimationClip:
       typeID: 224
       customType: 28
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 3783608556
       attribute: 38095219
@@ -575,7 +564,6 @@ AnimationClip:
       typeID: 224
       customType: 28
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 751182857
       attribute: 304273561
@@ -583,7 +571,6 @@ AnimationClip:
       typeID: 114
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     - serializedVersion: 2
       path: 751182857
       attribute: 3
@@ -591,7 +578,6 @@ AnimationClip:
       typeID: 4
       customType: 0
       isPPtrCurve: 0
-      isIntCurve: 0
     pptrCurveMapping: []
   m_AnimationClipSettings:
     serializedVersion: 2
@@ -813,7 +799,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4833333
-        value: 161.5
+        value: 212.7
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1167,7 +1153,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.96666664
-        value: 1.2
+        value: 1.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1176,7 +1162,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4833333
-        value: 1.2
+        value: 1.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1213,7 +1199,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.96666664
-        value: 1.2
+        value: 1.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1222,7 +1208,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4833333
-        value: 1.2
+        value: 1.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136

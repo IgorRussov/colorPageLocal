@@ -110,9 +110,31 @@ public class Pencil : MonoBehaviour
         gameControl.StrokeDrawStopped += LiftPencil;
     }
 
+    private float instantMoveTime;
+    private float lastInstantMoveCommandTime = -1;
+
+    private Vector2 prevInstantPos;
+    private Vector2 currentInstantPos;
+
     public void InstantMove(Vector2 target, bool moveInWorldSpace)
     {
         //Debug.Log("Instant move to " + target);
+
+        if (lastInstantMoveCommandTime == -1)
+        {
+            instantMoveTime = 0.03f;
+        }
+        else
+        {
+            instantMoveTime = Time.time - lastInstantMoveCommandTime;
+            lastInstantMoveCommandTime = Time.time;
+        }
+
+        prevInstantPos = currentInstantPos;
+        currentInstantPos = target;
+
+        //ForcedMove(target, moveInWorldSpace, true);
+        
         mustForcedMove = false;
         Vector2 currentDiff;
         if (moveInWorldSpace)
@@ -121,11 +143,15 @@ public class Pencil : MonoBehaviour
             currentDiff = target - new Vector2(transform.localPosition.x, transform.localPosition.y);
         Vector2 newPos = new Vector2(transform.localPosition.x, transform.localPosition.y) + currentDiff;
         rigidbody.MovePosition((Vector3)newPos + transform.parent.position);
-
+        
     }
 
-    public void ForcedMove(Vector2 target, bool moveInWorldSpace)
+    
+
+    private bool quickMove;
+    public void ForcedMove(Vector2 target, bool moveInWorldSpace, bool quickMove = false)
     {
+        this.quickMove = quickMove;
         // Debug.Log("Forced move to " + target);
         mustForcedMove = true;
 
@@ -152,12 +178,13 @@ public class Pencil : MonoBehaviour
     {
         if (mustForcedMove)
             UpdateForcedMove();
-        else if (pencilMode == PencilMode.DrawFill && wantMove) 
+        else if (pencilMode == PencilMode.DrawFill && wantMove)
         {
             UpdateDrawFill();
             //CheckStuckState();
         }
-            
+        else if (pencilMode == PencilMode.DrawStroke)
+            UpdateStrokeRotation();
         UpdateRepresPosition();
     }
 
@@ -165,6 +192,30 @@ public class Pencil : MonoBehaviour
     private void Update()
     {
         
+    }
+
+    private float desiredRotation;
+
+    private void UpdateStrokeRotation()
+    {
+        if (prevInstantPos == Vector2.zero)
+            return;
+        Vector2 delta = currentInstantPos - prevInstantPos;
+        Vector2 normal = -Vector2.Perpendicular(delta);
+
+        float angle = Vector2.SignedAngle(Vector2.up, normal);
+        Debug.Log(angle);
+
+        desiredRotation = angle + 360;
+
+        float currentRotation = transform.rotation.eulerAngles.z;
+        float rotationDelta = currentRotation - desiredRotation;
+
+        rotationDelta = Mathf.Min(rotationDelta, strokeRotationSpeed * Time.fixedDeltaTime);
+
+        rigidbody.rotation = Quaternion.Euler(0, 0, currentRotation + rotationDelta);
+
+
     }
 
 
@@ -282,8 +333,20 @@ public class Pencil : MonoBehaviour
 
     void UpdateForcedMove()
     {
-        float smoothTime = pencilMode == PencilMode.DrawFill ? 0.01f : forcedMoveSmoothTime;
-        Vector2.SmoothDamp(transform.localPosition, target, ref currentVelocity, smoothTime, forcedMoveMaxSpeed);
+        float smoothTime = quickMove ? 0.01f : forcedMoveSmoothTime;
+        float maxSpeed = quickMove ? 1000000f : forcedMoveMaxSpeed;
+
+        if (quickMove)
+        {
+            Vector2 delta = target - (Vector2)transform.localPosition;
+            float timeFromLastCommand = Time.time - lastInstantMoveCommandTime;
+            float remainingTime = instantMoveTime - timeFromLastCommand;
+            float partThisFrame = Time.fixedDeltaTime / remainingTime;
+
+            currentVelocity = delta / remainingTime;
+        }
+        else
+            Vector2.SmoothDamp(transform.localPosition, target, ref currentVelocity, smoothTime, maxSpeed);
       
         rigidbody.velocity = currentVelocity;
         if (currentVelocity.magnitude < 0.01f)

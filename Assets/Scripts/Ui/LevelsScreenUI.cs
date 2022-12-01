@@ -12,6 +12,18 @@ public class LevelsScreenUI : MonoBehaviour
 
     private List<LevelFrameUI> levelFrameUI;
 
+    public Animator animator;
+
+    public void Appear()
+    {
+        animator.SetTrigger("Appear");
+    }
+
+    public void Disappear()
+    {
+        animator.SetTrigger("Disappear");
+    }
+
     public void CreateLevelObjects()
     {
         List<LevelData> levelData = LevelManager.levelDataList;
@@ -39,6 +51,11 @@ public class LevelsScreenUI : MonoBehaviour
             levelFrameUI.Add(newLevelFrameUi);
             counter++;
         }
+    }
+
+    public void Disable()
+    {
+        this.gameObject.SetActive(false);
     }
 
     

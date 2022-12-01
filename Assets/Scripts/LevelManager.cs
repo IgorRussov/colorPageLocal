@@ -70,7 +70,9 @@ public class LevelManager : MonoBehaviour
     public void NextLevel()
     {
         levelIndex = (levelIndex + 1) % levelData.Length;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        StartCoroutine(LoadSceneAsync(sceneIndex));
     }
 
     public void LoadLevel(int levelIndex)
@@ -89,4 +91,14 @@ public class LevelManager : MonoBehaviour
     {
         
     }
+    IEnumerator LoadSceneAsync(int sceneId)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
+
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
+    }
+
 }

@@ -54,4 +54,9 @@ public class WinScreenAccuracy : MonoBehaviour
     {
         maxAccuracy = accuracy;
     }
+
+    public void Disappear()
+    {
+        accuracyAnimator.SetTrigger("Disappear");
+    }
 }

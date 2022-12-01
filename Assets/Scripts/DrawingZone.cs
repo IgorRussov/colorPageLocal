@@ -839,7 +839,8 @@ public class DrawingZone : MonoBehaviour
 
     private void UpdatePainterBuffer()
     {
-        colorPainterComputeBuffer.SetData(colorPainters);
+        List<ColorPainter> truncatedColorPainter = colorPainters.Take(10000).ToList();
+        colorPainterComputeBuffer.SetData(truncatedColorPainter);
         fillComputeShader.SetFloat(painterCountId, colorPainters.Count);
     }
 

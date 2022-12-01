@@ -10,7 +10,7 @@ public class GameStateDrawingFill : GameBaseState
 {
     private Vector2 lastPos;
     private float minPointDiff = 0.05f;
-    private int pixelsPerQuadrant = 10;
+    private int pixelsPerQuadrant = 20;
     private Vector2 drawTextureSize;
 
     private GameStateManager gameStateManager;
@@ -80,7 +80,7 @@ public class GameStateDrawingFill : GameBaseState
         int posi = Mathf.FloorToInt(pos.x / pixelsPerQuadrant);
         int posj = Mathf.FloorToInt(pos.y / pixelsPerQuadrant);
         bool visited = false;
-        int radius = 1;
+        int radius = 2;
         for (int i = -radius; i <= radius; i++)
             for(int j = -radius; j <= radius; j++)
             {
@@ -119,20 +119,36 @@ public class GameStateDrawingFill : GameBaseState
 
         Vector2 pos = Pencil.instance.gameObject.transform.position;
         Vector2 fillerPos = pos * PositionConverter.SvgPixelsPerUnit * PositionConverter.TextureScale;
+        Vector2 lastFillerPos = lastPos * PositionConverter.SvgPixelsPerUnit* PositionConverter.TextureScale;
         fillerPos += drawTextureSize * 0.5f;
         bool newVisited = UpdateQuadrants(fillerPos / PositionConverter.TextureScale);
 
+        newVisited = true;
 
         if (!Pencil.instance.mustForcedMove)
             if ((lastPos - pos).magnitude > minPointDiff)
             {
-                lastPos = pos;
-
                 if (newVisited)
-                    game.gameControl.drawingZone.AddColorPainter(fillerPos, 
-                        game.gameControl.gameStageInfo.FillStageIndex);
+                {
+                    Vector2 delta = pos - lastPos;
+                    float dist = delta.magnitude;
 
+                    int iterations = Mathf.CeilToInt(dist / minPointDiff);
+                    Vector2 step = delta / iterations;
+                    //Debug.Log(iterations);
 
+                    for(int i = 0; i < iterations; i++)
+                    {
+                        Vector2 compPos = lastPos + step * i;
+                        Vector2 compFillerPos = compPos * PositionConverter.SvgPixelsPerUnit * PositionConverter.TextureScale;
+                        compFillerPos += drawTextureSize * 0.5f;
+                        game.gameControl.drawingZone.AddColorPainter(compFillerPos,
+                            game.gameControl.gameStageInfo.FillStageIndex);
+                    }
+                   
+                }
+
+                lastPos = pos;
             }
 
         game.gameControl.drawingZone.UpdateDrawFill();
