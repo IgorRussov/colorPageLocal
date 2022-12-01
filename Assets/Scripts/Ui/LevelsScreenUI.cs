@@ -17,6 +17,7 @@ public class LevelsScreenUI : MonoBehaviour
         List<LevelData> levelData = LevelManager.levelDataList;
         levelFrameUI = new List<LevelFrameUI>();
         int counter = 0;
+        bool hadFirstUncompleted = false;
         RectTransform currentHorizontalPanel = null;
         foreach (LevelData ld in levelData)
         {
@@ -27,7 +28,14 @@ public class LevelsScreenUI : MonoBehaviour
             }
             GameObject newFrame = GameObject.Instantiate(levelFramePrefab, currentHorizontalPanel.transform);
             LevelFrameUI newLevelFrameUi = newFrame.GetComponent<LevelFrameUI>();
-            newLevelFrameUi.InitializeLevelFrame(ld, counter);
+            if (!ld.CompletedLevel && !hadFirstUncompleted)
+            {
+                newLevelFrameUi.InitializeLevelFrame(ld, counter, true);
+                hadFirstUncompleted = true;
+            }
+            else
+                newLevelFrameUi.InitializeLevelFrame(ld, counter, false);
+
             levelFrameUI.Add(newLevelFrameUi);
             counter++;
         }

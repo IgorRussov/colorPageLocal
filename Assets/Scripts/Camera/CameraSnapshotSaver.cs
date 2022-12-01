@@ -62,6 +62,6 @@ public class CameraSnapshotSaver : MonoBehaviour
         byte[] bytes = tex.EncodeToPNG();
         System.IO.File.WriteAllBytes(path, bytes);
 
-        return tex;
+        return FileIO.LoadTextureForLevel(levelName);
     }
 }
