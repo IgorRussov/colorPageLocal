@@ -195,6 +195,17 @@ public class DrawingSpriteFactory
 
         return GetSpriteFromScene(newScene, false);
     }
+
+    private static Sprite CreatePatternSprite(Shape shape, Scene patternScene)
+    {
+        SceneNode clipper = new SceneNode();
+        clipper.Shapes = new List<Shape>();
+        clipper.Shapes.Add(shape);
+
+        patternScene.Root.Clipper = clipper;
+
+        return GetSpriteFromScene(patternScene, false);
+    }
     #endregion
 
     #region Generate specific sprites 
@@ -282,6 +293,13 @@ public class DrawingSpriteFactory
         return CreateSprite(shape, patternFill, null);
     }
 
+    public static Sprite CreatePatternFillSprite(
+       Shape baseShape,
+       Scene patternScene)
+    {
+        return CreatePatternSprite(baseShape, patternScene);
+    }
+
 
     /// <summary>
     /// Creates a sprite with solid fill of provided color and no stroke
@@ -298,11 +316,11 @@ public class DrawingSpriteFactory
         return CreateSprite(shape, fill, null);
     }
 
-    public static Sprite CreateMaskSprite(Shape shape)
+    public static Sprite CreateMaskSprite(Shape shape, bool addEmptyRect)
     {
         SolidFill fill = CreateSolidFill(Color.white, 1);
-
-        return CreateSprite(shape, fill, null, true);
+        //sugma
+        return CreateSprite(shape, fill, null, addEmptyRect);
     }
 
     /// <summary>

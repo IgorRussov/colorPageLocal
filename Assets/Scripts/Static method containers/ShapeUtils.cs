@@ -413,10 +413,11 @@ public class ShapeUtils
     /// </summary>
     /// <param name="scene"></param>
     /// <returns></returns>
-    public static PatternFill GetPatternFillFromScene(Scene scene)
+    public static Scene GetPatternFillScene(Scene scene)
     {
         List<Shape> shapes = getAllShapes(scene.Root, scene.Root.Transform);
-        return shapes.Where(s => s.Fill as PatternFill != null).First().Fill as PatternFill;
+
+        return scene;
     }
 
     /// <summary>

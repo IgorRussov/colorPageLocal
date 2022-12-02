@@ -198,6 +198,7 @@ public class Pencil : MonoBehaviour
 
     private void UpdateStrokeRotation()
     {
+        return;
         if (prevInstantPos == Vector2.zero)
             return;
         Vector2 delta = currentInstantPos - prevInstantPos;

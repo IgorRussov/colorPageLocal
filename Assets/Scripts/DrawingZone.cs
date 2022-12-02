@@ -23,6 +23,7 @@ public class DrawingZone : MonoBehaviour
     public MeshCollider drawFillBoundsMeshCollider2;
     public CameraControl cameraControl;
     public SpriteMask drawFillMask;
+    public GameObject patternObject;
     [Header("Image settings")]
     public float desiredSvgWidth;
     public Material spriteMaterial;
@@ -64,9 +65,10 @@ public class DrawingZone : MonoBehaviour
     public List<Color>[] fillColors;         //Colors that can be used 
     [HideInInspector]
     public Vector2[] fillStartPositions;
-    private PatternFill patternFill;
+    private Shape patternFillShape;
     private SceneNode patternNode;
     private Rect patternRect;
+    private Scene patternScene;
     private GameObject startLineCueObject;
     private GameObject endLineCueObject;
 
@@ -181,16 +183,17 @@ public class DrawingZone : MonoBehaviour
         TesselationOptions = Options;
         PositionConverter.SvgPixelsPerUnit = svgPixelsPerUnit;
         //Get pattern info
-        //Scene patternScene = FileIO.GetVectorSceneFromFile(patternSvgFileName);
+        //patternScene = FileIO.GetVectorSceneFromFile(patternSvgFileName, false);
 
-        //patternFill = ShapeUtils.GetPatternFillFromScene(patternScene);
+        //patternFillShape = ShapeUtils.GetPatternFillShapeFromScene(patternScene);
         //patternNode = patternScene.Root;
         //patternRect = VectorUtils.ApproximateSceneNodeBounds(patternScene.Root);
 
         //Get main drawing scene and set some values based on it
-        Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
+        Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName, true);
         Rect sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
         ShapeUtils.ScaleSceneToFit(scene, desiredSvgWidth);
+        patternObject.transform.localScale = Vector3.one / PositionConverter.DrawingScale;
 
         sceneRect = VectorUtils.ApproximateSceneNodeBounds(scene.Root);
 
@@ -345,19 +348,17 @@ public class DrawingZone : MonoBehaviour
         SpriteRenderer renderer = drawingSprites[previewStrokeShapes.Count * 2 + drawStageIndex];
         renderer.enabled = true;
         renderer.sprite = null;
-        //renderer.sprite = ShapeUtils.CreatePatternFillSprite(
-        //    fillShapes[drawStageIndex],
-        //    patternFill);
+        //renderer.sprite = DrawingSpriteFactory.CreatePatternFillSprite(fillShapes[drawStageIndex], patternScene);
         //renderer.sprite = ShapeUtils.CreatePatternFillSprite(
         //    fillShapes[drawStageIndex],
         //    patternNode, patternRect);
         //Clear fill draw texture
 
         
-        SetMaskSprite(drawStageIndex);
+        SetMaskSpriteAndTexture(drawStageIndex);
         SetupNewDrawFillTexture();
         SetDrawFillBoundsCollider(drawStageIndex);
-        
+        SetMaskSprite(drawStageIndex);
         
         
     }
@@ -392,11 +393,11 @@ public class DrawingZone : MonoBehaviour
     /// Sets the mask sprite for drawing fill
     /// </summary>
     /// <param name="drawStageIndex"></param>
-    public void SetMaskSprite(int drawStageIndex)
+    public void SetMaskSpriteAndTexture(int drawStageIndex)
     {
         //Set mask sprite
         Sprite maskSprite = null;
-        maskSprite = DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex]);
+        maskSprite = DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex], true);
   
         drawFillMask.sprite = maskSprite;
 
@@ -423,6 +424,14 @@ public class DrawingZone : MonoBehaviour
 
         //drawFillQuadMaterial.SetTexture("_Alpha", 
         //    DrawingSpriteFactory.TextureFromSprite(fillShapes[drawStageIndex], maskSprite, spriteMaterial));
+    }
+
+    public void SetMaskSprite(int drawStageIndex)
+    {
+        Sprite maskSprite = null;
+        maskSprite = DrawingSpriteFactory.CreateMaskSprite(fillShapes[drawStageIndex], false);
+
+        drawFillMask.sprite = maskSprite;
     }
 
     /// <summary>

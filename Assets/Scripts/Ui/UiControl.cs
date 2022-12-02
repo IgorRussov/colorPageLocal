@@ -9,8 +9,10 @@ public class UiControl : MonoBehaviour
     public static UiControl Instance;
     public GameControl gameControl;
     [Header("Camera")]
+    public Camera snapshotCamera;
     public Cinemachine.CinemachineVirtualCamera snapshotVirtualCamera;
     public CameraSnapshotSaver cameraSnapshotSaver;
+    public GameObject fillPattern;
     [Header("Main game screen")]
     public GameObject colorButtonsPanel;
     public Button[] colorButtons;
@@ -127,6 +129,8 @@ public class UiControl : MonoBehaviour
     public void ShowVictoryScreen()
     {
         flashImage.SetActive(true);
+        fillPattern.SetActive(false);
+        snapshotCamera.gameObject.SetActive(true);
         snapshotVirtualCamera.gameObject.SetActive(true);
         Texture2D levelFinishedImage = cameraSnapshotSaver.RenderCameraToSaveLevel(LevelManager.CurrentLevelName);
         LevelManager.SetLevelCompletedImage(LevelManager.levelIndex, levelFinishedImage); 

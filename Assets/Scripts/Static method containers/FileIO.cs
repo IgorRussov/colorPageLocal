@@ -57,32 +57,17 @@ public class FileIO
     /// </summary>
     /// <param name="filePath"></param>
     /// <returns></returns>
-    public static Scene GetVectorSceneFromFile(string fileName)
+    public static Scene GetVectorSceneFromFile(string fileName, bool setDrawingSize)
     {
-        ShapeUtils.sceneRect = new Rect();
-
+        if (setDrawingSize)
+            ShapeUtils.sceneRect = new Rect();
 
         string filePath = GetSvgPath(fileName);
 
-        return SVGParser.ImportSVG(GetFixedSceneReader(fileName)).Scene;
-
-        TextReader textReader = null;
-        if (Application.platform == RuntimePlatform.Android) //We must use web request to get file if on android
-        {
-            WWW reader = new WWW(filePath);
-            while (!reader.isDone) { }
-
-            textReader = new StringReader(reader.text);
-        }
-        else
-        {
-            textReader = new StreamReader(filePath);
-        }
-        SVGParser.SceneInfo sceneInfo = SVGParser.ImportSVG(textReader);
-        return sceneInfo.Scene;
+        return SVGParser.ImportSVG(GetFixedSceneReader(fileName, setDrawingSize)).Scene;
     }
 
-    private static TextReader GetFixedSceneReader(string fileName)
+    private static TextReader GetFixedSceneReader(string fileName, bool setDrawingSize)
     {
         string filePath = GetSvgPath(fileName);
         TextReader textReader = null;
@@ -104,9 +89,13 @@ public class FileIO
         CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
-        float width = Single.Parse(viewBoxNumbers[2], NumberStyles.Any, ci);
-        float height = Single.Parse(viewBoxNumbers[3], NumberStyles.Any, ci);
-        ShapeUtils.SetDrawingSize(width, height);
+        if (setDrawingSize)
+        {
+            float width = Single.Parse(viewBoxNumbers[2], NumberStyles.Any, ci);
+            float height = Single.Parse(viewBoxNumbers[3], NumberStyles.Any, ci);
+            ShapeUtils.SetDrawingSize(width, height);
+        }
+        
 
         //Split path into separate elements
         List<XElement> startingPathElements = new List<XElement>();

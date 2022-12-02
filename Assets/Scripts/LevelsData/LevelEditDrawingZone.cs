@@ -71,7 +71,7 @@ public class LevelEditDrawingZone : MonoBehaviour
         PositionConverter.SvgPixelsPerUnit = svgPixelsPerUnit;
 
         //Get main drawing scene and set some values based on it
-        Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName);
+        Scene scene = FileIO.GetVectorSceneFromFile(levelData.svgFileName, true);
         //ShapeUtils.ScaleSceneToFit(scene, 1000);
         DrawingZone.originalSceneMatrix = scene.Root.Transform;
 

@@ -139,7 +139,7 @@ public class LevelDataWorker : MonoBehaviour
 
     public void ReadExistingLevelData()
     {
-        Scene vectorScene = FileIO.GetVectorSceneFromFile(sourceLevelData.svgFileName);
+        Scene vectorScene = FileIO.GetVectorSceneFromFile(sourceLevelData.svgFileName, true);
         List<Shape> strokeShapes = new List<Shape>();
         List<Shape> fillShapes = new List<Shape>();
 
@@ -182,7 +182,7 @@ public class LevelDataWorker : MonoBehaviour
 
     public void ReadLevelDataFromSvg()
     {
-        Scene vectorScene = FileIO.GetVectorSceneFromFile(svgFileName);
+        Scene vectorScene = FileIO.GetVectorSceneFromFile(svgFileName, true);
         List<Shape> strokeShapes = new List<Shape>();
         List<Shape> fillShapes = new List<Shape>();
 

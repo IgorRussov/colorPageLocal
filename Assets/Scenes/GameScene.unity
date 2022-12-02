@@ -27944,8 +27944,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameControl: {fileID: 1356946717}
+  snapshotCamera: {fileID: 1512496203}
   snapshotVirtualCamera: {fileID: 1974518806}
   cameraSnapshotSaver: {fileID: 1512496201}
+  fillPattern: {fileID: 1720216029}
   colorButtonsPanel: {fileID: 1496766888}
   colorButtons:
   - {fileID: 261916733}
@@ -33251,6 +33253,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674070986}
   m_CullTransparentMesh: 1
+--- !u!1001 &674566100
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2019433118}
+    m_Modifications:
+    - target: {fileID: -7871556540511652807, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7871556540511652807, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_MaskInteraction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3888481672020999207, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_Name
+      value: pattern2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 7243324766535440047, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
 --- !u!1 &694533379
 GameObject:
   m_ObjectHideFlags: 3
@@ -46089,7 +46156,7 @@ SpriteMask:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316100774}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -52210,7 +52277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1512496199
 Transform:
   m_ObjectHideFlags: 0
@@ -57693,6 +57760,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 258}
   m_SizeDelta: {x: -240, y: 492}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!1 &1720216029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3888481672020999207, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+  m_PrefabInstance: {fileID: 674566100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1720216030 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8742538545776668643, guid: 7235f51ec9bda0c4d892419a6a4b754f, type: 3}
+  m_PrefabInstance: {fileID: 674566100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1720216032
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720216029}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 979827c92cb9b4b4ca8d19bea1859cd0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1736346569
 GameObject:
   m_ObjectHideFlags: 0
@@ -57748,6 +57844,7 @@ MonoBehaviour:
   drawFillBoundsMeshCollider2: {fileID: 1579144419}
   cameraControl: {fileID: 519420033}
   drawFillMask: {fileID: 1316100775}
+  patternObject: {fileID: 1720216029}
   desiredSvgWidth: 800
   spriteMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   previewStrokeWidth: 5
@@ -57766,7 +57863,7 @@ MonoBehaviour:
   maxTanAngleDeviation: 1.57
   samplingStepSize: 0.05
   svgPixelsPerUnit: 100
-  patternSvgFileName: pattern
+  patternSvgFileName: pattern1
   startLineSpritePrefab: {fileID: 6081603364998566769, guid: 2e517d3b9886a424c8baa19eab4a3c4a, type: 3}
   endLineSpritePrefab: {fileID: 6081603364998566769, guid: 3eabd39774899954db2128dd6048380d, type: 3}
   fillStartPositions: []
@@ -63960,6 +64057,7 @@ Transform:
   - {fileID: 1579144420}
   - {fileID: 1316100776}
   - {fileID: 102609385}
+  - {fileID: 1720216030}
   m_Father: {fileID: 1736346570}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -69542,7 +69640,7 @@ MonoBehaviour:
   m_CenterOnActivate: 1
   m_GroupFramingMode: 2
   m_AdjustmentMode: 0
-  m_GroupFramingSize: 0.65
+  m_GroupFramingSize: 1
   m_MaxDollyIn: 5000
   m_MaxDollyOut: 5000
   m_MinimumDistance: 1
